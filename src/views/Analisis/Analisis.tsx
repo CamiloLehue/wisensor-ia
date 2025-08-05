@@ -11,6 +11,7 @@ import {
   Volume2,
   BadgeCheck,
   HardDriveUpload,
+  BotMessageSquare,
 } from "lucide-react";
 import Map3d from "./components/Map3d";
 import { useCentersData } from "./hooks/useCentersData";
@@ -144,165 +145,234 @@ export const Analisis = () => {
                   style={{ scrollbarWidth: "thin" }}
                 >
                   {messages.map((message, index) => (
-                    <div
-                      key={index}
-                      className={`flex items-start ${
-                        message.sender === "user" ? "justify-end" : ""
-                      }`}
-                    >
-                      {/* Mensaje del BOT */}
-                      {message.sender === "bot" && (
-                        <>
-                          <div className="flex-shrink-0 bg-gradient-to-bl from-[#ce4827] to-[#ca4242] p-2 rounded-full">
-                            <Bot className="h-5 w-5 text-white" />
+                    <>
+                      {message.sender === "bot-bienvenida" &&
+                      message.text === "sin-pregunta" ? (
+                        <div className="relative w-full max-w-5xl mx-auto flex flex-col justify-center items-center mb-5 ">
+                          <div className="absolute top-25 left-[50%] -translate-x-1/2 h-20 w-50 rounded-full bg-red-300 group-hover:bg-blue-500 transition-all duration-1000 blur-3xl opacity-25"></div>
+                          <div className="py-5">
+                            <BotMessageSquare
+                              size={60}
+                              className="text-gray-400 group-hover:text-sky-400 transition-all duration-700 ease-in-out"
+                            />
                           </div>
-                          <div className="ml-2 bg-[#03080c] border-s-2 border-s-[#ce4827] rounded-lg p-5 px-10 max-w-[calc(100%-60px)] h-full">
-                            <p className="text-[1rem] text-gray-100">
-                              {message.text.split("\n").map((line, i) => (
-                                <span key={i}>
-                                  {line}
-                                  <br />
-                                </span>
-                              ))}
+                          <p className="text-balance text-center text-gray-200">
+                            ¡Te damos la bienvenida a la sección de Análisis!
+                          </p>
+                          <p className="text-balance text-center text-amber-500 mb-4">
+                            (Versión beta) Beta 1.0.2
+                          </p>
+                          <p className="text-balance text-center text-gray-300">
+                            Actualmente, puedes acceder a información de los
+                            centros{"  "}
+                            <span className="font-bold text-white">
+                              PIRQUEN y POLOCUHE
+                            </span>
+                            .
+                          </p>
+                          <p className="text-balance text-center text-gray-300 mb-4">
+                            {" "}
+                            la plataforma te permite consultar tres bases de
+                            datos principales
+                          </p>
+                          <div className="flex justify-center items-start gap-5">
+                            <p className=" cursor-pointer py-1 text-sky-300 border border-dashed border-sky-300/50 px-4 rounded">
+                              Clíma
                             </p>
-
-                            {/* Verifica que el gráfico exista en el mensaje y sea válido */}
-                            {message.chart && isValidChart(message.chart) ? (
-                              <ChartErrorBoundary>
-                                <div className="mt-3 bg-[#0d1b2a] rounded-lg p-3 border border-[#22334a]">
-                                  <h4 className="text-xs font-semibold mb-2 text-blue-300">
-                                    {message.chart.title}
-                                  </h4>
-                                  <ResponsiveContainer
-                                    width="100%"
-                                    height={220}
-                                  >
-                                    {message.chart.type === "bar" ? (
-                                      <BarChart
-                                        data={message.chart.xAxis.map(
-                                          (cat, i) => {
-                                            const row = { name: cat };
-                                            message.chart.series.forEach(
-                                              (serie) => {
-                                                row[serie.name] = serie.data[i];
-                                              }
-                                            );
-                                            return row;
-                                          }
-                                        )}
-                                      >
-                                        <XAxis dataKey="name" fontSize={10} />
-                                        <YAxis fontSize={10} />
-                                        <Tooltip />
-                                        <Legend />
-                                        {message.chart.series.map(
-                                          (serie, idx) => (
-                                            <Bar
-                                              key={serie.name}
-                                              dataKey={serie.name}
-                                              fill={
-                                                [
-                                                  "#36A2EB",
-                                                  "#FF6384",
-                                                  "#FFCE56",
-                                                  "#4BC0C0",
-                                                ][idx % 4]
-                                              }
-                                              barSize={18}
-                                            />
-                                          )
-                                        )}
-                                      </BarChart>
-                                    ) : message.chart.type === "line" ? (
-                                      <LineChart
-                                        data={message.chart.xAxis.map(
-                                          (cat, i) => {
-                                            const row = { name: cat };
-                                            message.chart.series.forEach(
-                                              (serie) => {
-                                                row[serie.name] = serie.data[i];
-                                              }
-                                            );
-                                            return row;
-                                          }
-                                        )}
-                                      >
-                                        <XAxis dataKey="name" fontSize={10} />
-                                        <YAxis fontSize={10} />
-                                        <Tooltip />
-                                        <Legend />
-                                        {message.chart.series.map(
-                                          (serie, idx) => (
-                                            <Line
-                                              key={serie.name}
-                                              type="monotone"
-                                              dataKey={serie.name}
-                                              stroke={
-                                                [
-                                                  "#36A2EB",
-                                                  "#FF6384",
-                                                  "#FFCE56",
-                                                  "#4BC0C0",
-                                                ][idx % 4]
-                                              }
-                                              strokeWidth={2}
-                                              dot={false}
-                                            />
-                                          )
-                                        )}
-                                      </LineChart>
-                                    ) : (
-                                      unkwnown || "Unsupported chart type"
-                                    )}
-                                  </ResponsiveContainer>
-                                </div>
-                              </ChartErrorBoundary>
-                            ) : (
-                              <React.Fragment />
-                            )}
-
-                            {/* Renderizar audio si exist */}
-                            {message.audioBase64 && (
-                              <div className="mt-2 flex items-center space-x-1">
-                                <audio
-                                  ref={audioRef}
-                                  src={`data:audio/wav;base64,${message.audioBase64}`}
-                                  controls
-                                  className="hidden"
-                                />
-                                <button
-                                  onClick={handlePlayAudio}
-                                  className=" border border-lime-300 rounded-full hover:bg-blue-700 text-white px-3 py-2 text-xs flex items-center space-x-1"
-                                >
-                                  <Volume2 size={14} />
-                                  <span className="text-lime-300">
-                                    Escuchar respuesta
-                                  </span>
-                                </button>
+                            <p className=" cursor-pointer py-1 text-amber-300 border  border-dashed border-amber-300/50 px-4 rounded">
+                              Alimentación
+                            </p>
+                            <div className=" cursor-pointer flex flex-col justify-center items-center">
+                              <p className="text-lime-300  py-1  border  border-dashed border-lime-300/50 px-4 rounded">
+                                Informes Ambientales{" "}
+                              </p>
+                              <span className="text-gray-500 text-xs">
+                                (exclusivo para Pirquén)
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div
+                          key={index}
+                          className={`flex items-start ${
+                            message.sender === "user" ? "justify-end" : ""
+                          }`}
+                        >
+                          {/* Mensaje del BOT */}
+                          {message.sender === "bot" && (
+                            <>
+                              <div className="flex-shrink-0 bg-gradient-to-bl from-[#ce4827] to-[#ca4242] p-2 rounded-full">
+                                <Bot className="h-5 w-5 text-white" />
                               </div>
-                            )}
-                          </div>
-                        </>
-                      )}
+                              <div className="ml-2 bg-[#03080c] border-s-2 border-s-[#ce4827] rounded-lg p-5 px-10 max-w-[calc(100%-60px)] h-full">
+                                <p className="text-[1rem] text-gray-100">
+                                  {message.text.split("\n").map((line, i) => (
+                                    <span key={i}>
+                                      {line}
+                                      <br />
+                                    </span>
+                                  ))}
+                                </p>
 
-                      {/* Mensaje del USUARIO */}
-                      {message.sender === "user" && (
-                        <>
-                          <div className="mr-2 bg-blue-800 border-e-2 border-e-blue-500 rounded-lg p-2 max-w-[calc(100%-60px)]">
-                            <p className="text-[1rem] text-white">
-                              {message.text}
-                            </p>
-                          </div>
-                          <div className="flex-shrink-0 bg-gradient-to-bl from-blue-600 p-2 rounded-full ">
-                            <User className="h-5 w-5 text-gray-200" />
-                          </div>
-                        </>
+                                {/* Verifica que el gráfico exista en el mensaje y sea válido */}
+                                {message.chart &&
+                                isValidChart(message.chart) ? (
+                                  <ChartErrorBoundary>
+                                    <div className="mt-3 bg-[#0d1b2a] rounded-lg p-3 border border-[#22334a]">
+                                      <h4 className="text-xs font-semibold mb-2 text-blue-300">
+                                        {message.chart.title}
+                                      </h4>
+                                      <ResponsiveContainer
+                                        width="100%"
+                                        height={220}
+                                      >
+                                        {message.chart.type === "bar" ? (
+                                          <BarChart
+                                            data={message.chart.xAxis.map(
+                                              (cat, i) => {
+                                                const row = { name: cat };
+                                                message?.chart?.series.forEach(
+                                                  (serie) => {
+                                                    row[serie.name] =
+                                                      serie.data[i];
+                                                  }
+                                                );
+                                                return row;
+                                              }
+                                            )}
+                                          >
+                                            <XAxis
+                                              dataKey="name"
+                                              fontSize={10}
+                                            />
+                                            <YAxis fontSize={10} />
+                                            <Tooltip />
+                                            <Legend />
+                                            {message.chart.series.map(
+                                              (serie, idx) => (
+                                                <Bar
+                                                  key={serie.name}
+                                                  dataKey={serie.name}
+                                                  fill={
+                                                    [
+                                                      "#36A2EB",
+                                                      "#FF6384",
+                                                      "#FFCE56",
+                                                      "#4BC0C0",
+                                                    ][idx % 4]
+                                                  }
+                                                  barSize={18}
+                                                />
+                                              )
+                                            )}
+                                          </BarChart>
+                                        ) : message.chart.type === "line" ? (
+                                          <LineChart
+                                            data={message.chart.xAxis.map(
+                                              (cat, i) => {
+                                                const row = { name: cat };
+                                                message?.chart?.series.forEach(
+                                                  (serie) => {
+                                                    row[serie.name] =
+                                                      serie.data[i];
+                                                  }
+                                                );
+                                                return row;
+                                              }
+                                            )}
+                                          >
+                                            <XAxis
+                                              dataKey="name"
+                                              fontSize={10}
+                                            />
+                                            <YAxis fontSize={10} />
+                                            <Tooltip />
+                                            <Legend />
+                                            {message.chart.series.map(
+                                              (serie, idx) => (
+                                                <Line
+                                                  key={serie.name}
+                                                  type="monotone"
+                                                  dataKey={serie.name}
+                                                  stroke={
+                                                    [
+                                                      "#36A2EB",
+                                                      "#FF6384",
+                                                      "#FFCE56",
+                                                      "#4BC0C0",
+                                                    ][idx % 4]
+                                                  }
+                                                  strokeWidth={2}
+                                                  dot={false}
+                                                />
+                                              )
+                                            )}
+                                          </LineChart>
+                                        ) : (
+                                          unkwnown || "Unsupported chart type"
+                                        )}
+                                      </ResponsiveContainer>
+                                    </div>
+                                  </ChartErrorBoundary>
+                                ) : (
+                                  <React.Fragment />
+                                )}
+
+                                {/* Renderizar audio si exist */}
+                                {message.audioBase64 && (
+                                  <div className="mt-2 flex items-center space-x-1">
+                                    <audio
+                                      ref={audioRef}
+                                      src={`data:audio/wav;base64,${message.audioBase64}`}
+                                      controls
+                                      className="hidden"
+                                    />
+                                    <button
+                                      onClick={handlePlayAudio}
+                                      className=" border border-lime-300 rounded-full hover:bg-blue-700 text-white px-3 py-2 text-xs flex items-center space-x-1"
+                                    >
+                                      <Volume2 size={14} />
+                                      <span className="text-lime-300">
+                                        Escuchar respuesta
+                                      </span>
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )}
+
+                          {/* Mensaje del USUARIO */}
+                          {message.sender === "user" && (
+                            <>
+                              <div className="mr-2 bg-blue-800 border-e-2 border-e-blue-500 rounded-lg p-2 max-w-[calc(100%-60px)]">
+                                <p className="text-[1rem] text-white">
+                                  {message.text}
+                                </p>
+                              </div>
+                              <div className="flex-shrink-0 bg-gradient-to-bl from-blue-600 p-2 rounded-full ">
+                                <User className="h-5 w-5 text-gray-200" />
+                              </div>
+                            </>
+                          )}
+                        </div>
                       )}
-                    </div>
+                    </>
                   ))}
                 </div>
               </div>
             </div>
+
+            {isRecording && (
+              <div className="absolute bottom-15 z-10 left-[50%] bg-red-950/50 border border-red-500 rounded-2xl -translate-x-1/2 h-8  w-[15%]  flex justify-centerd items-center px-10">
+                <div className="bg-red-500 absolute left-[50%] -translate-x-1/2 blur-xl animate-pulse h-10 w-10 rounded-full opacity-50"></div>
+                <p className="relative flex items-center gap-2 z-20">
+                  <Mic size={16} /> Grabando...
+                </p>
+              </div>
+            )}
+
             {/* Input y botones */}
             <div className="absolute bottom-1 w-[94.5%] left-[50%] -translate-x-1/2 flex items-center gap-2 mt-2 p-[1px] bg-gradient-to-br from-blue-900 to-amber-600  rounded-full">
               <div className="w-full flex gap-2 bg-gray-900 p-0.5 rounded-full">

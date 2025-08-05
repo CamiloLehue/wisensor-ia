@@ -2,7 +2,7 @@ import { useState } from "react";
 import { questionAnalyzerService } from "../services/questionAnalyzerService";
 
 export interface Message {
-  sender: "user" | "bot";
+  sender: "user" | "bot" | "bot-bienvenida";
   text: string;
   audioBase64?: string | null;
   chart?: {
@@ -20,8 +20,8 @@ export function useChatIA() {
   // bienvenida del bot.
   const [messages, setMessages] = useState<Message[]>([
     {
-      sender: "bot",
-      text: "¡Hola! Soy WIS-AI Bienvenido a la sección de Análisis, una interfaz diseñada para ofrecer acceso a datos específicos y detallados organizados por centros. Actualmente disponemos de información de los centros PIRQUEN y POLOCUHE. A modo de demostración, la plataforma permite consultar tres bases de datos principales: Clima, Alimentación e Informes Ambientales (este último exclusivo para Pirquen).1. Datos Climáticos 2. Sistema de Alimentación 3. Informes Ambientales",
+      sender: "bot-bienvenida",
+      text: "sin-pregunta",
     },
   ]);
 
@@ -78,8 +78,8 @@ export function useChatIA() {
   const handleClearChat = () => {
     setMessages([
       {
-        sender: "bot",
-        text: "¡Hola! Soy WIS-AI Bienvenido a la sección de Análisis, una interfaz diseñada para ofrecer acceso a datos específicos y detallados organizados por centros. Actualmente disponemos de información de los centros PIRQUEN y POLOCUHE. A modo de demostración, la plataforma permite consultar tres bases de datos principales: Clima, Alimentación e Informes Ambientales (este último exclusivo para Pirquen).1. Datos Climáticos 2. Sistema de Alimentación 3. Informes Ambientales",
+        sender: "bot-bienvenida",
+        text: "sin-pregunta",
       },
     ]);
     setQuestion("");
