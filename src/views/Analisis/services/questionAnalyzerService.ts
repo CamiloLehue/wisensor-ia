@@ -5,12 +5,12 @@ const API_URL = import.meta.env.VITE_API_BASE_URL;
 export interface QuestionRequest {
   user_question: string;
   informe_filename?: string; // Opcional si la pregunta es sobre un informe específico
-  contexto_previo?: string; //Usuario: Pregunta anterior \n Asistente: Respuesta anterior, 
+  contexto_previo?: [] | null; //Usuario: Pregunta anterior \n Asistente: Respuesta anterior, 
 }
 
 export interface QuestionResponse {
   answer: string;
-  audio_base64?: string | null;
+  // audio_base64?: string | null;
   chart?: {
     type: string;
     title: string;
