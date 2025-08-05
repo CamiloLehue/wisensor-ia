@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: Montserrat ;
+  src: url("../src/assets/fonts/Montserrat-Regular.ttf");
+}
+
+@theme {
+  /* Colores personalizados */
+  --color-gray-light: #2d353c;
+  --color-gray-darkL: #262d33;
+  --color-gray-dark: #20252a;
+  --color-red-dark: #ff5b57;
+  --color-dark-osc: #1a1d21;
+  --color-red-600: var(--color-red-dark);
+  --color-red-300: #ff8a87; 
+  --font-montserrat: Montserrat;
+}
+
+/* Estilos personalizados */
+.sidebar {
+  transition: all 0.2s ease;
+  width: 4rem;
+}
+
+.sidebar:hover {
+  width: 12rem;
+}
+
+.sidebar:hover .sidebar-text {
+  opacity: 1;
+  width: auto;
+  margin-left: 0.75rem;
+}
+
+/* .sidebar svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+} */
+
+.sidebar-wisensor {
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.sidebar:not(:hover) .sidebar-wisensor {
+  font-size: 0.9rem;
+  transform: scale(0.8);
+}
+
+.sidebar:not(:hover) .sidebar-menu-link {
+  justify-content: center !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+/* Scroll */
+/* Estilos para el scroll personalizado */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #1f2937;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #1f2937; /* bg-gray-800 */
+  border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* bg-gray-600 */
+  border-radius: 4px;
+  border: 1px solid #374151; /* bg-gray-700 */
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7280; /* bg-gray-500 */
+}
+
+/* Estilos específicos para el scroll de actividades */
+.actividades-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #6b7280 #374151;
+}
+
+.actividades-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.actividades-scroll::-webkit-scrollbar-track {
+  background: #374151; /* bg-gray-700 */
+  border-radius: 3px;
+}
+
+.actividades-scroll::-webkit-scrollbar-thumb {
+  background-color: #6b7280; /* bg-gray-500 */
+  border-radius: 3px;
+  border: 1px solid #4b5563; /* bg-gray-600 */
+}
+
+.actividades-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af; /* bg-gray-400 */
+}
+
+/* Estilos específicos para el scroll de proyectos */
+.proyectos-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #6b7280 #374151;
+}
+
+.proyectos-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.proyectos-scroll::-webkit-scrollbar-track {
+  background: #374151; /* bg-gray-700 */
+  border-radius: 3px;
+}
+
+.proyectos-scroll::-webkit-scrollbar-thumb {
+  background-color: #6b7280; /* bg-gray-500 */
+  border-radius: 3px;
+  border: 1px solid #4b5563; /* bg-gray-600 */
+}
+
+.proyectos-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af; /* bg-gray-400 */
+}
+@keyframes bubble {
+  0% { transform: translateY(0); opacity: 0.3; }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+@keyframes pulse-neon {
+  0%, 100% {
+    filter: drop-shadow(0 0 0.5px #ADD8E6) drop-shadow(0 0 1px #ADD8E6);
+    opacity: 0.98;
+  }
+  50% {
+    filter: drop-shadow(0 0 1px #ADD8E6) drop-shadow(0 0 2px #ADD8E6);
+    opacity: 1;
+  }
+}
+
+.animate-pulse-neon {
+  animation: pulse-neon 2s infinite alternate ease-in-out;
+}
+
+/* Utilidades para texto truncado */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.bg-gradient-dark {
+  background: linear-gradient(145deg, #202328, #1f2227);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.card-gradient {
+  background: linear-gradient(145deg, #202328, #1a1d21);
+}
+.card-hover {
+  transition: all 0.3s ease;
+  background: linear-gradient(145deg, #202328, #1a1d21);
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom styles for MapTiler popups */
+.mapboxgl-popup-close-button {
+  color: black !important; /* Asegura que el botón de cerrar sea visible contra el fondo, si el fondo no es negro puro */
+  font-size: 20px; /* Opcional: ajustar tamaño si es necesario */
+}
+/* Sidebar mejorado */
+.sidebarColor {
+  background: linear-gradient(180deg, #08121a 0%, #0a1422 100%);
+  border-right: 1px solid rgba(46, 91, 173, 0.2);
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Topbar con efecto vidrio */
+.topbar {
+  background: rgba(8, 18, 26, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(46, 91, 173, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+.bg-azul-dark{
+  background: radial-gradient(ellipse at center, #08121a 0%, #050a0f 70%);
+  color: #e0e0e0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+}
+/* Añade esto a tu archivo CSS principal (por ejemplo, index.css o global.css) */
+
