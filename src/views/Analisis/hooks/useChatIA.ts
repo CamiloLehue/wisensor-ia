@@ -5,6 +5,7 @@ export interface Message {
   sender: "user" | "bot" | "bot-bienvenida";
   text: string;
   audioBase64?: string | null;
+  contexto_previo?: [] | null;
   chart?: {
     type: string;
     title: string;
@@ -24,6 +25,9 @@ export function useChatIA() {
       text: "sin-pregunta",
     },
   ]);
+
+  console.log("messages", messages);
+  
 
   // 3. Modificamos handleAskQuestion para que trabaje con el array.
   const handleAskQuestion = async () => {
@@ -46,6 +50,7 @@ export function useChatIA() {
     try {
       const response = await questionAnalyzerService.analyzeQuestion({
         user_question: question,
+        contexto_previo:messages,
       });
 
       const botResponse: Message = {
