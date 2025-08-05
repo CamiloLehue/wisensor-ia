@@ -10,7 +10,7 @@ export interface QuestionRequest {
 
 export interface QuestionResponse {
   answer: string;
-  // audio_base64?: string | null;
+  audio_base64?: string | null;
   chart?: {
     type: string;
     title: string;
