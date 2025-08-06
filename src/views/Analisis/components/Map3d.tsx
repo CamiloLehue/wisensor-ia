@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import * as maptilersdk from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import { Center } from '../../views/Configuracion/sections/services/centersService'; // Importar la interfaz Center
@@ -15,7 +15,7 @@ export default function CMap3d({ macrozonaData, salmonConcessions, concessionAre
   const map = useRef<maptilersdk.Map | null>(null);
 
   // La URL  mapa .
-  const styleUrl = "https://api.maptiler.com/maps/0197f631-07d9-7a7f-9310-cd447713fd1a/style.json?key=J7a25SJNVDfXRxlsaujO";
+  const styleUrl = "https://api.maptiler.com/maps/dataviz/style.json?key=sgfw4VJk7hmPrdCuxFEp";
 
   // Definición de la capa de clorofila (chlorophyll)
   const chlorophyllLayerInfo = {
@@ -33,7 +33,7 @@ export default function CMap3d({ macrozonaData, salmonConcessions, concessionAre
       container: mapContainer.current,
       style: styleUrl,
       center: [-72.93768, -42.39810],
-      zoom: 5,
+      zoom: 6,
       pitch: 60, //rotacion del mapa
     });
 
@@ -77,9 +77,12 @@ export default function CMap3d({ macrozonaData, salmonConcessions, concessionAre
               'Riesgo bajo', '#00cc00',    // Verde 
               'Sin Datos', '#cccccc',      // Gris
               '#0000ff' // azul
+
             ],
-                'fill-opacity': 0.5,
-                'fill-outline-color': '#000000'
+                'fill-opacity': 0.3,
+                'fill-outline-color': '#ffffff'
+
+                
           }
         });
             console.log('Capa macrozonas-layer añadida');
@@ -357,33 +360,9 @@ export default function CMap3d({ macrozonaData, salmonConcessions, concessionAre
             });
           }
 
-          // Añadir capa de clorofila (chlorophyll)
-          if (!map.current.getSource(chlorophyllLayerInfo.sourceId)) {
-            map.current.addSource(chlorophyllLayerInfo.sourceId, {
-              type: 'raster',
-              tiles: [chlorophyllLayerInfo.tilesUrl],
-              tileSize: 256,
-              attribution: '<a href="https://resourcewatch.org/" target="_blank">Resource Watch</a>'
-            });
-          }
-          if (!map.current.getLayer(chlorophyllLayerInfo.layerId)) {
-            map.current.addLayer({
-              id: chlorophyllLayerInfo.layerId,
-              type: 'raster',
-              source: chlorophyllLayerInfo.sourceId,
-              paint: { 'raster-opacity': 0.7 }
-            });
-          }
+        
+       
 
-          // Controlar visibilidad de la capa de clorofila según zoom
-          map.current.on('zoom', () => {
-            const currentZoom = map.current.getZoom();
-            const chlorophyllZoomThreshold = 10;
-            const chlorophyllVisibility = currentZoom > chlorophyllZoomThreshold ? 'none' : 'visible';
-            if (map.current.getLayer(chlorophyllLayerInfo.layerId)) {
-              map.current.setLayoutProperty(chlorophyllLayerInfo.layerId, 'visibility', chlorophyllVisibility);
-            }
-          });
 
         } catch (error) {
           console.error('Error al añadir capas del mapa:', error);
