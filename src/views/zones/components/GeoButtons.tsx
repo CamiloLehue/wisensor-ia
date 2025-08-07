@@ -3,33 +3,49 @@ import { useZones } from "../hooks/useZones";
 import { useMap } from "react-leaflet";
 import Button from "../../../components/ui/Button";
 
-function GeoButtons() {
+type GeoButtonsProps = {
+  handleFlyToZone?: (lat: number, lng: number) => void;
+  onFlyEnd?: (lat: number, lng: number) => void;
+};
+
+function GeoButtons({ handleFlyToZone, onFlyEnd }: GeoButtonsProps) {
   const [openMenu, setOpenMenu] = useState(false);
   return (
     <>
       <div className="absolute bottom-5 left-2 bg-bgt z-[9999] px-4 rounded">
-        <Button
-          onClick={() => setOpenMenu(!openMenu)}
-        >
+        <Button onClick={() => setOpenMenu(!openMenu)}>
           {openMenu ? "Ocultar" : "Mostrar Concesiones"}
         </Button>
       </div>
-      {openMenu && <MenuOptions />}
+      {openMenu && <MenuOptions handleFlyToZone={handleFlyToZone} onFlyEnd={onFlyEnd} />}
     </>
   );
 }
 
-const MenuOptions = () => {
+type MenuOptionsProps = {
+  handleFlyToZone?: (lat: number, lng: number) => void;
+  onFlyEnd?: (lat: number, lng: number) => void;
+};
+
+const MenuOptions = ({ handleFlyToZone, onFlyEnd }: MenuOptionsProps) => {
   const { zones, loading } = useZones();
   const map = useMap();
 
   if (loading) return null;
 
-  const handleFlyToZone = (lat: number, lng: number) => {
+  const flyToZone = (lat: number, lng: number) => {
     map.flyTo([lat, lng], 10, {
       animate: true,
       duration: 1.5,
     });
+    if (handleFlyToZone) {
+      handleFlyToZone(lat, lng);
+    }
+    if (onFlyEnd) {
+      setTimeout(() => {
+        onFlyEnd(lat, lng);
+      }, 1500); // igual a la duración de la animación
+    }
   };
 
   return (
@@ -41,7 +57,7 @@ const MenuOptions = () => {
             return (
               <button
                 key={zone.id}
-                onClick={() => handleFlyToZone(lat, lng)}
+                onClick={() => flyToZone(lat, lng)}
                 className="bg-[#07191e] py-2 px-2  text-white/90 hover:bg-[#1e3035] flex justify-start items-center border-b border-b-sky-300"
                 style={{
                   borderLeftColor: zone.color,

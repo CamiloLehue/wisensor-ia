@@ -1,22 +1,23 @@
 import { MapContainer, TileLayer, LayersControl, useMap } from "react-leaflet";
 import { useEffect } from "react";
-import { LatLngExpression } from "leaflet";
+// import { LatLngExpression } from "leaflet";
 import { CircleDot } from "lucide-react";
 import { GeoButtons, GeofenceLayer } from "../../zones";
 
 interface MapViewProps {
-  vehicleLastPosition?: [number, number];
   height?: string;
+  handleFlyToZone?: (lat: number, lng: number) => void;
+  onFlyEnd?: (lat: number, lng: number) => void;
 }
 
-const MapCenterUpdater = ({ center }: { center: LatLngExpression }) => {
-  const map = useMap();
-  useEffect(() => {
-    map.setView(center, map.getZoom());
-    map.invalidateSize();
-  }, [center, map]);
-  return null;
-};
+// const MapCenterUpdater = ({ center }: { center: LatLngExpression }) => {
+//   const map = useMap();
+//   useEffect(() => {
+//     map.setView(center, map.getZoom());
+//     map.invalidateSize();
+//   }, [center, map]);
+//   return null;
+// };
 
 const ResizeMap = ({ height }: { height: string }) => {
   const map = useMap();
@@ -26,8 +27,8 @@ const ResizeMap = ({ height }: { height: string }) => {
   return null;
 };
 
-const MapView = ({ height = "100%" }: MapViewProps) => {
-  const { BaseLayer,Overlay } = LayersControl;
+const MapView = ({ height = "100%", handleFlyToZone, onFlyEnd }: MapViewProps) => {
+  const { BaseLayer, Overlay } = LayersControl;
 
   return (
     <div
@@ -42,7 +43,6 @@ const MapView = ({ height = "100%" }: MapViewProps) => {
         style={{ height: "100%", width: "100%" }}
       >
         <ResizeMap height={height} />
-        {<MapCenterUpdater center={[-42.624623, -73.171303]} />}
 
         <LayersControl position="topright">
           <BaseLayer checked name="Esri Satellite">
@@ -59,7 +59,7 @@ const MapView = ({ height = "100%" }: MapViewProps) => {
           <Overlay checked name="Zonas Geográficas">
             <GeofenceLayer />
           </Overlay>
-         <GeoButtons />
+          <GeoButtons handleFlyToZone={handleFlyToZone} onFlyEnd={onFlyEnd} />
         </LayersControl>
       </MapContainer>
 

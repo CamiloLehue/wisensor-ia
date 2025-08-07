@@ -12,7 +12,15 @@ export interface Message {
     xAxis: string[];
     series: { name: string; data: number[] }[];
   } | null;
+  debug_context?: coordenadas;
 }
+
+type coordenadas = {
+  id: string;
+  name: string;
+  coordinates: number[];
+  color: string;
+};
 
 export function useChatIA() {
   const [question, setQuestion] = useState("");
@@ -26,8 +34,7 @@ export function useChatIA() {
     },
   ]);
 
-  console.log("messages", messages);
-  
+  console.log("messages", messages.find((m) => m.debug_context?.id === "1"));
 
   // 3. Modificamos handleAskQuestion para que trabaje con el array.
   const handleAskQuestion = async () => {
@@ -50,7 +57,7 @@ export function useChatIA() {
     try {
       const response = await questionAnalyzerService.analyzeQuestion({
         user_question: question,
-        contexto_previo:messages,
+        contexto_previo: messages,
       });
 
       const botResponse: Message = {
