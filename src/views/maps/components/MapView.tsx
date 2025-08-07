@@ -9,6 +9,7 @@ interface MapViewProps {
   handleFlyToZone?: (lat: number, lng: number) => void;
   onFlyEnd?: (lat: number, lng: number) => void;
   coordinates?: [number, number];
+  zoom?: number;
 }
 
 // const MapCenterUpdater = ({ center }: { center: LatLngExpression }) => {
@@ -28,7 +29,13 @@ const ResizeMap = ({ height }: { height: string }) => {
   return null;
 };
 
-const MapCenterUpdater = ({ coordinates }: { coordinates: [number, number] }) => {
+const MapCenterUpdater = ({
+  coordinates,
+  zoom,
+}: {
+  coordinates: [number, number];
+  zoom: number;
+}) => {
   const map = useMap();
   const [isInitialZoom, setIsInitialZoom] = useState(true);
 
@@ -36,22 +43,28 @@ const MapCenterUpdater = ({ coordinates }: { coordinates: [number, number] }) =>
     if (coordinates) {
       if (isInitialZoom) {
         // Primera vez: solo centramos el mapa sin cambiar el zoom
-        map.setView(coordinates, 8);
+        map.setView(coordinates, zoom);
         setIsInitialZoom(false);
       } else {
         // Siguientes actualizaciones: animación con zoom
-        map.flyTo(coordinates, 13, {
+        map.flyTo(coordinates, zoom, {
           duration: 2,
-          easeLinearity: 0.5
+          easeLinearity: 0.5,
         });
       }
       map.invalidateSize();
     }
-  }, [coordinates, map, isInitialZoom]);
+  }, [coordinates, map, isInitialZoom, zoom]);
   return null;
 };
 
-const MapView = ({ height = "100%", handleFlyToZone, onFlyEnd, coordinates }: MapViewProps) => {
+const MapView = ({
+  height = "100%",
+  handleFlyToZone,
+  onFlyEnd,
+  coordinates,
+  zoom
+}: MapViewProps) => {
   const { BaseLayer, Overlay } = LayersControl;
 
   return (
@@ -62,12 +75,12 @@ const MapView = ({ height = "100%", handleFlyToZone, onFlyEnd, coordinates }: Ma
       <MapContainer
         key={"default"}
         center={[-42.624623, -73.171303]}
-        zoom={8}
+        zoom={zoom}
         scrollWheelZoom
         style={{ height: "100%", width: "100%" }}
       >
         <ResizeMap height={height} />
-        {coordinates && <MapCenterUpdater coordinates={coordinates} />}
+        {coordinates && <MapCenterUpdater coordinates={coordinates} zoom={zoom || 8} />}
 
         <LayersControl position="topright">
           <BaseLayer checked name="Esri Satellite">
@@ -84,7 +97,7 @@ const MapView = ({ height = "100%", handleFlyToZone, onFlyEnd, coordinates }: Ma
           <Overlay checked name="Zonas Geográficas">
             <GeofenceLayer />
           </Overlay>
-          <GeoButtons handleFlyToZone={handleFlyToZone} onFlyEnd={onFlyEnd} />
+          <GeoButtons handleFlyToZone={handleFlyToZone} onFlyEnd={onFlyEnd} zoom={zoom} />
         </LayersControl>
       </MapContainer>
 

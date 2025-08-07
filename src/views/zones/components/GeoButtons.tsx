@@ -6,6 +6,7 @@ import Button from "../../../components/ui/Button";
 type GeoButtonsProps = {
   handleFlyToZone?: (lat: number, lng: number) => void;
   onFlyEnd?: (lat: number, lng: number) => void;
+  zoom?: number;
 };
 
 function GeoButtons({ handleFlyToZone, onFlyEnd }: GeoButtonsProps) {
@@ -25,16 +26,17 @@ function GeoButtons({ handleFlyToZone, onFlyEnd }: GeoButtonsProps) {
 type MenuOptionsProps = {
   handleFlyToZone?: (lat: number, lng: number) => void;
   onFlyEnd?: (lat: number, lng: number) => void;
+  zoom?: number;
 };
 
-const MenuOptions = ({ handleFlyToZone, onFlyEnd }: MenuOptionsProps) => {
+const MenuOptions = ({ handleFlyToZone, onFlyEnd, zoom }: MenuOptionsProps) => {
   const { zones, loading } = useZones();
   const map = useMap();
 
   if (loading) return null;
 
   const flyToZone = (lat: number, lng: number) => {
-    map.flyTo([lat, lng], 10, {
+    map.flyTo([lat, lng], zoom, {
       animate: true,
       duration: 1.5,
     });

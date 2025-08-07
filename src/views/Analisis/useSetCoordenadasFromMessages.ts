@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 export const useSetCoordenadasFromMessages = (
   messages: MessagesType[],
   setCoordenadas: Dispatch<SetStateAction<[number, number]>>
+  ,setZoomMap: Dispatch<SetStateAction<number>>
 ) => {
   useEffect(() => {
     // Logs para depuración
@@ -29,9 +30,10 @@ export const useSetCoordenadasFromMessages = (
         const [lat, lng] = firstCoordinate;
         console.log("Actualizando coordenadas a:", [lat, lng]);
         setCoordenadas([lat, lng]);
+        setZoomMap(11);
       } else {
         console.log("No se encontraron coordenadas en el mensaje");
       }
     }
-  }, [messages, setCoordenadas]);
+  }, [messages, setCoordenadas,setZoomMap]);
 };

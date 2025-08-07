@@ -34,6 +34,9 @@ export const Analisis = () => {
   const [coordenadas, setCoordenadas] = useState<[number, number]>([
     -42.624623, -73.171303,
   ]);
+  const [zoom, setZoom] = useState<number>(8);
+
+  const [zoomMap, setZoomMap] = useState(7);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   // Chat IA hook
@@ -56,11 +59,13 @@ export const Analisis = () => {
     // Si quieres centrar desde fuera, puedes usar map.flyTo desde GeoButtons
     // Aquí solo actualizamos el estado si se llama desde otro lado
     setCoordenadas([lat, lng]);
+    setZoomMap(11);
   };
 
   // Sincroniza el estado después de la animación
   const handleFlyEnd = (lat: number, lng: number) => {
     setCoordenadas([lat, lng]);
+    setZoomMap(11);
   };
 
   useEffect(() => {
@@ -78,7 +83,7 @@ export const Analisis = () => {
     audioRef,
   } = useAudioRecorder(setQuestion, setAnswer);
 
-  useSetCoordenadasFromMessages(messages as MessagesType[], setCoordenadas);
+  useSetCoordenadasFromMessages(messages as MessagesType[], setCoordenadas,setZoomMap);
 
   return (
     <div className="flex h-full w-full text-white p-4 gap-4">
@@ -95,6 +100,7 @@ export const Analisis = () => {
             handleFlyToZone={handleFlyToZone} 
             onFlyEnd={handleFlyEnd} 
             coordinates={coordenadas}
+            zoom={zoomMap}
           />
         </div>
       </div>
@@ -104,7 +110,7 @@ export const Analisis = () => {
           <button onClick={() => setCoordenadas([-42.848879, -72.882211])}>
             cambiar coordenadas
           </button>
-          <p>{coordenadas}</p>
+          <p>coord: {coordenadas} zoom: {zoomMap}</p>
         </div>
         <div className="flex-1 flex flex-col gap-5">
           <div className="flex flex-col flex-grow-[1] gap-8 relative">
