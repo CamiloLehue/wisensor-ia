@@ -157,9 +157,9 @@ export const Analisis = () => {
                   <div
                     id="chatMessages"
                     ref={chatContainerRef}
-                    className="flex-1 overflow-y-auto h-20  mb-2 space-y-6 custom-scroll text-xs scrollbar-thin scrollbar-thumb-cyan-500/40   px-5 scrollbar-track-[#0d1b2a] scrollbar-thumb-rounded-full"
+                    className="flex-1 overflow-y-auto h-20  mb-20 space-y-6 custom-scroll text-xs scrollbar-thin scrollbar-thumb-cyan-500/40   px-5 scrollbar-track-[#0d1b2a] scrollbar-thumb-rounded-full"
                     style={{ scrollbarWidth: "thin" }}
-                  >
+                  >./
                     {messages.map((message: Message, index: number) => {
                       return (
                         <>

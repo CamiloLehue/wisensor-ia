@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, LayersControl, useMap } from "react-leaflet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import { LatLngExpression } from "leaflet";
 import { CircleDot } from "lucide-react";
 import { GeoButtons, GeofenceLayer } from "../../zones";
@@ -30,16 +30,24 @@ const ResizeMap = ({ height }: { height: string }) => {
 
 const MapCenterUpdater = ({ coordinates }: { coordinates: [number, number] }) => {
   const map = useMap();
+  const [isInitialZoom, setIsInitialZoom] = useState(true);
+
   useEffect(() => {
     if (coordinates) {
-      // Hacemos un flyTo con animación suave y zoom 13
-      map.flyTo(coordinates, 13, {
-        duration: 2, // duración de la animación en segundos
-        easeLinearity: 0.5
-      });
+      if (isInitialZoom) {
+        // Primera vez: solo centramos el mapa sin cambiar el zoom
+        map.setView(coordinates, 8);
+        setIsInitialZoom(false);
+      } else {
+        // Siguientes actualizaciones: animación con zoom
+        map.flyTo(coordinates, 13, {
+          duration: 2,
+          easeLinearity: 0.5
+        });
+      }
       map.invalidateSize();
     }
-  }, [coordinates, map]);
+  }, [coordinates, map, isInitialZoom]);
   return null;
 };
 
