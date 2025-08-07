@@ -1,35 +1,12 @@
 import { useState } from "react";
 import { questionAnalyzerService } from "../services/questionAnalyzerService";
-
-export interface Message {
-  sender: "user" | "bot" | "bot-bienvenida";
-  text: string;
-  audioBase64?: string | null;
-  contexto_previo?: [] | null;
-  chart?: {
-    type: string;
-    title: string;
-    xAxis: string[];
-    series: { name: string; data: number[] }[];
-  } | null;
-  debug_context?: {
-    pirquen_id?: {
-      center_id: number;
-      center_name: string;
-    };
-    coordendadas?: {
-      id: string;
-      name: string;
-      coordinates: [number, number][];
-      color: string;
-    };
-  };
-}
+import { Message } from "../types/MessageType";
 
 export function useChatIA() {
   const [question, setQuestion] = useState("");
   const [isLoadingResponse, setIsLoadingResponse] = useState(false);
   const [answer, setAnswer] = useState("");
+  
   // bienvenida del bot.
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -38,9 +15,8 @@ export function useChatIA() {
     },
   ]);
 
-  console.log("messages", messages.find((m) => m.debug_context?.id === "1"));
+  console.log(answer);
 
-  // 3. Modificamos handleAskQuestion para que trabaje con el array.
   const handleAskQuestion = async () => {
     if (!question.trim() || isLoadingResponse) return;
     setIsLoadingResponse(true);
@@ -69,23 +45,28 @@ export function useChatIA() {
         text: response.answer,
         audioBase64: response.audio_base64 || null,
         chart: response.chart || null,
-        debug_context: response.debug_context || null,
+        debug_context: response.debug_context,
       };
 
       setMessages((prevMessages) => [
         ...prevMessages.slice(0, -1),
         botResponse,
       ]);
-    } catch (err: any) {
-      const errorMessage: Message = {
+    } catch (err: unknown) {
+      let errorMessage = "Error desconocido";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
+      const errorResponse: Message = {
         sender: "bot",
-        text: `Lo siento, hubo un error al procesar tu pregunta: ${
-          err.message || "Error desconocido"
-        }.`,
+        text: `Lo siento, hubo un error al procesar tu pregunta: ${errorMessage}.`,
       };
+
       setMessages((prevMessages) => [
         ...prevMessages.slice(0, -1),
-        errorMessage,
+        errorResponse,
       ]);
     } finally {
       setIsLoadingResponse(false);

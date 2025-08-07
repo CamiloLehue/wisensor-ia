@@ -28,7 +28,7 @@ import { useChatIA } from "./hooks/useChatIA";
 import { useAudioRecorder } from "./hooks/useAudioRecorder";
 import { InfoModal } from "./components/InfoModal";
 import { MapView } from "../maps/index.js";
-import { MessagesType } from "./types/MessageType.js";
+import { Message, MessagesType } from "./types/MessageType.js";
 
 export const Analisis = () => {
   const [coordenadas, setCoordenadas] = useState<[number, number]>([
@@ -82,22 +82,20 @@ export const Analisis = () => {
     audioRef,
   } = useAudioRecorder(setQuestion, setAnswer);
 
-  useSetCoordenadasFromMessages(messages as MessagesType[], setCoordenadas,setZoomMap);
+  useSetCoordenadasFromMessages(
+    messages as MessagesType[],
+    setCoordenadas,
+    setZoomMap
+  );
 
   return (
     <div className="flex h-full w-full text-white p-4 gap-4">
       {/* Sección del Mapa */}
       <div className="bg-[#08141e] w-1/3 h-full flex flex-col z-0 rounded-lg border border-[#182a38] shadow-lg">
         <div className="flex-1 rounded-md overflow-hidden">
-          {/* <Map3d
-            macrozonaData={macrozonaData}
-            salmonConcessions={salmonConcessions}
-            concessionAreas={concessionAreas}
-            centers={centers}
-          /> */}
-          <MapView 
-            handleFlyToZone={handleFlyToZone} 
-            onFlyEnd={handleFlyEnd} 
+          <MapView
+            handleFlyToZone={handleFlyToZone}
+            onFlyEnd={handleFlyEnd}
             coordinates={coordenadas}
             zoom={zoomMap}
           />
@@ -353,6 +351,7 @@ export const Analisis = () => {
 
                                     {/* Renderizar audio si exist */}
                                     {message.audioBase64 && (
+                                      
                                       <div className="mt-2 flex items-center space-x-1">
                                         <audio
                                           ref={audioRef}
