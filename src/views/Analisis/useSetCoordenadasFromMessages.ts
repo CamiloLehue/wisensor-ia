@@ -1,44 +1,37 @@
-import { useEffect } from "react";
+import { MessagesType } from "./types/MessageType";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
-/**
- * Hook para setear coordenadas del mapa a partir del último mensaje con debug_context.coordendadas o coordinates
- * @param messages Lista de mensajes
- * @param setCoordenadas Setter de coordenadas del mapa
- */
-export function useSetCoordenadasFromMessages(messages: any[], setCoordenadas: (c: [number, number]) => void) {
+export const useSetCoordenadasFromMessages = (
+  messages: MessagesType[],
+  setCoordenadas: Dispatch<SetStateAction<[number, number]>>
+) => {
   useEffect(() => {
-    if (!messages || messages.length === 0) return;
-    const lastMsg = messages[messages.length - 1];
-    if (
-      lastMsg.debug_context &&
-      lastMsg.debug_context.coordendadas &&
-      Array.isArray(lastMsg.debug_context.coordendadas.coordinates)
-    ) {
-      const coords = lastMsg.debug_context.coordendadas.coordinates;
-      if (coords.length > 0 && Array.isArray(coords[0])) {
-        const n = coords.length;
-        let sumLat = 0;
-        let sumLng = 0;
-        coords.forEach(([lat, lng]: [number, number]) => {
-          sumLat += lat;
-          sumLng += lng;
-        });
-        setCoordenadas([sumLat / n, sumLng / n]);
-        return;
+    // Logs para depuración
+    console.log("Messages recibidos:", messages);
+
+    // Verificar si hay mensajes
+    if (messages.length > 0) {
+      // Obtener el último mensaje
+      const lastMessage = messages[messages.length - 1] as MessagesType;
+      console.log("Último mensaje:", lastMessage);
+      
+      // Verificar la estructura del debug_context
+      console.log("debug_context:", lastMessage?.debug_context);
+      console.log("coordenadas:", lastMessage?.debug_context?.coordendadas);
+      
+      // Verificar si el mensaje tiene las coordenadas en debug_context
+      if (lastMessage?.debug_context?.coordendadas?.coordinates?.length > 0) {
+        // Obtener la primera coordenada del arreglo de coordinates
+        const firstCoordinate = lastMessage.debug_context.coordendadas.coordinates[0];
+        console.log("Primera coordenada encontrada:", firstCoordinate);
+        
+        // Extraer lat y lng del primer par de coordenadas y actualizar estado
+        const [lat, lng] = firstCoordinate;
+        console.log("Actualizando coordenadas a:", [lat, lng]);
+        setCoordenadas([lat, lng]);
+      } else {
+        console.log("No se encontraron coordenadas en el mensaje");
       }
     }
-    // Fallback: si no hay coordendadas, usar coordinates
-    if (
-      lastMsg.debug_context &&
-      Array.isArray(lastMsg.debug_context.coordinates) &&
-      lastMsg.debug_context.coordinates.length === 2 &&
-      typeof lastMsg.debug_context.coordinates[0] === "number" &&
-      typeof lastMsg.debug_context.coordinates[1] === "number"
-    ) {
-      setCoordenadas([
-        lastMsg.debug_context.coordinates[0],
-        lastMsg.debug_context.coordinates[1],
-      ]);
-    }
   }, [messages, setCoordenadas]);
-}
+};

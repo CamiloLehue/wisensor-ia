@@ -12,15 +12,19 @@ export interface Message {
     xAxis: string[];
     series: { name: string; data: number[] }[];
   } | null;
-  debug_context?: coordenadas;
+  debug_context?: {
+    pirquen_id?: {
+      center_id: number;
+      center_name: string;
+    };
+    coordendadas?: {
+      id: string;
+      name: string;
+      coordinates: [number, number][];
+      color: string;
+    };
+  };
 }
-
-type coordenadas = {
-  id: string;
-  name: string;
-  coordinates: number[];
-  color: string;
-};
 
 export function useChatIA() {
   const [question, setQuestion] = useState("");
@@ -65,6 +69,7 @@ export function useChatIA() {
         text: response.answer,
         audioBase64: response.audio_base64 || null,
         chart: response.chart || null,
+        debug_context: response.debug_context || null,
       };
 
       setMessages((prevMessages) => [

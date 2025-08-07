@@ -8,6 +8,7 @@ interface MapViewProps {
   height?: string;
   handleFlyToZone?: (lat: number, lng: number) => void;
   onFlyEnd?: (lat: number, lng: number) => void;
+  coordinates?: [number, number];
 }
 
 // const MapCenterUpdater = ({ center }: { center: LatLngExpression }) => {
@@ -27,7 +28,22 @@ const ResizeMap = ({ height }: { height: string }) => {
   return null;
 };
 
-const MapView = ({ height = "100%", handleFlyToZone, onFlyEnd }: MapViewProps) => {
+const MapCenterUpdater = ({ coordinates }: { coordinates: [number, number] }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (coordinates) {
+      // Hacemos un flyTo con animación suave y zoom 13
+      map.flyTo(coordinates, 13, {
+        duration: 2, // duración de la animación en segundos
+        easeLinearity: 0.5
+      });
+      map.invalidateSize();
+    }
+  }, [coordinates, map]);
+  return null;
+};
+
+const MapView = ({ height = "100%", handleFlyToZone, onFlyEnd, coordinates }: MapViewProps) => {
   const { BaseLayer, Overlay } = LayersControl;
 
   return (
@@ -43,6 +59,7 @@ const MapView = ({ height = "100%", handleFlyToZone, onFlyEnd }: MapViewProps) =
         style={{ height: "100%", width: "100%" }}
       >
         <ResizeMap height={height} />
+        {coordinates && <MapCenterUpdater coordinates={coordinates} />}
 
         <LayersControl position="topright">
           <BaseLayer checked name="Esri Satellite">
