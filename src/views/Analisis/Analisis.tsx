@@ -34,7 +34,6 @@ export const Analisis = () => {
   const [coordenadas, setCoordenadas] = useState<[number, number]>([
     -42.624623, -73.171303,
   ]);
-  const [zoom, setZoom] = useState<number>(8);
 
   const [zoomMap, setZoomMap] = useState(7);
   const [showInfoModal, setShowInfoModal] = useState(false);
