@@ -16,6 +16,7 @@ id: string;
 name: string;
 coordinates: Array<number[]>;
 color: string;
+zoom: number;
 }
 
 export interface InformePirquen20 {

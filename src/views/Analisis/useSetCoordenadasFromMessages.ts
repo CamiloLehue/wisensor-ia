@@ -25,12 +25,13 @@ export const useSetCoordenadasFromMessages = (
         // Obtener la primera coordenada del arreglo de coordinates
         const firstCoordinate = lastMessage.debug_context.coordendadas.coordinates[0];
         console.log("Primera coordenada encontrada:", firstCoordinate);
+        const zoom = lastMessage.debug_context.coordendadas.zoom;
         
         // Extraer lat y lng del primer par de coordenadas y actualizar estado
         const [lat, lng] = firstCoordinate;
         console.log("Actualizando coordenadas a:", [lat, lng]);
         setCoordenadas([lat, lng]);
-        setZoomMap(11);
+        setZoomMap(zoom);
       } else {
         console.log("No se encontraron coordenadas en el mensaje");
       }

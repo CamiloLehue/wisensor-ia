@@ -105,12 +105,6 @@ export const Analisis = () => {
       </div>
       {/* Panel derecho: Análisis y Chatbox */}
       <div className="w-2/3 h-full flex flex-col gap-4 rounded-lg shadow-lg">
-        <div className="bg-red-500 w-full h-full">
-          <button onClick={() => setCoordenadas([-42.848879, -72.882211])}>
-            cambiar coordenadas
-          </button>
-          <p>coord: {coordenadas} zoom: {zoomMap}</p>
-        </div>
         <div className="flex-1 flex flex-col gap-5">
           <div className="flex flex-col flex-grow-[1] gap-8 relative">
             {/* modal info */}
@@ -164,7 +158,7 @@ export const Analisis = () => {
                     ref={chatContainerRef}
                     className="flex-1 overflow-y-auto h-20  mb-20 space-y-6 custom-scroll text-xs scrollbar-thin scrollbar-thumb-cyan-500/40   px-5 scrollbar-track-[#0d1b2a] scrollbar-thumb-rounded-full"
                     style={{ scrollbarWidth: "thin" }}
-                  >./
+                  >
                     {messages.map((message: Message, index: number) => {
                       return (
                         <>
