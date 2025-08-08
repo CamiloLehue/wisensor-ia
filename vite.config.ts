@@ -7,6 +7,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     host: '0.0.0.0', //PERMITIR CUALQUIER IP
-    allowedHosts: ['ia.wisensor.cl'],  //PERMITIR ACCESO DESDE CUALQUIER HOST DE LA RED
+    allowedHosts: ['wisensoria.iotlink.cl'],  //PERMITIR ACCESO DESDE CUALQUIER HOST DE LA RED
   },
 });
