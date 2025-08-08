@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 // import { LatLngExpression } from "leaflet";
 import { CircleDot } from "lucide-react";
 import { GeoButtons, GeofenceLayer } from "../../zones";
-// import WeatherEffects from "./WeatherEffects";
+import WeatherEffects from "./WeatherEffects";
 
 interface MapViewProps {
   height?: string;
@@ -11,16 +11,9 @@ interface MapViewProps {
   onFlyEnd?: (lat: number, lng: number) => void;
   coordinates?: [number, number];
   zoom?: number;
+  tipoClima?: string;
 }
 
-// const MapCenterUpdater = ({ center }: { center: LatLngExpression }) => {
-//   const map = useMap();
-//   useEffect(() => {
-//     map.setView(center, map.getZoom());
-//     map.invalidateSize();
-//   }, [center, map]);
-//   return null;
-// };
 
 const ResizeMap = ({ height }: { height: string }) => {
   const map = useMap();
@@ -111,7 +104,7 @@ const MapView = ({
       {
         <div className="absolute left-0 top-0  w-full h-full z-[999]">
           {/* <RainEffects/> */}
-          {/* <WeatherEffects weatherType="lluvioso" /> */}
+          <WeatherEffects weatherType="lluvioso" />
         </div>
       }
 

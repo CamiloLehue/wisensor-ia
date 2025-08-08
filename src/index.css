@@ -289,3 +289,27 @@
     transform: translateX(15px);
   }
 }
+
+
+
+
+
+.custom-audio {
+  width: 100%; /* Ancho completo */
+  background-color: #03080c; /* \Fondo */
+  height: 35px;
+  margin-top: 30px;
+  border-radius: 25px;
+}
+
+/* Estilo para los controles del reproductor */
+.custom-audio::-webkit-media-controls-panel {
+  background-color: #03080c;
+}
+
+.custom-audio::-webkit-media-controls-play-button,
+.custom-audio::-webkit-media-controls-mute-button {
+  filter: brightness(0.8);
+  background-color: #ff5900;
+  border-radius: 50%;
+}

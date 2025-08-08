@@ -2,7 +2,7 @@ export interface Message {
   sender: "user" | "bot" | "bot-bienvenida";
   text: string;
   audioBase64?: string | null;
-  contexto_previo?:  null | unknown;
+  contexto_previo?: null | unknown;
   chart?: {
     type: string;
     title: string;
@@ -10,7 +10,10 @@ export interface Message {
     series: { name: string; data: number[] }[];
   } | null;
   debug_context?: DebugContext;
-  
+}
+
+export interface MessageAudio {
+  audioBase64?: string | null;
 }
 
 export interface MessagesType {
@@ -27,9 +30,11 @@ export interface DebugContext {
 export interface QuestionRequest {
   user_question: string;
   informe_filename?: string; // Opcional si la pregunta es sobre un informe específico
-  contexto_previo?:  null | unknown; 
-  debug_context?:DebugContext;
+  contexto_previo?: null | unknown;
+  debug_context?: DebugContext;
 }
+
+
 
 export interface QuestionResponse {
   answer: string;
@@ -42,6 +47,17 @@ export interface QuestionResponse {
   };
   debug_context?: DebugContext;
 }
+
+
+export interface QuestionRequestAudio {
+  user_question: string;
+  text:string;
+}
+
+export interface QuestionResponseAudio {
+  audio_base64: string;
+}
+
 
 export interface Coordendadas {
   id: string;
