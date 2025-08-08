@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 // import { LatLngExpression } from "leaflet";
 import { CircleDot } from "lucide-react";
 import { GeoButtons, GeofenceLayer } from "../../zones";
-// import WeatherEffects from "./WeatherEffects";
+import WeatherEffects from "./WeatherEffects";
 
 interface MapViewProps {
   height?: string;
@@ -111,7 +111,7 @@ const MapView = ({
       {
         <div className="absolute left-0 top-0  w-full h-full z-[999]">
           {/* <RainEffects/> */}
-          {/* <WeatherEffects weatherType="lluvioso" /> */}
+          <WeatherEffects weatherType="lluvioso" />
         </div>
       }
 

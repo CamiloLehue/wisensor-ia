@@ -35,6 +35,9 @@ export const Analisis = () => {
   const [coordenadas, setCoordenadas] = useState<[number, number]>([
     -42.624623, -73.171303,
   ]);
+  const [currentlyPlayingAudio, setCurrentlyPlayingAudio] = useState<
+    string | null
+  >(null);
 
   const [zoomMap, setZoomMap] = useState(7);
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -85,27 +88,64 @@ export const Analisis = () => {
   );
 
   const { handleTextAudio, textAudio, isLoadingAudio } = useTextAudio();
+  const audioCache = useRef<Map<string, string>>(new Map());
 
-  const handlePlayAudioFunction = async (text: string) => {
+  const handlePlayAudioFunction = async (text: string, autoPlay = false) => {
+    // Si ya está en caché, reproducir directamente
+    if (audioCache.current.has(text)) {
+      if (audioRef.current) {
+        audioRef.current.src = `data:audio/wav;base64,${audioCache.current.get(
+          text
+        )}`;
+        audioRef.current.currentTime = 0;
+        setCurrentlyPlayingAudio(text);
+        if (autoPlay) {
+          audioRef.current.play();
+        }
+      }
+      return;
+    }
+
+    // Marcar que este audio se está cargando
+    setCurrentlyPlayingAudio(text);
+
     try {
       await handleTextAudio(text);
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        const playPromise = audioRef.current.play();
 
-        if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            console.error("Error al reproducir audio:", error);
-            // Mostrar mensaje al usuario si falla la reproducción
-          });
+      if (textAudio && audioRef.current) {
+        // Guardar en caché
+        audioCache.current.set(text, textAudio);
+
+        // Configurar el audio solo si sigue siendo el audio actual que queremos reproducir
+        if (currentlyPlayingAudio === text) {
+          audioRef.current.src = `data:audio/wav;base64,${textAudio}`;
+          audioRef.current.currentTime = 0;
+
+          // Reproducir automáticamente solo si es autoPlay (respuesta del servidor)
+          if (autoPlay) {
+            audioRef.current.play();
+          }
         }
       }
     } catch (error) {
       console.error("Error al generar audio:", error);
-      // Mostrar feedback al usuario
+      setCurrentlyPlayingAudio(null);
     }
   };
 
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      // Solo auto-reproducir si es respuesta del bot y no es el mensaje inicial
+      if (
+        lastMessage.sender === "bot" &&
+        lastMessage.text !== "sin-pregunta" &&
+        lastMessage.text !== "Buscando en WI-DB... Por favor, espera."
+      ) {
+        handlePlayAudioFunction(lastMessage.text, true);
+      }
+    }
+  }, [messages]);
   return (
     <div className="flex h-full w-full text-white p-4 gap-4">
       {/* Sección del Mapa */}
@@ -368,26 +408,17 @@ export const Analisis = () => {
                                     )}
 
                                     {/* Renderizar audio si exist */}
-                                    {
-                                      <div className="mt-2 flex items-center space-x-1">
-                                        <audio
-                                          ref={audioRef}
-                                          src={`data:audio/wav;base64,${textAudio}`}
-                                          controls
-                                          className="hidden"
-                                        />
-                                        <button
-                                          onClick={() =>
-                                            handlePlayAudioFunction(
-                                              message.text
-                                            )
-                                          }
-                                          className=" border border-lime-300 rounded-full hover:bg-blue-700 text-white px-3 py-2 text-xs flex items-center space-x-1"
-                                          disabled={isLoadingAudio}
-                                        >
-                                          {isLoadingAudio ? (
+
+                                    <div className="mt-2 flex items-center space-x-1">
+                                      {currentlyPlayingAudio ===
+                                      message.text ? (
+                                        isLoadingAudio ? (
+                                          <button
+                                            className="border border-amber-300 rounded-full bg-amber-900/20 text-white px-3 py-2 text-xs flex items-center space-x-1"
+                                            disabled
+                                          >
                                             <svg
-                                              className="animate-spin h-3 w-3 text-white"
+                                              className="animate-spin h-3 w-3 text-amber-300"
                                               xmlns="http://www.w3.org/2000/svg"
                                               fill="none"
                                               viewBox="0 0 24 24"
@@ -406,17 +437,39 @@ export const Analisis = () => {
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                               ></path>
                                             </svg>
-                                          ) : (
-                                            <Volume2 size={14} />
-                                          )}
+                                            <span className="text-amber-300">
+                                              Cargando audio...
+                                            </span>
+                                          </button>
+                                        ) : (
+                                          <audio
+                                            ref={audioRef}
+                                            src={`data:audio/wav;base64,${textAudio}`}
+                                            controls
+                                            className="max-w-full"
+                                            onEnded={() =>
+                                              setCurrentlyPlayingAudio(null)
+                                            }
+                                          />
+                                        )
+                                      ) : (
+                                        <button
+                                          onClick={() =>
+                                            handlePlayAudioFunction(
+                                              message.text,
+                                              false
+                                            )
+                                          }
+                                          className="border border-lime-300 rounded-full hover:bg-blue-700 text-white px-3 py-2 text-xs flex items-center space-x-1"
+                                          disabled={isLoadingAudio}
+                                        >
+                                          <Volume2 size={14} />
                                           <span className="text-lime-300">
-                                            {isLoadingAudio
-                                              ? "Generando audio..."
-                                              : "Escuchar respuesta"}
+                                            Cargar Audio
                                           </span>
                                         </button>
-                                      </div>
-                                    }
+                                      )}
+                                    </div>
                                   </div>
                                 </>
                               )}
