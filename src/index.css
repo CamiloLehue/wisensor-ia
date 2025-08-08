@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: Montserrat ;
+  font-family: Montserrat;
   src: url("../src/assets/fonts/Montserrat-Regular.ttf");
 }
 
@@ -13,7 +13,7 @@
   --color-red-dark: #ff5b57;
   --color-dark-osc: #1a1d21;
   --color-red-600: var(--color-red-dark);
-  --color-red-300: #ff8a87; 
+  --color-red-300: #ff8a87;
   --font-montserrat: Montserrat;
 }
 
@@ -140,17 +140,24 @@
   background-color: #9ca3af; /* bg-gray-400 */
 }
 @keyframes bubble {
-  0% { transform: translateY(0); opacity: 0.3; }
-  100% { transform: translateY(-100px); opacity: 0; }
+  0% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
 }
 
 @keyframes pulse-neon {
-  0%, 100% {
-    filter: drop-shadow(0 0 0.5px #ADD8E6) drop-shadow(0 0 1px #ADD8E6);
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0.5px #add8e6) drop-shadow(0 0 1px #add8e6);
     opacity: 0.98;
   }
   50% {
-    filter: drop-shadow(0 0 1px #ADD8E6) drop-shadow(0 0 2px #ADD8E6);
+    filter: drop-shadow(0 0 1px #add8e6) drop-shadow(0 0 2px #add8e6);
     opacity: 1;
   }
 }
@@ -209,11 +216,76 @@
   border-bottom: 1px solid rgba(46, 91, 173, 0.25);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
-.bg-azul-dark{
+.bg-azul-dark {
   background: radial-gradient(ellipse at center, #08121a 0%, #050a0f 70%);
   color: #e0e0e0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 /* Añade esto a tu archivo CSS principal (por ejemplo, index.css o global.css) */
 
+@keyframes fall {
+  0% {
+    transform: translateY(-100%) translateX(-50%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(100vh) translateX(-50%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-light {
+  0%,
+  100% {
+    transform: scale(1) translateX(-50%) translateY(-50%);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05) translateX(-50%) translateY(-50%);
+    opacity: 0.9;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg) translateX(-50%) translateY(-50%);
+  }
+  to {
+    transform: rotate(360deg) translateX(-50%) translateY(-50%);
+  }
+}
+
+@keyframes cloud-move-1 {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(20px);
+  }
+}
+@keyframes cloud-move-2 {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-30px);
+  }
+}
+@keyframes cloud-move-3 {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(15px);
+  }
+}

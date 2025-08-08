@@ -91,7 +91,7 @@ export const Analisis = () => {
   return (
     <div className="flex h-full w-full text-white p-4 gap-4">
       {/* Sección del Mapa */}
-      <div className="bg-[#08141e] w-4/12 h-full flex flex-col z-0 rounded-lg border border-[#182a38] shadow-lg">
+      <div className="bg-[#08141e] w-5/12 h-full flex flex-col z-0 rounded-lg border border-[#182a38] shadow-lg">
         <div className="flex-1 rounded-md overflow-hidden">
           <MapView
             handleFlyToZone={handleFlyToZone}
@@ -474,7 +474,7 @@ export const Analisis = () => {
           </div>
         </div>
       </div>
-      <div className="w-1/12 h-full flex flex-col gap-4 rounded-lg shadow-lg bg-amber-300"></div>
+      {/* <div className="w-1/12 h-full flex flex-col gap-4 rounded-lg shadow-lg bg-amber-300"></div> */}
     </div>
   );
 };
