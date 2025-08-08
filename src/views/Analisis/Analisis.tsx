@@ -39,6 +39,7 @@ export const Analisis = () => {
     string | null
   >(null);
 
+  const [tipoClima, setTipoClima] = useState<string>("");
   const [zoomMap, setZoomMap] = useState(7);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
@@ -156,6 +157,7 @@ export const Analisis = () => {
             onFlyEnd={handleFlyEnd}
             coordinates={coordenadas}
             zoom={zoomMap}
+            tipoClima={tipoClima}
           />
         </div>
       </div>
@@ -442,15 +444,19 @@ export const Analisis = () => {
                                             </span>
                                           </button>
                                         ) : (
-                                          <audio
-                                            ref={audioRef}
-                                            src={`data:audio/wav;base64,${textAudio}`}
-                                            controls
-                                            className="max-w-full"
-                                            onEnded={() =>
-                                              setCurrentlyPlayingAudio(null)
-                                            }
-                                          />
+                                          <div className="relative w-full">
+                                            <div className="absolute -left-8 top-7 w-10 h-10 z-10 bg-[#03080c] "></div>
+                                            <div className="absolute -right-7 top-7 w-[98%] h-10 z-10 bg-[#03080c] "></div>
+                                            <audio
+                                              ref={audioRef}
+                                              src={`data:audio/wav;base64,${textAudio}`}
+                                              controls
+                                              onEnded={() =>
+                                                setCurrentlyPlayingAudio(null)
+                                              }
+                                              className="custom-audio"
+                                            />
+                                          </div>
                                         )
                                       ) : (
                                         <button

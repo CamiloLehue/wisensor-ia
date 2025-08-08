@@ -11,16 +11,9 @@ interface MapViewProps {
   onFlyEnd?: (lat: number, lng: number) => void;
   coordinates?: [number, number];
   zoom?: number;
+  tipoClima?: string;
 }
 
-// const MapCenterUpdater = ({ center }: { center: LatLngExpression }) => {
-//   const map = useMap();
-//   useEffect(() => {
-//     map.setView(center, map.getZoom());
-//     map.invalidateSize();
-//   }, [center, map]);
-//   return null;
-// };
 
 const ResizeMap = ({ height }: { height: string }) => {
   const map = useMap();
