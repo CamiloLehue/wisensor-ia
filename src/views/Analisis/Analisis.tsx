@@ -29,6 +29,7 @@ import { useAudioRecorder } from "./hooks/useAudioRecorder";
 import { InfoModal } from "./components/InfoModal";
 import { MapView } from "../maps/index.js";
 import { Message, MessagesType } from "./types/MessageType.js";
+import { useTextAudio } from "./hooks/useVoice.js";
 
 export const Analisis = () => {
   const [coordenadas, setCoordenadas] = useState<[number, number]>([
@@ -74,19 +75,36 @@ export const Analisis = () => {
     }
   }, [messages]);
 
-  const {
-    isRecording,
-    startRecording,
-    stopRecording,
-    handlePlayAudio,
-    audioRef,
-  } = useAudioRecorder(setQuestion, setAnswer);
+  const { isRecording, startRecording, stopRecording, audioRef } =
+    useAudioRecorder(setQuestion, setAnswer);
 
   useSetCoordenadasFromMessages(
     messages as MessagesType[],
     setCoordenadas,
     setZoomMap
   );
+
+  const { handleTextAudio, textAudio, isLoadingAudio } = useTextAudio();
+
+  const handlePlayAudioFunction = async (text: string) => {
+    try {
+      await handleTextAudio(text);
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        const playPromise = audioRef.current.play();
+
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.error("Error al reproducir audio:", error);
+            // Mostrar mensaje al usuario si falla la reproducción
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error al generar audio:", error);
+      // Mostrar feedback al usuario
+    }
+  };
 
   return (
     <div className="flex h-full w-full text-white p-4 gap-4">
@@ -350,25 +368,55 @@ export const Analisis = () => {
                                     )}
 
                                     {/* Renderizar audio si exist */}
-                                    {message.audioBase64 && (
+                                    {
                                       <div className="mt-2 flex items-center space-x-1">
                                         <audio
                                           ref={audioRef}
-                                          src={`data:audio/wav;base64,${message.audioBase64}`}
+                                          src={`data:audio/wav;base64,${textAudio}`}
                                           controls
                                           className="hidden"
                                         />
                                         <button
-                                          onClick={handlePlayAudio}
+                                          onClick={() =>
+                                            handlePlayAudioFunction(
+                                              message.text
+                                            )
+                                          }
                                           className=" border border-lime-300 rounded-full hover:bg-blue-700 text-white px-3 py-2 text-xs flex items-center space-x-1"
+                                          disabled={isLoadingAudio}
                                         >
-                                          <Volume2 size={14} />
+                                          {isLoadingAudio ? (
+                                            <svg
+                                              className="animate-spin h-3 w-3 text-white"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              fill="none"
+                                              viewBox="0 0 24 24"
+                                            >
+                                              <circle
+                                                className="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                strokeWidth="4"
+                                              ></circle>
+                                              <path
+                                                className="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                              ></path>
+                                            </svg>
+                                          ) : (
+                                            <Volume2 size={14} />
+                                          )}
                                           <span className="text-lime-300">
-                                            Escuchar respuesta
+                                            {isLoadingAudio
+                                              ? "Generando audio..."
+                                              : "Escuchar respuesta"}
                                           </span>
                                         </button>
                                       </div>
-                                    )}
+                                    }
                                   </div>
                                 </>
                               )}

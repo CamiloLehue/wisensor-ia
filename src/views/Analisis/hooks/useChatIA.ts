@@ -91,5 +91,6 @@ export function useChatIA() {
     handleAskQuestion,
     handleClearChat,
     setAnswer,
+    answer,
   };
 }
