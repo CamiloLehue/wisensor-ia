@@ -9,10 +9,10 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
   };
 
   const CardStyles = ({ children, title, subtitle }: InfoModalProps) => {
-    const colorSelect = (title: string) => {
-      if (title.includes("Datos")) {
+    const colorSelect = (title: string | undefined) => {
+      if (title?.includes("Datos")) {
         return "#1dddff";
-      } else if (title.includes("Sistema")) {
+      } else if (title?.includes("Sistema")) {
         return "#ffcd16";
       } else {
         return "#bbf451";
@@ -73,7 +73,7 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
         </p>
         <div className="flex justify-center items-start gap-5">
           <p className="text-sky-300 border border-sky-300/50 px-2 rounded">
-            Clíma
+            Clima
           </p>
           <p className="text-amber-300 border border-amber-300/50 px-2 rounded">
             Alimentación
@@ -83,7 +83,7 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
               Informes Ambientales{" "}
             </p>
             <span className="text-gray-300 text-xs">
-              (exclusivo para Pirquén)
+              (exclusivo para Pirquen)
             </span>
           </div>
         </div>
@@ -117,7 +117,7 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
                   ¿Cuál fue la temperatura el 3 de mayo en pirquen?
                 </li>
                 <li className="hover:bg-sky-950 border-s border-s-sky-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  ¿Me puedes dar un grafico de clima y alimentacion para
+                  ¿Me puedes dar un grafico de clima y alimentación para
                   pirquen?
                 </li>
               </ul>
@@ -149,7 +149,7 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
                 </li>
                 <li className="hover:bg-amber-950 border-s border-s-amber-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
                   Entrégame un análisis de los últimos datos de alimentación de
-                  pirquén
+                  pirquen
                 </li>
               </ul>
             </div>
