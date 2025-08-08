@@ -63,7 +63,7 @@ const MapView = ({
   handleFlyToZone,
   onFlyEnd,
   coordinates,
-  zoom
+  zoom,
 }: MapViewProps) => {
   const { BaseLayer, Overlay } = LayersControl;
 
@@ -80,7 +80,9 @@ const MapView = ({
         style={{ height: "100%", width: "100%" }}
       >
         <ResizeMap height={height} />
-        {coordinates && <MapCenterUpdater coordinates={coordinates} zoom={zoom || 8} />}
+        {coordinates && (
+          <MapCenterUpdater coordinates={coordinates} zoom={zoom || 8} />
+        )}
 
         <LayersControl position="topright">
           <BaseLayer checked name="Esri Satellite">
@@ -97,7 +99,11 @@ const MapView = ({
           <Overlay checked name="Zonas Geográficas">
             <GeofenceLayer />
           </Overlay>
-          <GeoButtons handleFlyToZone={handleFlyToZone} onFlyEnd={onFlyEnd} zoom={zoom} />
+          <GeoButtons
+            handleFlyToZone={handleFlyToZone}
+            onFlyEnd={onFlyEnd}
+            zoom={zoom}
+          />
         </LayersControl>
       </MapContainer>
 

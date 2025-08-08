@@ -1,4 +1,4 @@
-import { MessagesType } from "./types/MessageType";
+import { MessagesType } from "../types/MessageType"; 
 import { Dispatch, SetStateAction, useEffect } from "react";
 
 export const useSetCoordenadasFromMessages = (

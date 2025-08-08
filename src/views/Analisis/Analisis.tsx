@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSetCoordenadasFromMessages } from "./useSetCoordenadasFromMessages";
+import { useSetCoordenadasFromMessages } from "../Analisis/hooks/useSetCoordenadasFromMessages.js";
 
 import {
   Send,
@@ -91,7 +91,7 @@ export const Analisis = () => {
   return (
     <div className="flex h-full w-full text-white p-4 gap-4">
       {/* Sección del Mapa */}
-      <div className="bg-[#08141e] w-1/3 h-full flex flex-col z-0 rounded-lg border border-[#182a38] shadow-lg">
+      <div className="bg-[#08141e] w-4/12 h-full flex flex-col z-0 rounded-lg border border-[#182a38] shadow-lg">
         <div className="flex-1 rounded-md overflow-hidden">
           <MapView
             handleFlyToZone={handleFlyToZone}
@@ -102,7 +102,7 @@ export const Analisis = () => {
         </div>
       </div>
       {/* Panel derecho: Análisis y Chatbox */}
-      <div className="w-2/3 h-full flex flex-col gap-4 rounded-lg shadow-lg">
+      <div className="w-7/12 h-full flex flex-col gap-4 rounded-lg shadow-lg">
         <div className="flex-1 flex flex-col gap-5">
           <div className="flex flex-col flex-grow-[1] gap-8 relative">
             {/* modal info */}
@@ -191,18 +191,18 @@ export const Analisis = () => {
                                 datos principales
                               </p>
                               <div className="flex justify-center items-start gap-5">
-                                <p className=" cursor-pointer py-1 text-sky-300 border border-dashed border-sky-300/50 px-4 rounded">
-                                  Clíma
+                                <p className=" cursor-default py-1 text-sky-300 border border-dashed border-sky-300/50 px-4 rounded">
+                                  Clima
                                 </p>
-                                <p className=" cursor-pointer py-1 text-amber-300 border  border-dashed border-amber-300/50 px-4 rounded">
+                                <p className=" cursor-default py-1 text-amber-300 border  border-dashed border-amber-300/50 px-4 rounded">
                                   Alimentación
                                 </p>
-                                <div className=" cursor-pointer flex flex-col justify-center items-center">
+                                <div className=" cursor-default flex flex-col justify-center items-center">
                                   <p className="text-lime-300  py-1  border  border-dashed border-lime-300/50 px-4 rounded">
                                     Informes Ambientales{" "}
                                   </p>
                                   <span className="text-gray-500 text-xs">
-                                    (exclusivo para Pirquén)
+                                    (Exclusivo para Pirquén)
                                   </span>
                                 </div>
                               </div>
@@ -351,7 +351,6 @@ export const Analisis = () => {
 
                                     {/* Renderizar audio si exist */}
                                     {message.audioBase64 && (
-                                      
                                       <div className="mt-2 flex items-center space-x-1">
                                         <audio
                                           ref={audioRef}
@@ -475,6 +474,7 @@ export const Analisis = () => {
           </div>
         </div>
       </div>
+      <div className="w-1/12 h-full flex flex-col gap-4 rounded-lg shadow-lg bg-amber-300"></div>
     </div>
   );
 };
