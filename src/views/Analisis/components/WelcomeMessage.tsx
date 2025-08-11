@@ -1,13 +1,13 @@
 import React, { useRef } from "react";
-import ChatBotSvg from "./svg/ChatBotSvg";
+import {ChatBotSvg} from "./svg/ChatBotSvg";
 import { useRobotAnimation } from "../hooks/useRobotAnimation";
 
 export const WelcomeMessage: React.FC = () => {
   const container = useRef<HTMLDivElement>(null);
   
   useRobotAnimation(container, {
-    floatHeight: 15,
-    floatDuration: 2,
+    floatHeight: 5,
+    floatDuration: 10,
     entryDuration: 1.5
   });
 

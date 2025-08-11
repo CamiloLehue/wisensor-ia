@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Send, Mic, MicOff } from "lucide-react";
-import { useAnimation } from "../../../animateConfigs/useAnimation";
 
 interface ChatInputProps {
   question: string;
@@ -21,32 +20,27 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   stopRecording,
   handleAskQuestion,
 }) => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const { scaleIn } = useAnimation(wrapperRef);
-
-  useEffect(() => {
-    scaleIn(".input", {
-      duration: 1,
-      delay: 0,
-      initialScale: 0.5,
-      finalScale: 1,
-    });
-  }, [scaleIn]);
+  
 
   return (
     <div
-      ref={wrapperRef}
-      className="absolute input bottom-10 w-[94.5%] left-[50%] -translate-x-1/2 flex items-center gap-2 mt-2 p-[1px] bg-gradient-to-br from-blue-900 to-amber-600 rounded-full"
+      className="absolute input bottom-10 w-[94.5%] left-[50%] -translate-x-1/2 flex items-end gap-2 mt-2 p-[1px] bg-gradient-to-br from-blue-900 to-amber-600 rounded-2xl"
     >
-      <div className="w-full flex gap-2 bg-gray-900 p-0.5 rounded-full">
-        <input
-          type="text"
-          className=" flex-1  px-5 py-4 bg-transparent text-white text-xs focus:outline-none focus:ring focus:ring-transparent focus:bg-slate-950 focus:rounded-full transition-all duration-500"
+      <div className="w-full flex gap-2 bg-gray-900 p-0.5 rounded-2xl">
+        <textarea
+          rows={1}
+          className="flex-1 px-5 py-3 bg-transparent text-white text-xs focus:outline-none focus:ring focus:ring-transparent focus:bg-slate-950 focus:rounded-2xl transition-all duration-500 resize-none overflow-hidden min-h-[44px] max-h-[200px]"
           placeholder="Haz una pregunta sobre los centros o informes..."
           value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
+          onChange={(e) => {
+            setQuestion(e.target.value);
+            // Ajustar altura automáticamente
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
               handleAskQuestion();
             }
           }}

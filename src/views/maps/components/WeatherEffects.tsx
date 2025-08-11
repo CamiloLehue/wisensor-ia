@@ -50,7 +50,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
     weatherType === "soleado"
       ? "bg-gradient-to-b from-blue-500/70 to-yellow-200/20 "
       : weatherType === "nublado"
-      ? "bg-gradient-to-b from-gray-800 to-gray-600 opacity-20"
+      ? "bg-gradient-to-b from-gray-800/70 to-gray-600/20 "
       : "bg-gradient-to-b from-blue-500/40 to-gray-900/40 ";
 
   //   const weatherMessage =
@@ -88,22 +88,151 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
 
       {weatherType === "soleado" && (
         <>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gradient-to-bl from-amber-300 to-amber-500 rounded-full shadow-lg shadow-amber-600/50 z-10 animate-pulse-light"></div>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-gradient-to-r from-yellow-500 to-transparent opacity-30 animate-spin-slow"></div>
+          {/* Sol central */}
+          <div className="absolute top-18 right-2 w-20 h-20 bg-gradient-to-bl from-amber-300 to-amber-500 rounded-full shadow-lg shadow-amber-600/50 z-20"></div>
+          
+          {/* Resplandor base */}
+          <div className="absolute top-14 -right-2 w-28 h-28 rounded-full bg-yellow-500/30 blur-md pulse-glow z-10"></div>
+          
+          {/* Resplandor exterior con animación */}
+          <div className="absolute -top-7 -right-20 w-80 h-80 rounded-full bg-gradient-to-r from-yellow-500/40 to-transparent sun-glow z-[5]"></div>
+          
+          {/* Rayos de sol giratorios */}
+          <div className="absolute top-8 -right-4 w-32 h-32 sun-rays z-[15]">
+            {[...Array(12)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-16 bg-gradient-to-t from-yellow-400/50 to-transparent"
+                style={{
+                  left: '50%',
+                  top: '50%',
+                  transform: `rotate(${i * 30}deg)`,
+                  transformOrigin: '0 0'
+                }}
+              ></div>
+            ))}
+          </div>
+          
+          {/* Halo exterior extra */}
+          <div className="absolute -top-12 -right-24 w-96 h-96 rounded-full bg-gradient-radial from-yellow-500/20 via-yellow-500/5 to-transparent"></div>
         </>
       )}
 
       {weatherType === "nublado" && (
         <>
-          <div className="absolute top-1/4 left-1/4 w-64 h-32 bg-gray-400 rounded-full blur-md opacity-60 animate-cloud-move-1"></div>
-          <div className="absolute top-1/2 right-1/4 w-80 h-40 bg-gray-500 rounded-full blur-md opacity-70 animate-cloud-move-2"></div>
-          <div className="absolute bottom-1/4 left-1/3 w-72 h-36 bg-gray-400 rounded-full blur-md opacity-50 animate-cloud-move-3"></div>
+          {/* Nubes superiores */}
+          <div className="absolute top-0 left-0 right-0 h-48 ">
+            {/* Capa de nubes principal superior */}
+           
+            {/* Nubes individuales flotantes superiores */}
+            <div className="absolute top-5 left-1/4 w-64 h-32">
+              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 rounded-full blur-2xl cloud-float-1"></div>
+            </div>
+            <div className="absolute top-2 right-1/4 w-80 h-40">
+              <div className="w-full h-full bg-gradient-to-b from-gray-400 to-gray-500 rounded-full blur-2xl cloud-float-2"></div>
+            </div>
+            <div className="absolute top-8 left-2/3 w-72 h-36">
+              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 rounded-full blur-2xl cloud-float-3"></div>
+            </div>
+          </div>
+
+          {/* Nubes inferiores */}
+          <div className="absolute bottom-0 left-0 right-0 h-48  transform rotate-180">
+            {/* Capa de nubes principal inferior */}
+           
+            {/* Nubes individuales flotantes inferiores */}
+            <div className="absolute top-5 left-1/3 w-64 h-32">
+              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 rounded-full blur-2xl cloud-float-1" style={{ animationDelay: '-4s' }}></div>
+            </div>
+            <div className="absolute top-2 right-1/3 w-80 h-40">
+              <div className="w-full h-full bg-gradient-to-b from-gray-400 to-gray-500 rounded-full blur-2xl cloud-float-2" style={{ animationDelay: '-6s' }}></div>
+            </div>
+            <div className="absolute top-8 left-1/4 w-72 h-36">
+              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 rounded-full blur-2xl cloud-float-3" style={{ animationDelay: '-2s' }}></div>
+            </div>
+          </div>
         </>
       )}
 
       <style>
         {`
-         
+          @keyframes sunGlow {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.4; }
+          }
+
+          @keyframes sunRays {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+
+          @keyframes pulseGlow {
+            0%, 100% { filter: blur(10px) brightness(1); }
+            50% { filter: blur(15px) brightness(1.2); }
+          }
+
+          @keyframes floatCloud {
+            0% { transform: translateX(-15%) scale(1); }
+            50% { transform: translateX(15%) scale(2); }
+            100% { transform: translateX(-15%) scale(1); }
+          }
+
+          @keyframes cloudPulse {
+            0% { opacity: 0.6; filter: blur(8px); transform: translateX(-10%); }
+            50% { opacity: 0.8; filter: blur(12px); transform: translateX(10%); }
+            100% { opacity: 0.6; filter: blur(8px); transform: translateX(-10%); }
+          }
+
+          @keyframes cloudExpand {
+            0% { transform: scaleX(1) translateX(-10%); }
+            50% { transform: scaleX(3) translateX(10%); }
+            100% { transform: scaleX(1) translateX(-10%); }
+          }
+
+          @keyframes floatCloudReverse {
+            0% { transform: translateX(15%) scale(1); }
+            50% { transform: translateX(-15%) scale(1.05); }
+            100% { transform: translateX(15%) scale(1); }
+          }
+
+          @keyframes cloudDrift {
+            0% { transform: translateX(-20%) scale(1); }
+            33% { transform: translateX(0%) scale(2); }
+            66% { transform: translateX(20%) scale(0.95); }
+            100% { transform: translateX(-20%) scale(1); }
+          }
+
+          .cloud-float-1 {
+            animation: floatCloud 20s ease-in-out infinite;
+          }
+
+          .cloud-float-2 {
+            animation: floatCloudReverse 25s ease-in-out infinite;
+          }
+
+          .cloud-float-3 {
+            animation: cloudDrift 30s ease-in-out infinite;
+          }
+
+          .cloud-pulse {
+            animation: cloudPulse 15s ease-in-out infinite;
+          }
+
+          .cloud-expand {
+            animation: cloudExpand 20s ease-in-out infinite;
+          }
+
+          .sun-glow {
+            animation: sunGlow 3s ease-in-out infinite;
+          }
+
+          .sun-rays {
+            animation: sunRays 20s linear infinite;
+          }
+
+          .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+          }
         `}
       </style>
     </div>

@@ -14,7 +14,6 @@ interface MapViewProps {
   tipoClima?: string;
 }
 
-
 const ResizeMap = ({ height }: { height: string }) => {
   const map = useMap();
   useEffect(() => {
@@ -52,12 +51,46 @@ const MapCenterUpdater = ({
   return null;
 };
 
+const WeatherEffectsController = () => {
+  const map = useMap();
+  const [currentZoom, setCurrentZoom] = useState(map.getZoom());
+
+  useEffect(() => {
+    const handleZoomEnd = () => {
+      setCurrentZoom(map.getZoom());
+    };
+
+    map.on("zoomend", handleZoomEnd);
+
+    return () => {
+      map.off("zoomend", handleZoomEnd);
+    };
+  }, [map]);
+
+  return (
+    <div
+      className="leaflet-pane leaflet-overlay-pane"
+      style={{
+        zIndex: 999,
+        position: "absolute",
+        left: 0,
+        top: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+      }}
+    >
+      {currentZoom > 6 && <WeatherEffects weatherType="nublado" />}
+    </div>
+  );
+};
+
 const MapView = ({
   height = "100%",
   handleFlyToZone,
   onFlyEnd,
   coordinates,
-  zoom,
+  zoom = 8,
 }: MapViewProps) => {
   const { BaseLayer, Overlay } = LayersControl;
 
@@ -99,14 +132,8 @@ const MapView = ({
             zoom={zoom}
           />
         </LayersControl>
+        <WeatherEffectsController />
       </MapContainer>
-
-      {
-        <div className="absolute left-0 top-0  w-full h-full z-[999]">
-          {/* <RainEffects/> */}
-          <WeatherEffects weatherType="lluvioso" />
-        </div>
-      }
 
       <div className="absolute bottom-5 right-2 z-[999] flex flex-col gap-2 items-end">
         <div className="bg-gradient-to-bl to-[#ffca2d] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg ">
