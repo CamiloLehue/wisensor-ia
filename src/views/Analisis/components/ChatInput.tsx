@@ -1,5 +1,6 @@
-import React from 'react';
-import { Send, Mic, MicOff } from 'lucide-react';
+import React, { useEffect, useRef } from "react";
+import { Send, Mic, MicOff } from "lucide-react";
+import { useAnimation } from "../../../animateConfigs/useAnimation";
 
 interface ChatInputProps {
   question: string;
@@ -20,12 +21,27 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   stopRecording,
   handleAskQuestion,
 }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const { scaleIn } = useAnimation(wrapperRef);
+
+  useEffect(() => {
+    scaleIn(".input", {
+      duration: 1,
+      delay: 0,
+      initialScale: 0.5,
+      finalScale: 1,
+    });
+  }, [scaleIn]);
+
   return (
-    <div className="absolute bottom-10 w-[94.5%] left-[50%] -translate-x-1/2 flex items-center gap-2 mt-2 p-[1px] bg-gradient-to-br from-blue-900 to-amber-600 rounded-full">
+    <div
+      ref={wrapperRef}
+      className="absolute input bottom-10 w-[94.5%] left-[50%] -translate-x-1/2 flex items-center gap-2 mt-2 p-[1px] bg-gradient-to-br from-blue-900 to-amber-600 rounded-full"
+    >
       <div className="w-full flex gap-2 bg-gray-900 p-0.5 rounded-full">
         <input
           type="text"
-          className="flex-1 px-5 py-4 bg-transparent text-white text-xs focus:outline-none focus:ring focus:ring-transparent focus:bg-slate-950 focus:rounded-full transition-all duration-500"
+          className=" flex-1  px-5 py-4 bg-transparent text-white text-xs focus:outline-none focus:ring focus:ring-transparent focus:bg-slate-950 focus:rounded-full transition-all duration-500"
           placeholder="Haz una pregunta sobre los centros o informes..."
           value={question}
           onChange={(e) => setQuestion(e.target.value)}

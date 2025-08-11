@@ -1,15 +1,21 @@
-import React from 'react';
-import { BotMessageSquare } from 'lucide-react';
+import React, { useRef } from "react";
+import ChatBotSvg from "./svg/ChatBotSvg";
+import { useRobotAnimation } from "../hooks/useRobotAnimation";
 
 export const WelcomeMessage: React.FC = () => {
+  const container = useRef<HTMLDivElement>(null);
+  
+  useRobotAnimation(container, {
+    floatHeight: 15,
+    floatDuration: 2,
+    entryDuration: 1.5
+  });
+
   return (
     <div className="relative w-full max-w-5xl mx-auto flex flex-col justify-center items-center mb-5">
       <div className="absolute top-25 left-[50%] -translate-x-1/2 h-20 w-50 rounded-full bg-red-300 group-hover:bg-blue-500 transition-all duration-1000 blur-3xl opacity-25"></div>
-      <div className="py-5">
-        <BotMessageSquare
-          size={60}
-          className="text-gray-400 group-hover:text-sky-400 transition-all duration-700 ease-in-out"
-        />
+      <div ref={container} className="py-5 h-30 w-30 container">
+        <ChatBotSvg />
       </div>
       <p className="text-balance text-center text-gray-200">
         ¡Te damos la bienvenida a la sección de Análisis!
@@ -37,7 +43,7 @@ export const WelcomeMessage: React.FC = () => {
             Informes Ambientales{" "}
           </p>
           <span className="text-gray-500 text-xs">
-            (Exclusivo para Pirquén)
+            (Exclusivo para Pirquen)
           </span>
         </div>
       </div>
