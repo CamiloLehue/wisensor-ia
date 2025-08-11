@@ -50,7 +50,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
     weatherType === "soleado"
       ? "bg-gradient-to-b from-blue-500/70 to-yellow-200/20 "
       : weatherType === "nublado"
-      ? "bg-gradient-to-b from-gray-800/70 to-gray-600/20 "
+      ? "bg-gradient-to-b via-gray-100/20 from-gray-800/70 to-gray-600/20 "
       : "bg-gradient-to-b from-blue-500/40 to-gray-900/40 ";
 
   //   const weatherMessage =
@@ -126,13 +126,13 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
            
             {/* Nubes individuales flotantes superiores */}
             <div className="absolute top-5 left-1/4 w-64 h-32">
-              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 rounded-full blur-2xl cloud-float-1"></div>
+              <div className="w-full h-full bg-gradient-to-b from-gray-300/60 to-gray-400/50 rounded-full blur-2xl cloud-float-1"></div>
             </div>
             <div className="absolute top-2 right-1/4 w-80 h-40">
-              <div className="w-full h-full bg-gradient-to-b from-gray-400 to-gray-500 rounded-full blur-2xl cloud-float-2"></div>
+              <div className="w-full h-full bg-gradient-to-b from-gray-400/60 to-gray-500 rounded-full blur-2xl cloud-float-2"></div>
             </div>
             <div className="absolute top-8 left-2/3 w-72 h-36">
-              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 rounded-full blur-2xl cloud-float-3"></div>
+              <div className="w-full h-full bg-gradient-to-b from-gray-300/60 to-gray-400/50 rounded-full blur-2xl cloud-float-3"></div>
             </div>
           </div>
 
@@ -142,13 +142,13 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
            
             {/* Nubes individuales flotantes inferiores */}
             <div className="absolute top-5 left-1/3 w-64 h-32">
-              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 rounded-full blur-2xl cloud-float-1" style={{ animationDelay: '-4s' }}></div>
+              <div className="w-full h-full bg-gradient-to-b from-gray-300/60 to-gray-400/50 rounded-full blur-2xl cloud-float-1" style={{ animationDelay: '-4s' }}></div>
             </div>
             <div className="absolute top-2 right-1/3 w-80 h-40">
               <div className="w-full h-full bg-gradient-to-b from-gray-400 to-gray-500 rounded-full blur-2xl cloud-float-2" style={{ animationDelay: '-6s' }}></div>
             </div>
             <div className="absolute top-8 left-1/4 w-72 h-36">
-              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 rounded-full blur-2xl cloud-float-3" style={{ animationDelay: '-2s' }}></div>
+              <div className="w-full h-full bg-gradient-to-b from-gray-300/60 to-gray-400/50 rounded-full blur-2xl cloud-float-3" style={{ animationDelay: '-2s' }}></div>
             </div>
           </div>
         </>

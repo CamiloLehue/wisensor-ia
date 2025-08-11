@@ -17,7 +17,7 @@ export const Analisis = () => {
   >(null);
 
   const [tipoClima, setTipoClima] = useState<string>("");
-  const [zoomMap, setZoomMap] = useState(7);
+  const [zoomMap, setZoomMap] = useState(9);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 

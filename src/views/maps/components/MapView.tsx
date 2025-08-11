@@ -1,6 +1,5 @@
 import { MapContainer, TileLayer, LayersControl, useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
-// import { LatLngExpression } from "leaflet";
 import { CircleDot } from "lucide-react";
 import { GeoButtons, GeofenceLayer } from "../../zones";
 import WeatherEffects from "./WeatherEffects";
@@ -108,7 +107,7 @@ const MapView = ({
       >
         <ResizeMap height={height} />
         {coordinates && (
-          <MapCenterUpdater coordinates={coordinates} zoom={zoom || 8} />
+          <MapCenterUpdater coordinates={coordinates} zoom={zoom || 10} />
         )}
 
         <LayersControl position="topright">
@@ -123,7 +122,10 @@ const MapView = ({
               opacity={0.2}
             />
           </BaseLayer>
-          <Overlay checked name="Zonas Geográficas">
+          <Overlay checked name="Polígonos de Zonas">
+            <GeofenceLayer />
+          </Overlay>
+          <Overlay checked name="Iconos de Zonas">
             <GeofenceLayer />
           </Overlay>
           <GeoButtons
