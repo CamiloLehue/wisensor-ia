@@ -65,6 +65,7 @@ export interface Coordendadas {
   coordinates: Array<number[]>;
   color: string;
   zoom: number;
+  clima?:string;
 }
 
 export interface InformePirquen20 {

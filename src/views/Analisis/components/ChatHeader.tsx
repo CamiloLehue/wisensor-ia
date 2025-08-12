@@ -78,7 +78,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
         </div>
       </div>
       <div className="main-title absolute left-[50%] -translate-x-1/2 ">
-        <h2 className="text-xl font-bold text-white">
+        <h2 className="text-base font-light text-white">
           <span className="text-red-500">WIS-AI</span> ANÁLISIS
         </h2>
       </div>
