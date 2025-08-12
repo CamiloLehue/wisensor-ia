@@ -5,9 +5,10 @@ import concesionIcon from "../../../assets/img/concesion.png";
 interface GeofenceMarkerProps {
     coordinates: [number, number][];
     name: string;
+    onClick?: () => void;
 }
 
-const GeofenceMarker = ({ coordinates, name }: GeofenceMarkerProps) => {
+const GeofenceMarker = ({ coordinates, name, onClick }: GeofenceMarkerProps) => {
     // Calculamos el centro del polígono para colocar el marcador
     const center = coordinates.reduce(
         (acc, curr) => [acc[0] + curr[0], acc[1] + curr[1]],
@@ -26,6 +27,9 @@ const GeofenceMarker = ({ coordinates, name }: GeofenceMarkerProps) => {
             position={center}
             icon={customIcon}
             title={name}
+            eventHandlers={{
+                click: onClick,
+            }}
         />
     );
 };

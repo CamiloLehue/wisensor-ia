@@ -3,7 +3,19 @@ import GeofencePolygon from "./GeofencePolygon";
 import GeofenceMarker from "./GeofenceMarker";
 import { useZones } from "../hooks/useZones";
 
-const GeofenceLayer = () => {
+import "leaflet/dist/leaflet.css";
+import { WeatherType } from "../../../types/Trazabilidad";
+
+interface GeofenceLayerProps {
+  onZoneClick?: (name: string, clima?: WeatherType) => void;
+}
+
+const GeofenceLayer = ({ onZoneClick }: GeofenceLayerProps) => {
+  const handleClick = (name: string, clima?: WeatherType) => {
+    if (onZoneClick) {
+      onZoneClick(name, clima);
+    }
+  };
     const { zones, loading } = useZones();
 
     if (loading) return "cargando...";
@@ -18,6 +30,7 @@ const GeofenceLayer = () => {
                         name={zone.name || "Zona sin nombre"}
                         coordinates={zone.coordinates || []}
                         color={zone.color || "blue"}
+                        onClick={() => handleClick(zone.name || "Zona sin nombre", zone.clima as WeatherType)}
                     />
                 ))}
             </LayerGroup>
@@ -29,6 +42,7 @@ const GeofenceLayer = () => {
                         key={`marker-${zone?.id}`}
                         name={zone.name || "Zona sin nombre"}
                         coordinates={zone.coordinates || []}
+                        onClick={() => handleClick(zone.name || "Zona sin nombre", zone.clima as WeatherType)}
                     />
                 ))}
             </LayerGroup>

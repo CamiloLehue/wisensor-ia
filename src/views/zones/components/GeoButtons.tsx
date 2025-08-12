@@ -3,14 +3,16 @@ import { useZones } from "../hooks/useZones";
 import { useMap } from "react-leaflet";
 import Button from "../../../components/ui/Button";
 import { CircleChevronRight } from "lucide-react";
+import { WeatherType } from "../../../types/Trazabilidad";
 
 type GeoButtonsProps = {
   handleFlyToZone?: (lat: number, lng: number) => void;
   onFlyEnd?: (lat: number, lng: number) => void;
+  onZoneClick?: (name: string, clima?: WeatherType) => void;
   zoom?: number;
 };
 
-function GeoButtons({ handleFlyToZone, onFlyEnd }: GeoButtonsProps) {
+function GeoButtons({ handleFlyToZone, onFlyEnd, onZoneClick }: GeoButtonsProps) {
   const [openMenu, setOpenMenu] = useState(false);
   return (
     <>
@@ -20,7 +22,7 @@ function GeoButtons({ handleFlyToZone, onFlyEnd }: GeoButtonsProps) {
         </Button>
       </div>
       {openMenu && (
-        <MenuOptions handleFlyToZone={handleFlyToZone} onFlyEnd={onFlyEnd} />
+        <MenuOptions handleFlyToZone={handleFlyToZone} onFlyEnd={onFlyEnd} onZoneClick={onZoneClick} />
       )}
     </>
   );
@@ -29,10 +31,11 @@ function GeoButtons({ handleFlyToZone, onFlyEnd }: GeoButtonsProps) {
 type MenuOptionsProps = {
   handleFlyToZone?: (lat: number, lng: number) => void;
   onFlyEnd?: (lat: number, lng: number) => void;
+  onZoneClick?: (name: string, clima?: WeatherType) => void;
   zoom?: number;
 };
 
-const MenuOptions = ({ handleFlyToZone, onFlyEnd, zoom }: MenuOptionsProps) => {
+const MenuOptions = ({ handleFlyToZone, onFlyEnd, onZoneClick, zoom }: MenuOptionsProps) => {
   const { zones, loading } = useZones();
   const map = useMap();
 
@@ -64,7 +67,12 @@ const MenuOptions = ({ handleFlyToZone, onFlyEnd, zoom }: MenuOptionsProps) => {
               return zone.color === "gray" ? (
                 <button
                   key={zone.id || 0}
-                  onClick={() => flyToZone(lat, lng)}
+                  onClick={() => {
+                    flyToZone(lat, lng);
+                    if (onZoneClick) {
+                      onZoneClick(zone.name || "Zona desconocida", zone.clima as WeatherType);
+                    }
+                  }}
                   className="bg-[#595e5f] py-2 px-2  flex justify-between text-white/50  items-center border-b border-b-sky-300"
                   style={{
                     borderLeftColor: zone.color || "transparent",
@@ -80,7 +88,12 @@ const MenuOptions = ({ handleFlyToZone, onFlyEnd, zoom }: MenuOptionsProps) => {
               ) : (
                 <button
                   key={zone.id || 0}
-                  onClick={() => flyToZone(lat, lng)}
+                  onClick={() => {
+                    flyToZone(lat, lng);
+                    if (onZoneClick) {
+                      onZoneClick(zone.name || "Zona desconocida", zone.clima as WeatherType);
+                    }
+                  }}
                   className="group bg-[#07191e] py-2 px-2 flex justify-between cursor-pointer  text-white/90 hover:bg-[#1e3035] items-center border-b border-b-sky-300"
                   style={{
                     borderLeftColor: zone.color || "transparent",
