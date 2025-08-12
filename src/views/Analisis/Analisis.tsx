@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSetCoordenadasFromMessages } from "../Analisis/hooks/useSetCoordenadasFromMessages.js";
 import { useChatIA } from "./hooks/useChatIA";
+import { WeatherType } from "../zones/types/Zone";
 import { useAudioRecorder } from "./hooks/useAudioRecorder";
 import { InfoModal } from "./components/InfoModal";
 import { MessagesType } from "./types/MessageType.js";
@@ -16,8 +17,13 @@ export const Analisis = () => {
     string | null
   >(null);
 
-  const [tipoClima, setTipoClima] = useState<string>("");
+  const [tipoClima, setTipoClima] = useState<WeatherType>("soleado");
   const [zoomMap, setZoomMap] = useState(9);
+
+  // Efecto para monitorear cambios en tipoClima
+  useEffect(() => {
+    console.log("Analisis: tipoClima cambió a:", tipoClima);
+  }, [tipoClima]);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -32,7 +38,9 @@ export const Analisis = () => {
     handleAskQuestion,
     handleClearChat,
     setAnswer,
-  } = useChatIA();
+  } = useChatIA({ 
+    onWeatherChange: (clima: WeatherType) => setTipoClima(clima)
+  });
 
   const handleToggleInfoModal = () => {
     setShowInfoModal(!showInfoModal);
@@ -65,7 +73,8 @@ export const Analisis = () => {
   useSetCoordenadasFromMessages(
     messages as MessagesType[],
     setCoordenadas,
-    setZoomMap
+    setZoomMap,
+    setTipoClima
   );
 
   const { handleTextAudio, textAudio, isLoadingAudio } = useTextAudio();

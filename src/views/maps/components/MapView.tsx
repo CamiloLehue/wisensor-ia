@@ -59,7 +59,9 @@ const WeatherEffectsController: React.FC<WeatherEffectsControllerProps> = ({ wea
   const map = useMap();
   const [currentZoom, setCurrentZoom] = useState(map.getZoom());
   
-  console.log('WeatherEffectsController recibió:', weatherType);
+  useEffect(() => {
+    console.log('WeatherEffectsController - tipo de clima actual:', weatherType);
+  }, [weatherType]);
   
   useEffect(() => {
     const handleZoomEnd = () => {
@@ -100,12 +102,10 @@ const MapView = ({
   tipoClima = "soleado"
 }: MapViewProps) => {
   const { BaseLayer, Overlay } = LayersControl;
-  const [currentClima, setCurrentClima] = useState<WeatherType>(tipoClima);
-
+  
   useEffect(() => {
-    console.log('Clima inicial:', tipoClima);
-    console.log('Clima actual:', currentClima);
-  }, [tipoClima, currentClima]);
+    console.log('MapView - Clima recibido:', tipoClima);
+  }, [tipoClima]);
 
   return (
     <div
@@ -137,19 +137,18 @@ const MapView = ({
             />
           </BaseLayer>
           <Overlay checked name="Polígonos de Zonas">
-            <GeofenceLayer onZoneClick={(name: string, clima?: WeatherType) => clima && setCurrentClima(clima)} />
+            <GeofenceLayer />
           </Overlay>
           <Overlay checked name="Iconos de Zonas">
-            <GeofenceLayer onZoneClick={(name: string, clima?: WeatherType) => clima && setCurrentClima(clima)} />
+            <GeofenceLayer />
           </Overlay>
           <GeoButtons
             handleFlyToZone={handleFlyToZone}
             onFlyEnd={onFlyEnd}
-            onZoneClick={(name: string, clima?: WeatherType) => clima && setCurrentClima(clima)}
             zoom={zoom}
           />
         </LayersControl>
-        <WeatherEffectsController weatherType={currentClima} />
+        <WeatherEffectsController weatherType={tipoClima} />
       </MapContainer>
 
       <div className="absolute bottom-5 right-2 z-[999] flex flex-col gap-2 items-end">

@@ -21,10 +21,23 @@ export interface MessagesType {
   debug_context: DebugContext;
 }
 
+import { WeatherType } from "../../zones/types/Zone";
+
+export interface Coordenadas {
+  id: string;
+  name: string;
+  coordinates: [number, number][];
+  color: string;
+  zoom: number;
+  clima: WeatherType;
+}
+
 export interface DebugContext {
-  pirquen_id: string;
-  informe_pirquen_20: InformePirquen20;
-  coordendadas: Coordendadas;
+  pirquen_id?: {
+    center_id: number;
+    center_name: string;
+  };
+  coordendadas?: Coordenadas;
 }
 
 export interface QuestionRequest {
@@ -65,6 +78,7 @@ export interface Coordendadas {
   coordinates: Array<number[]>;
   color: string;
   zoom: number;
+  clima?:string;
 }
 
 export interface InformePirquen20 {
