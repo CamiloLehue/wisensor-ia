@@ -111,7 +111,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
           <div className="absolute -top-17  -left-32 w-80 h-80 rounded-full bg-gradient-to-r from-amber-400 to-transparent sun-glow2 z-[5]"></div>
 
           {/* Rayos de sol giratorios */}
-          <div className="absolute top-18 -left-4 blur-[2px]  w-32 h-32 sun-rays z-[15]">
+          {/* <div className="absolute top-18 -left-4 blur-[2px]  w-32 h-32 sun-rays z-[15]">
             {[...Array(12)].map((_, i) => (
               <div
                 key={i}
@@ -124,7 +124,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
                 }}
               ></div>
             ))}
-          </div>
+          </div> */}
 
           {/* Halo exterior extra */}
           <div className="absolute -top-12 -right-24 w-96 h-96 rounded-full bg-gradient-radial from-yellow-500/20 via-yellow-500/5 to-transparent"></div>
@@ -299,18 +299,17 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
           </div>
         )}
       </div>
-
-      <div className="absolute right-2 top-19 w-full h-7">
-        {weatherType === "soleado" && (
-          <div className="  flex justify-center items-center  w-full gap-4 h-full  mx-auto">
-            <article className="flex justify-center items-center gap-1 bg-gradient-to-br from-indigo-500 to-blue-500 border-t shadow-md border-t-indigo-400 rounded-lg px-4 py-1">
+      {weatherType === "nublado" && (
+        <div className="absolute z-[9999] left-0 top-19 px-5 w-full h-10 bg-gradient-to-br from-red-500/50  to-rose-500/60">
+          <div className="  flex justify-start items-center  w-full gap-4 h-full  mx-auto">
+            <article className="flex justify-center items-center gap-1 bg-red-500 border-t shadow-md border-t-red-400 rounded-lg px-4 py-1">
               <WiTime3 size={17} />
               <p className="text-nowrap">
-                Fecha busqueda:{" "}
+                Fecha Histórica:{" "}
                 <span className="text-lime-200">12 Julio 2025</span>
               </p>
             </article>
-            <article className="flex justify-center items-center gap-1 bg-gradient-to-br from-indigo-500 to-blue-500 border-t shadow-md border-t-indigo-400 rounded-lg px-4 py-1">
+            <article className="flex justify-center items-center gap-1 bg-red-500 border-t shadow-md border-t-red-400 rounded-lg px-4 py-1">
               <WiTime3 size={17} />
               <p className="text-nowrap">
                 Centro seleccionado:{" "}
@@ -318,8 +317,8 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
               </p>
             </article>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <style>
         {`
