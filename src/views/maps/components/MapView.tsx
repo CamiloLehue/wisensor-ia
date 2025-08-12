@@ -1,9 +1,9 @@
 import { MapContainer, TileLayer, LayersControl, useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
-// import { LatLngExpression } from "leaflet";
 import { CircleDot } from "lucide-react";
 import { GeoButtons, GeofenceLayer } from "../../zones";
 import WeatherEffects from "./WeatherEffects";
+import { WeatherType } from "../../zones/types/Zone";
 
 interface MapViewProps {
   height?: string;
@@ -11,9 +11,12 @@ interface MapViewProps {
   onFlyEnd?: (lat: number, lng: number) => void;
   coordinates?: [number, number];
   zoom?: number;
-  tipoClima?: string;
+  tipoClima?: WeatherType;
 }
 
+interface WeatherEffectsControllerProps {
+  weatherType: WeatherType;
+}
 
 const ResizeMap = ({ height }: { height: string }) => {
   const map = useMap();
@@ -52,14 +55,57 @@ const MapCenterUpdater = ({
   return null;
 };
 
+const WeatherEffectsController: React.FC<WeatherEffectsControllerProps> = ({ weatherType }) => {
+  const map = useMap();
+  const [currentZoom, setCurrentZoom] = useState(map.getZoom());
+  
+  console.log('WeatherEffectsController recibió:', weatherType);
+  
+  useEffect(() => {
+    const handleZoomEnd = () => {
+      setCurrentZoom(map.getZoom());
+    };
+
+    map.on("zoomend", handleZoomEnd);
+
+    return () => {
+      map.off("zoomend", handleZoomEnd);
+    };
+  }, [map]);
+
+  return (
+    <div
+      className="leaflet-pane leaflet-overlay-pane"
+      style={{
+        zIndex: 999,
+        position: "absolute",
+        left: 0,
+        top: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+      }}
+    >
+      {currentZoom > 6 && <WeatherEffects weatherType={weatherType} />}
+    </div>
+  );
+};
+
 const MapView = ({
   height = "100%",
   handleFlyToZone,
   onFlyEnd,
   coordinates,
-  zoom,
+  zoom = 8,
+  tipoClima = "soleado"
 }: MapViewProps) => {
   const { BaseLayer, Overlay } = LayersControl;
+  const [currentClima, setCurrentClima] = useState<WeatherType>(tipoClima);
+
+  useEffect(() => {
+    console.log('Clima inicial:', tipoClima);
+    console.log('Clima actual:', currentClima);
+  }, [tipoClima, currentClima]);
 
   return (
     <div
@@ -75,7 +121,7 @@ const MapView = ({
       >
         <ResizeMap height={height} />
         {coordinates && (
-          <MapCenterUpdater coordinates={coordinates} zoom={zoom || 8} />
+          <MapCenterUpdater coordinates={coordinates} zoom={zoom || 10} />
         )}
 
         <LayersControl position="topright">
@@ -90,23 +136,21 @@ const MapView = ({
               opacity={0.2}
             />
           </BaseLayer>
-          <Overlay checked name="Zonas Geográficas">
-            <GeofenceLayer />
+          <Overlay checked name="Polígonos de Zonas">
+            <GeofenceLayer onZoneClick={(name: string, clima?: WeatherType) => clima && setCurrentClima(clima)} />
+          </Overlay>
+          <Overlay checked name="Iconos de Zonas">
+            <GeofenceLayer onZoneClick={(name: string, clima?: WeatherType) => clima && setCurrentClima(clima)} />
           </Overlay>
           <GeoButtons
             handleFlyToZone={handleFlyToZone}
             onFlyEnd={onFlyEnd}
+            onZoneClick={(name: string, clima?: WeatherType) => clima && setCurrentClima(clima)}
             zoom={zoom}
           />
         </LayersControl>
+        <WeatherEffectsController weatherType={currentClima} />
       </MapContainer>
-
-      {
-        <div className="absolute left-0 top-0  w-full h-full z-[999]">
-          {/* <RainEffects/> */}
-          <WeatherEffects weatherType="lluvioso" />
-        </div>
-      }
 
       <div className="absolute bottom-5 right-2 z-[999] flex flex-col gap-2 items-end">
         <div className="bg-gradient-to-bl to-[#ffca2d] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg ">

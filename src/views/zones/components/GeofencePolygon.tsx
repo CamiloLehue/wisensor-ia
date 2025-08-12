@@ -5,12 +5,14 @@ interface GeofencePolygonProps {
   name: string;
   coordinates: [number, number][];
   color?: string;
+  onClick?: () => void;
 }
 
 const GeofencePolygon: React.FC<GeofencePolygonProps> = ({
   name,
   coordinates,
   color = "blue",
+  onClick,
 }) => {
   const latSum = coordinates.reduce((sum, [lat]) => sum + lat, 0);
   const lngSum = coordinates.reduce((sum, [, lng]) => sum + lng, 0);
@@ -34,6 +36,9 @@ const GeofencePolygon: React.FC<GeofencePolygonProps> = ({
           fillOpacity: 0.4,
           fill: true,
           fillColor: color,
+        }}
+        eventHandlers={{
+          click: onClick,
         }}
       >
         <Popup>{name}</Popup>

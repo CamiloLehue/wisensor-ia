@@ -1,17 +1,32 @@
-import raw from "../../../assets/data/zones.json";
+// import raw from "../../../assets/data/zones.json";
+// import { ApiZoneData } from "../types/Zone";
 import { ApiZoneData } from "../types/Zone";
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
+// export const getZones = async (): Promise<ApiZoneData[]> => {
+//     return raw as ApiZoneData[];
+// };
 
 export const getZones = async (): Promise<ApiZoneData[]> => {
-    return raw as ApiZoneData[];
+  // const token = localStorage.getItem("token");
+
+  // if (!token) {
+  //     throw new Error("Token no encontrado. El usuario no está autenticado.");
+  // }
+
+  const response = await fetch(`${API_URL}/question-analyzer/datos-centros`, {
+    // headers: {
+    // "Authorization": `Bearer ${token}`,
+    // "Content-Type": "application/json",
+    // },
+  });
+
+  if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+  }
+
+  const data: ApiZoneData[] = await response.json();
+
+  return data;
 };
-
-
-
-// -> cuando se haga el backend
-
-// export const getZones = async (): Promise<ZoneData[]> => {
-//     const res = await fetch("https://apistruck.neuroeac.cl/geofences");
-//     const data: ZoneData[] = await res.json();
-
-//     return data;
-// };

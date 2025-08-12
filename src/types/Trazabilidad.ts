@@ -48,6 +48,8 @@ export interface Documento {
     updated_at: string;
 }
 
+export type WeatherType = "soleado" | "nublado" | "lluvioso";
+
 export interface Centro {
     id: number;
     nombre: string;
