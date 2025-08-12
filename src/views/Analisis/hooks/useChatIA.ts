@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { questionAnalyzerService } from "../services/questionAnalyzerService";
 import { Message } from "../types/MessageType";
+import { WeatherType } from "../../zones/types/Zone";
 
-export function useChatIA() {
+interface UseChatIAProps {
+  onWeatherChange?: (clima: WeatherType) => void;
+}
+
+export function useChatIA({ onWeatherChange }: UseChatIAProps = {}) {
   const [question, setQuestion] = useState("");
   const [isLoadingResponse, setIsLoadingResponse] = useState(false);
   const [answer, setAnswer] = useState("");
@@ -39,6 +44,11 @@ export function useChatIA() {
         user_question: question,
         contexto_previo: messages,
       });
+
+      // Si hay un debug_context con clima, actualizamos el estado del clima
+      if (response.debug_context?.coordendadas?.clima && onWeatherChange) {
+        onWeatherChange(response.debug_context.coordendadas.clima as WeatherType);
+      }
 
       const botResponse: Message = {
         sender: "bot",

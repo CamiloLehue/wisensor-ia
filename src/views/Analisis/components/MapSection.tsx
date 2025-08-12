@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MapView } from '../../maps/index.js';
+
+import { WeatherType } from '../../zones/types/Zone';
 
 interface MapSectionProps {
   handleFlyToZone: (lat: number, lng: number) => void;
   onFlyEnd: (lat: number, lng: number) => void;
   coordinates: [number, number];
   zoom: number;
-  tipoClima: string;
+  tipoClima: WeatherType;
 }
 
 export const MapSection: React.FC<MapSectionProps> = ({
@@ -16,6 +18,9 @@ export const MapSection: React.FC<MapSectionProps> = ({
   zoom,
   tipoClima,
 }) => {
+  useEffect(() => {
+    console.log("MapSection recibió tipoClima:", tipoClima);
+  }, [tipoClima]);
   return (
     <div className="bg-[#08141e] w-5/12 h-full flex flex-col z-0 rounded-lg border border-[#182a38] shadow-lg">
       <div className="flex-1 rounded-md overflow-hidden">

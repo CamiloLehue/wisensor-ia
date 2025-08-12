@@ -8,8 +8,7 @@ import {
   WiRain,
   WiTime3,
 } from "react-icons/wi";
-
-type WeatherType = "soleado" | "lluvioso" | "nublado";
+import { WeatherType } from "../../zones/types/Zone";
 
 interface WeatherEffectsProps {
   weatherType: WeatherType; // La prop que determinará el clima a mostrar
@@ -28,6 +27,10 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
   const [raindrops, setRaindrops] = useState<Raindrop[]>([]);
   // Número total de gotas de lluvia a renderizar
   const numRaindrops: number = 150;
+
+  useEffect(() => {
+    console.log("WeatherEffects recibió nuevo clima:", weatherType);
+  }, [weatherType]);
 
   // Efecto para generar las gotas de lluvia solo cuando el clima es 'lluvioso'
   useEffect(() => {

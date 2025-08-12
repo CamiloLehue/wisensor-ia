@@ -1,10 +1,13 @@
 import { MessagesType } from "../types/MessageType"; 
 import { Dispatch, SetStateAction, useEffect } from "react";
 
+import { WeatherType } from "../../zones/types/Zone";
+
 export const useSetCoordenadasFromMessages = (
   messages: MessagesType[],
-  setCoordenadas: Dispatch<SetStateAction<[number, number]>>
-  ,setZoomMap: Dispatch<SetStateAction<number>>
+  setCoordenadas: Dispatch<SetStateAction<[number, number]>>,
+  setZoomMap: Dispatch<SetStateAction<number>>,
+  setTipoClima: Dispatch<SetStateAction<WeatherType>>
 ) => {
   useEffect(() => {
     // Logs para depuración
@@ -26,15 +29,23 @@ export const useSetCoordenadasFromMessages = (
         const firstCoordinate = lastMessage.debug_context.coordendadas.coordinates[0];
         console.log("Primera coordenada encontrada:", firstCoordinate);
         const zoom = lastMessage.debug_context.coordendadas.zoom;
+        const clima = lastMessage.debug_context.coordendadas.clima as WeatherType;
+        
+        console.log("Clima recibido:", clima);
         
         // Extraer lat y lng del primer par de coordenadas y actualizar estado
         const [lat, lng] = firstCoordinate;
         console.log("Actualizando coordenadas a:", [lat, lng]);
         setCoordenadas([lat, lng]);
         setZoomMap(zoom);
+        
+        if (clima) {
+          console.log("Actualizando clima a:", clima);
+          setTipoClima(clima);
+        }
       } else {
         console.log("No se encontraron coordenadas en el mensaje");
       }
     }
-  }, [messages, setCoordenadas,setZoomMap]);
+  }, [messages, setCoordenadas, setZoomMap, setTipoClima]);
 };
