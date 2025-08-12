@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useZones } from "../hooks/useZones";
 import { useMap } from "react-leaflet";
 import Button from "../../../components/ui/Button";
+import { CircleChevronRight } from "lucide-react";
 
 type GeoButtonsProps = {
   handleFlyToZone?: (lat: number, lng: number) => void;
@@ -18,7 +19,9 @@ function GeoButtons({ handleFlyToZone, onFlyEnd }: GeoButtonsProps) {
           {openMenu ? "Ocultar" : "Mostrar Concesiones"}
         </Button>
       </div>
-      {openMenu && <MenuOptions handleFlyToZone={handleFlyToZone} onFlyEnd={onFlyEnd} />}
+      {openMenu && (
+        <MenuOptions handleFlyToZone={handleFlyToZone} onFlyEnd={onFlyEnd} />
+      )}
     </>
   );
 }
@@ -54,23 +57,44 @@ const MenuOptions = ({ handleFlyToZone, onFlyEnd, zoom }: MenuOptionsProps) => {
     <div className="absolute bottom-15 left-2 z-[9999] bg-gradient-to-bl to-[#ffca2d] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg ">
       <div className=" bg-[#08141e] w-[240px]  rounded-lg border border-[#182a38] shadow-lg">
         <div className="flex flex-col gap-0.5 py-2">
-          {zones.map((zone) => {
-            const [lat, lng] = zone.coordinates[1];
-            return (
-              <button
-                key={zone.id}
-                onClick={() => flyToZone(lat, lng)}
-                className="bg-[#07191e] py-2 px-2  text-white/90 hover:bg-[#1e3035] flex justify-start items-center border-b border-b-sky-300"
-                style={{
-                  borderLeftColor: zone.color,
-                  borderLeftStyle: "solid",
-                  borderLeftWidth: 5,
-                }}
-              >
-                <small className="text-[10px] ">{zone.name}</small>
-              </button>
-            );
-          })}
+          {zones
+            .sort((a, b) => b.name.localeCompare(a.name))
+            .map((zone) => {
+              const [lat, lng] = zone.coordinates[1] || [0, 0];
+              return zone.color === "gray" ? (
+                <button
+                  key={zone.id || 0}
+                  onClick={() => flyToZone(lat, lng)}
+                  className="bg-[#595e5f] py-2 px-2  flex justify-between text-white/50  items-center border-b border-b-sky-300"
+                  style={{
+                    borderLeftColor: zone.color || "transparent",
+                    borderLeftStyle: "solid",
+                    borderLeftWidth: 5,
+                  }}
+                >
+                  <small className="text-[10px] ">
+                    {zone.name || "Zona desconocida"}{" "}
+                  </small>
+                  <CircleChevronRight />
+                </button>
+              ) : (
+                <button
+                  key={zone.id || 0}
+                  onClick={() => flyToZone(lat, lng)}
+                  className="group bg-[#07191e] py-2 px-2 flex justify-between cursor-pointer  text-white/90 hover:bg-[#1e3035] items-center border-b border-b-sky-300"
+                  style={{
+                    borderLeftColor: zone.color || "transparent",
+                    borderLeftStyle: "solid",
+                    borderLeftWidth: 5,
+                  }}
+                >
+                  <small className="text-[10px] group-hover:text-sky-500 ">
+                    {zone.name || "Zona desconocida"}{" "}
+                  </small>
+                  <CircleChevronRight className="text-sky-400 group-hover:scale-90 transition-all duration-300 " />
+                </button>
+              );
+            })}
         </div>
       </div>
     </div>

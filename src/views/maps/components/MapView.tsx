@@ -53,7 +53,7 @@ const MapCenterUpdater = ({
 const WeatherEffectsController = () => {
   const map = useMap();
   const [currentZoom, setCurrentZoom] = useState(map.getZoom());
-
+  const ClimaActual = "nublado";
   useEffect(() => {
     const handleZoomEnd = () => {
       setCurrentZoom(map.getZoom());
@@ -79,7 +79,7 @@ const WeatherEffectsController = () => {
         pointerEvents: "none",
       }}
     >
-      {currentZoom > 6 && <WeatherEffects weatherType="nublado" />}
+      {currentZoom > 6 && <WeatherEffects weatherType={ClimaActual} />}
     </div>
   );
 };
