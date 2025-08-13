@@ -12,6 +12,7 @@ interface MapSectionProps {
   temperatura?: number;
   viento?: number;
   precipitacion?: number;
+  fecha?: string;
 }
 
 export const MapSection: React.FC<MapSectionProps> = ({
@@ -23,6 +24,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
   temperatura,
   viento,
   precipitacion,
+  fecha,
 }) => {
   useEffect(() => {
     console.log("MapSection recibió tipoClima:", tipoClima);
@@ -39,6 +41,7 @@ export const MapSection: React.FC<MapSectionProps> = ({
           temperatura={temperatura}
           viento={viento}
           precipitacion={precipitacion}
+          fecha={fecha}
         />
       </div>
     </div>

@@ -48,7 +48,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
               <WiDirectionDownRight className="text-5xl" />
             </div>
             <div className="px-3 py-1 text-nowrap">
-              <small>Dirección del viento</small>
+              <small>Velocidad del viento</small>
               <p className="text-base">{vientoNumber !== undefined ? `${vientoNumber.toFixed(2)} km/h` : 'Sur Este'}</p>
             </div>
           </article>
@@ -88,7 +88,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
               <WiDirectionDownRight className="text-5xl" />
             </div>
             <div className="px-3 py-1 text-nowrap">
-              <small>Dirección del viento</small>
+              <small>Velocidad del viento</small>
               <p className="text-base">{vientoNumber !== undefined ? `${vientoNumber.toFixed(2)} km/h` : 'Sur Este'}</p>
             </div>
           </article>
@@ -128,7 +128,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
               <WiDirectionDownRight className="text-5xl" />
             </div>
             <div className="px-3 py-1 text-nowrap">
-              <small>Dirección del viento</small>
+              <small>Velocidad del viento</small>
               <p className="text-base">{vientoNumber !== undefined ? `${vientoNumber.toFixed(2)} km/h` : 'Sur Este'}</p>
             </div>
           </article>

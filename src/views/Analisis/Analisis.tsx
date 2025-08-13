@@ -22,6 +22,7 @@ export const Analisis = () => {
   const [temperatura, setTemperatura] = useState<number | undefined>(undefined);
   const [viento, setViento] = useState<number | undefined>(undefined);
   const [precipitacion, setPrecipitacion] = useState<number | undefined>(undefined);
+  const [fecha, setFecha] = useState<string | undefined>(undefined);
 
   // Efecto para monitorear cambios en tipoClima
   useEffect(() => {
@@ -89,7 +90,8 @@ export const Analisis = () => {
     setTipoClima,
     setTemperatura,
     setViento,
-    setPrecipitacion
+    setPrecipitacion,
+    setFecha
   );
 
   const { handleTextAudio, textAudio, isLoadingAudio } = useTextAudio();
@@ -163,6 +165,7 @@ export const Analisis = () => {
         temperatura={temperatura}
         viento={viento}
         precipitacion={precipitacion}
+        fecha={fecha}
       />
 
       {/* Panel derecho: Análisis y Chatbox */}

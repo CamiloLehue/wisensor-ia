@@ -10,7 +10,8 @@ export const useSetCoordenadasFromMessages = (
   setTipoClima: Dispatch<SetStateAction<WeatherType>>,
   setTemperatura?: Dispatch<SetStateAction<number | undefined>>,
   setViento?: Dispatch<SetStateAction<number | undefined>>,
-  setPrecipitacion?: Dispatch<SetStateAction<number | undefined>>
+  setPrecipitacion?: Dispatch<SetStateAction<number | undefined>>,
+  setFecha?: Dispatch<SetStateAction<string | undefined>>
 ) => {
   useEffect(() => {
     // Logs para depuración
@@ -89,6 +90,11 @@ export const useSetCoordenadasFromMessages = (
               console.log("Actualizando precipitación a:", ultimoDato.precipitacion);
               setPrecipitacion(ultimoDato.precipitacion);
             }
+            
+            if (setFecha && ultimoDato.fecha !== undefined) {
+              console.log("Actualizando fecha a:", ultimoDato.fecha);
+              setFecha(ultimoDato.fecha);
+            }
             }
           }
         }
@@ -96,5 +102,5 @@ export const useSetCoordenadasFromMessages = (
         console.log("No se encontraron coordenadas en el mensaje");
       }
     }
-  }, [messages, setCoordenadas, setZoomMap, setTipoClima, setTemperatura, setViento, setPrecipitacion]);
+  }, [messages, setCoordenadas, setZoomMap, setTipoClima, setTemperatura, setViento, setPrecipitacion, setFecha]);
 };
