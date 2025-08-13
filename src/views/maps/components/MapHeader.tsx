@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { WiRain, WiDirectionDownRight, WiHumidity, WiCelsius, WiCloudy, WiDaySunny } from 'react-icons/wi';
 
 interface MapHeaderProps {
@@ -8,6 +9,27 @@ interface MapHeaderProps {
 }
 
 const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento, precipitacion }) => {
+  // Add a debug element to show if the component is rendering at all
+  console.log('MapHeader rendering with', { weatherType, temperatura, viento, precipitacion });
+  
+  // Force conversion to numbers to ensure proper display
+  const tempNumber = temperatura !== undefined ? Number(temperatura) : undefined;
+  const vientoNumber = viento !== undefined ? Number(viento) : undefined;
+  const precipNumber = precipitacion !== undefined ? Number(precipitacion) : undefined;
+  // Log cuando cambian los valores
+  useEffect(() => {
+    console.log('MapHeader - PROPS RAW:', { weatherType, temperatura, viento, precipitacion });
+    console.log('MapHeader - Datos climáticos recibidos:', { 
+      weatherType, 
+      temperatura: temperatura !== undefined ? temperatura : 'undefined', 
+      viento: viento !== undefined ? viento : 'undefined', 
+      precipitacion: precipitacion !== undefined ? precipitacion : 'undefined',
+      typeOfTemperatura: typeof temperatura,
+      typeOfViento: typeof viento,
+      typeOfPrecipitacion: typeof precipitacion
+    });
+  }, [weatherType, temperatura, viento, precipitacion]);
+  
   return (
     <div className="absolute right-2 top-3 w-full h-15">
       {weatherType === "lluvioso" && (
@@ -27,7 +49,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Dirección del viento</small>
-              <p className="text-base">{viento ? `${viento} km/h` : 'Sur Este'}</p>
+              <p className="text-base">{vientoNumber !== undefined ? `${vientoNumber.toFixed(2)} km/h` : 'Sur Este'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -36,7 +58,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Precipitación</small>
-              <p className="text-base">{precipitacion ? `${precipitacion} mm` : 'Moderada'}</p>
+              <p className="text-base">{precipNumber !== undefined ? `${precipNumber.toFixed(2)} mm` : 'Moderada'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -45,7 +67,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Temperatura</small>
-              <p className="text-base">{temperatura ? `${temperatura} °C` : '7 °C'}</p>
+              <p className="text-base">{tempNumber !== undefined ? `${tempNumber.toFixed(2)} °C` : '7 °C'}</p>
             </div>
           </article>
         </div>
@@ -67,7 +89,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Dirección del viento</small>
-              <p className="text-base">{viento ? `${viento} km/h` : 'Sur Este'}</p>
+              <p className="text-base">{vientoNumber !== undefined ? `${vientoNumber.toFixed(2)} km/h` : 'Sur Este'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -76,7 +98,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Precipitación</small>
-              <p className="text-base">{precipitacion ? `${precipitacion} mm` : 'Baja'}</p>
+              <p className="text-base">{precipNumber !== undefined ? `${precipNumber.toFixed(2)} mm` : 'Baja'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -85,7 +107,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Temperatura</small>
-              <p className="text-base">{temperatura ? `${temperatura} °C` : '7 °C'}</p>
+              <p className="text-base">{tempNumber !== undefined ? `${tempNumber.toFixed(2)} °C` : '7 °C'}</p>
             </div>
           </article>
         </div>
@@ -107,7 +129,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Dirección del viento</small>
-              <p className="text-base">{viento ? `${viento} km/h` : 'Sur Este'}</p>
+              <p className="text-base">{vientoNumber !== undefined ? `${vientoNumber.toFixed(2)} km/h` : 'Sur Este'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -116,7 +138,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Precipitación</small>
-              <p className="text-base">{precipitacion ? `${precipitacion} mm` : '0 mm'}</p>
+              <p className="text-base">{precipNumber !== undefined ? `${precipNumber.toFixed(2)} mm` : '0 mm'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -125,7 +147,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Temperatura</small>
-              <p className="text-base">{temperatura ? `${temperatura} °C` : '7 °C'}</p>
+              <p className="text-base">{tempNumber !== undefined ? `${tempNumber.toFixed(2)} °C` : '7 °C'}</p>
             </div>
           </article>
         </div>

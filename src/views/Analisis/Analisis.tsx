@@ -30,7 +30,11 @@ export const Analisis = () => {
   
   // Efecto para monitorear cambios en los datos climáticos
   useEffect(() => {
-    console.log("Analisis: datos climáticos actualizados:", { temperatura, viento, precipitacion });
+    console.log("Analisis: datos climáticos actualizados:", {
+      temperatura: temperatura !== undefined ? temperatura : 'undefined',
+      viento: viento !== undefined ? viento : 'undefined', 
+      precipitacion: precipitacion !== undefined ? precipitacion : 'undefined'
+    });
   }, [temperatura, viento, precipitacion]);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);

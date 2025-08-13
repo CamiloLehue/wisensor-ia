@@ -27,6 +27,11 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType, temperatur
   useEffect(() => {
     console.log("WeatherEffects recibió nuevo clima:", weatherType);
   }, [weatherType]);
+  
+  // Log datos climáticos cuando cambian
+  useEffect(() => {
+    console.log("WeatherEffects recibió datos climáticos:", { temperatura, viento, precipitacion });
+  }, [temperatura, viento, precipitacion]);
 
   // Efecto para generar las gotas de lluvia solo cuando el clima es 'lluvioso'
   useEffect(() => {
@@ -73,7 +78,10 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType, temperatur
       className={`relative h-screen w-full overflow-hidden flex items-center justify-center`}
     >
       <div className={`absolute inset-0 ${gradientBackgroundClass}`}></div>
-      <MapHeader weatherType={weatherType} temperatura={temperatura} viento={viento} precipitacion={precipitacion} />
+      {/* Ensure MapHeader has highest z-index to be visible */}
+      <div className="absolute inset-0 z-[9999]">
+        <MapHeader weatherType={weatherType} temperatura={temperatura} viento={viento} precipitacion={precipitacion} />
+      </div>
 
       {weatherType === "lluvioso" && (
         <div className="absolute inset-0 z-10 pointer-events-none">
@@ -173,8 +181,8 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType, temperatur
         </>
       )}
 
-      {/* Contenedor del indicador de clima */}
-      <MapHeader weatherType={weatherType} />
+      {/* Contenedor del indicador de clima (ya está incluido arriba) */}
+      {/* <MapHeader weatherType={weatherType} /> */}
       {weatherType === "nublado" && (
         <div className="absolute z-[9999] left-0 top-19 px-5 w-full h-10 bg-gradient-to-br from-red-500/50  to-rose-500/60">
           <div className="  flex justify-start items-center  w-full gap-4 h-full  mx-auto">

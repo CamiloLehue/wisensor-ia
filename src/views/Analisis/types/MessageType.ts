@@ -39,7 +39,7 @@ export interface DebugContext {
   };
   coordendadas?: Coordenadas;
   centros: Array<CentroClass[] | CentroClass>;
-  datos_centro: Array<DatosCentroClass[] | DatosCentroClass>;
+  datos_centros: Array<DatosCentroClass[] | DatosCentroClass>;
 }
 export interface CentroClass {
     center_id:   number;

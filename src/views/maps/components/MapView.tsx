@@ -115,6 +115,17 @@ const MapView = ({
   useEffect(() => {
     console.log('MapView - Clima recibido:', tipoClima);
   }, [tipoClima]);
+  
+  useEffect(() => {
+    console.log('MapView - Datos climáticos recibidos:', {
+      temperatura: temperatura !== undefined ? temperatura : 'undefined',
+      viento: viento !== undefined ? viento : 'undefined', 
+      precipitacion: precipitacion !== undefined ? precipitacion : 'undefined',
+      typeOfTemperatura: typeof temperatura,
+      typeOfViento: typeof viento,
+      typeOfPrecipitacion: typeof precipitacion
+    });
+  }, [temperatura, viento, precipitacion]);
 
   return (
     <div
