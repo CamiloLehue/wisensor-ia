@@ -1,5 +1,6 @@
 import React from "react";
 import { Send, Mic, MicOff } from "lucide-react";
+import GrabandoLoad from "../../../components/GrabandoLoad";
 
 interface ChatInputProps {
   question: string;
@@ -20,12 +21,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   stopRecording,
   handleAskQuestion,
 }) => {
-  
-
   return (
-    <div
-      className="absolute input bottom-10 w-[94.5%] left-[50%] -translate-x-1/2 flex items-end gap-2 mt-2 p-[1px] bg-gradient-to-br from-blue-900 to-amber-600 rounded-2xl"
-    >
+    <div className="absolute z-[9999]  bottom-10 w-[94.5%] left-[50%] -translate-x-1/2 flex items-end gap-2 mt-2 p-[1.2px] bg-gradient-to-br from-blue-900 to-amber-600 rounded-2xl">
       <div className="w-full flex gap-2 bg-gray-900 p-0.5 rounded-2xl">
         <textarea
           rows={1}
@@ -35,8 +32,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           onChange={(e) => {
             setQuestion(e.target.value);
             // Ajustar altura automáticamente
-            e.target.style.height = 'auto';
-            e.target.style.height = e.target.scrollHeight + 'px';
+            e.target.style.height = "auto";
+            e.target.style.height = e.target.scrollHeight + "px";
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -59,6 +56,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             {isRecording ? <MicOff size={14} /> : <Mic size={14} />}
           </button>
         </div>
+        {isRecording && (
+          <div
+            onClick={isRecording ? stopRecording : startRecording}
+            className="absolute backdrop-blur-xs cursor-pointer w-full h-[500px] bottom-0 transition-all duration-700   flex flex-col gap-10 justify-center items-center"
+          >
+            <GrabandoLoad  />
+            <small className="bg-red-500 px-4 rounded-full">Parar grabación</small>
+          </div>
+        )}
         <div className="flex justify-center items-center pe-2.5 ">
           <button
             onClick={handleAskQuestion}
@@ -93,6 +99,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           </button>
         </div>
       </div>
+
     </div>
   );
 };

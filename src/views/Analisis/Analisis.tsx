@@ -19,11 +19,24 @@ export const Analisis = () => {
 
   const [tipoClima, setTipoClima] = useState<WeatherType>("soleado");
   const [zoomMap, setZoomMap] = useState(9);
+  const [temperatura, setTemperatura] = useState<number | undefined>(undefined);
+  const [viento, setViento] = useState<number | undefined>(undefined);
+  const [precipitacion, setPrecipitacion] = useState<number | undefined>(undefined);
+  const [fecha, setFecha] = useState<string | undefined>(undefined);
 
   // Efecto para monitorear cambios en tipoClima
   useEffect(() => {
     console.log("Analisis: tipoClima cambió a:", tipoClima);
   }, [tipoClima]);
+  
+  // Efecto para monitorear cambios en los datos climáticos
+  useEffect(() => {
+    console.log("Analisis: datos climáticos actualizados:", {
+      temperatura: temperatura !== undefined ? temperatura : 'undefined',
+      viento: viento !== undefined ? viento : 'undefined', 
+      precipitacion: precipitacion !== undefined ? precipitacion : 'undefined'
+    });
+  }, [temperatura, viento, precipitacion]);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -74,7 +87,11 @@ export const Analisis = () => {
     messages as MessagesType[],
     setCoordenadas,
     setZoomMap,
-    setTipoClima
+    setTipoClima,
+    setTemperatura,
+    setViento,
+    setPrecipitacion,
+    setFecha
   );
 
   const { handleTextAudio, textAudio, isLoadingAudio } = useTextAudio();
@@ -145,6 +162,10 @@ export const Analisis = () => {
         coordinates={coordenadas}
         zoom={zoomMap}
         tipoClima={tipoClima}
+        temperatura={temperatura}
+        viento={viento}
+        precipitacion={precipitacion}
+        fecha={fecha}
       />
 
       {/* Panel derecho: Análisis y Chatbox */}

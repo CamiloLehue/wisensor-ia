@@ -45,8 +45,13 @@ export function useChatIA({ onWeatherChange }: UseChatIAProps = {}) {
         contexto_previo: messages,
       });
 
+      // Log de la respuesta completa para depuración
+      console.log("Respuesta del servidor:", response);
+      console.log("Debug context:", response.debug_context);
+      
       // Si hay un debug_context con clima, actualizamos el estado del clima
       if (response.debug_context?.coordendadas?.clima && onWeatherChange) {
+        console.log("Clima detectado en la respuesta:", response.debug_context.coordendadas.clima);
         onWeatherChange(response.debug_context.coordendadas.clima as WeatherType);
       }
 

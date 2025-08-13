@@ -12,10 +12,18 @@ interface MapViewProps {
   coordinates?: [number, number];
   zoom?: number;
   tipoClima?: WeatherType;
+  temperatura?: number;
+  viento?: number;
+  precipitacion?: number;
+  fecha?: string;
 }
 
 interface WeatherEffectsControllerProps {
   weatherType: WeatherType;
+  temperatura?: number;
+  viento?: number;
+  precipitacion?: number;
+  fecha?: string;
 }
 
 const ResizeMap = ({ height }: { height: string }) => {
@@ -55,7 +63,7 @@ const MapCenterUpdater = ({
   return null;
 };
 
-const WeatherEffectsController: React.FC<WeatherEffectsControllerProps> = ({ weatherType }) => {
+const WeatherEffectsController: React.FC<WeatherEffectsControllerProps> = ({ weatherType, temperatura, viento, precipitacion, fecha }) => {
   const map = useMap();
   const [currentZoom, setCurrentZoom] = useState(map.getZoom());
   
@@ -88,7 +96,7 @@ const WeatherEffectsController: React.FC<WeatherEffectsControllerProps> = ({ wea
         pointerEvents: "none",
       }}
     >
-      {currentZoom > 6 && <WeatherEffects weatherType={weatherType} />}
+      {currentZoom > 6 && <WeatherEffects weatherType={weatherType} temperatura={temperatura} viento={viento} precipitacion={precipitacion} fecha={fecha} />}
     </div>
   );
 };
@@ -99,13 +107,30 @@ const MapView = ({
   onFlyEnd,
   coordinates,
   zoom = 8,
-  tipoClima = "soleado"
+  tipoClima = "soleado",
+  temperatura,
+  viento,
+  precipitacion,
+  fecha
 }: MapViewProps) => {
   const { BaseLayer, Overlay } = LayersControl;
   
   useEffect(() => {
     console.log('MapView - Clima recibido:', tipoClima);
   }, [tipoClima]);
+  
+  useEffect(() => {
+    console.log('MapView - Datos climáticos recibidos:', {
+      temperatura: temperatura !== undefined ? temperatura : 'undefined',
+      viento: viento !== undefined ? viento : 'undefined', 
+      precipitacion: precipitacion !== undefined ? precipitacion : 'undefined',
+      fecha: fecha !== undefined ? fecha : 'undefined',
+      typeOfTemperatura: typeof temperatura,
+      typeOfViento: typeof viento,
+      typeOfPrecipitacion: typeof precipitacion,
+      typeOfFecha: typeof fecha
+    });
+  }, [temperatura, viento, precipitacion, fecha]);
 
   return (
     <div
@@ -148,7 +173,7 @@ const MapView = ({
             zoom={zoom}
           />
         </LayersControl>
-        <WeatherEffectsController weatherType={tipoClima} />
+        <WeatherEffectsController weatherType={tipoClima} temperatura={temperatura} viento={viento} precipitacion={precipitacion} fecha={fecha} />
       </MapContainer>
 
       <div className="absolute bottom-5 right-2 z-[999] flex flex-col gap-2 items-end">
