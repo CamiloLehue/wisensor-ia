@@ -33,9 +33,10 @@ const GeofencePolygon: React.FC<GeofencePolygonProps> = ({
         positions={coordinates}
         pathOptions={{
           color,
-          fillOpacity: 0.4,
+          fillOpacity: 0.1,
           fill: true,
           fillColor: color,
+          weight: 0.5,
         }}
         eventHandlers={{
           click: onClick,

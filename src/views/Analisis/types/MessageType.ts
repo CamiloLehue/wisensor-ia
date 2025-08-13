@@ -38,6 +38,26 @@ export interface DebugContext {
     center_name: string;
   };
   coordendadas?: Coordenadas;
+  centros: Array<CentroClass[] | CentroClass>;
+  datos_centro: Array<DatosCentroClass[] | DatosCentroClass>;
+}
+export interface CentroClass {
+    center_id:   number;
+    center_name: string;
+}
+
+
+export interface DatosCentroClass {
+    count:              number;
+    data:               Datum[];
+    default_limit_used: boolean;
+}
+
+export interface Datum {
+    fecha:              Date;
+    temperatura_maxima: number;
+    viento:             number;
+    precipitacion:      number;
 }
 
 export interface QuestionRequest {
@@ -46,8 +66,6 @@ export interface QuestionRequest {
   contexto_previo?: null | unknown;
   debug_context?: DebugContext;
 }
-
-
 
 export interface QuestionResponse {
   answer: string;
@@ -61,16 +79,14 @@ export interface QuestionResponse {
   debug_context?: DebugContext;
 }
 
-
 export interface QuestionRequestAudio {
   user_question: string;
-  text:string;
+  text: string;
 }
 
 export interface QuestionResponseAudio {
   audio_base64: string;
 }
-
 
 export interface Coordendadas {
   id: string;
@@ -78,7 +94,7 @@ export interface Coordendadas {
   coordinates: Array<number[]>;
   color: string;
   zoom: number;
-  clima?:string;
+  clima?: string;
 }
 
 export interface InformePirquen20 {

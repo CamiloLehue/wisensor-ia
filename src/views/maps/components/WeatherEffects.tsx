@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  WiCelsius,
-  WiCloudy,
-  WiDaySunny,
-  WiDirectionDownRight,
-  WiHumidity,
-  WiRain,
-  WiTime3,
-} from "react-icons/wi";
+import { WiTime3 } from "react-icons/wi";
+import MapHeader from "./MapHeader";
 import { WeatherType } from "../../zones/types/Zone";
 
 interface WeatherEffectsProps {
@@ -60,7 +53,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
 
   const gradientBackgroundClass =
     weatherType === "soleado"
-      ? "bg-gradient-to-b from-blue-500/70 to-yellow-200/20 "
+      ? "bg-gradient-to-b from-amber-500/10 to-blue-500/70 "
       : weatherType === "nublado"
       ? "bg-gradient-to-b via-gray-100/20 from-gray-800/70 to-gray-600/20 "
       : "bg-gradient-to-b from-blue-500/40 to-gray-900/40 ";
@@ -101,14 +94,14 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
       {weatherType === "soleado" && (
         <>
           {/* Sol central */}
-          <div className="absolute top-27 left-4 w-15 h-15 bg-gradient-to-bl from-amber-300 to-amber-500 rounded-full shadow-lg shadow-amber-600/50 z-20"></div>
+          <div className="absolute top-27 left-10 w-10 h-10 bg-gradient-to-bl from-amber-300 to-amber-500 rounded-full shadow-lg shadow-amber-600/50 z-20"></div>
 
           {/* Resplandor base */}
-          <div className="absolute top-24 -left-2 w-28 h-28 rounded-full bg-yellow-500/30 blur-md pulse-glow z-10"></div>
+          <div className="absolute top-25 left-7 w-14 h-14 rounded-full bg-yellow-500/30 blur-md pulse-glow z-10"></div>
 
           {/* Resplandor exterior con animación */}
-          <div className="absolute -top-17  -left-32 w-80 h-80 rounded-full bg-gradient-to-r from-amber-400 to-transparent sun-glow z-[5]"></div>
-          <div className="absolute -top-17  -left-32 w-80 h-80 rounded-full bg-gradient-to-r from-amber-400 to-transparent sun-glow2 z-[5]"></div>
+          <div className="absolute -top-17 -left-27 w-80 h-80 rounded-full bg-gradient-to-r from-amber-400/50 to-transparent sun-glow z-[5]"></div>
+          <div className="absolute -top-17 -left-27 w-80 h-80 rounded-full bg-gradient-to-r from-amber-400/50 to-transparent sun-glow2 z-[5]"></div>
 
           {/* Rayos de sol giratorios */}
           {/* <div className="absolute top-18 -left-4 blur-[2px]  w-32 h-32 sun-rays z-[15]">
@@ -177,128 +170,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
       )}
 
       {/* Contenedor del indicador de clima */}
-      <div className="absolute right-2 top-3 w-full h-15">
-        {weatherType === "lluvioso" && (
-          <div className="bg-gradient-to-br from-white/20 backdrop-blur-lg grid grid-cols-4 border-t shadow-md border-t-white/40 to-gray-200/10 w-[85%] h-full rounded-lg mx-auto">
-            <article className="flex items-center">
-              <div>
-                <WiRain className="text-5xl text-sky-300" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Clima Actual</small>
-                <p className="text-base">Lluvioso</p>
-              </div>
-            </article>
-            <article className="flex items-center">
-              <div>
-                <WiDirectionDownRight className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Dirección del viento</small>
-                <p className="text-base">Sur Este</p>
-              </div>
-            </article>
-            <article className="flex items-center">
-              <div>
-                <WiHumidity className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Humedad</small>
-                <p className="text-base">Sur Este</p>
-              </div>
-            </article>
-            <article className="flex items-center">
-              <div>
-                <WiCelsius className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Temperatura</small>
-                <p className="text-base">7 °C</p>
-              </div>
-            </article>
-          </div>
-        )}
-        {weatherType === "nublado" && (
-          <div className="bg-gradient-to-br from-white/20 backdrop-blur-lg grid grid-cols-4 border-t shadow-md border-t-white/40 to-gray-200/10 w-[85%] h-full rounded-lg mx-auto">
-            <article className="flex items-center">
-              <div>
-                <WiCloudy className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Clima Actual</small>
-                <p className="text-base">Parcialmente Nublado</p>
-              </div>
-            </article>
-            <article className="flex items-center">
-              <div>
-                <WiDirectionDownRight className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Dirección del viento</small>
-                <p className="text-base">Sur Este</p>
-              </div>
-            </article>
-            <article className="flex items-center">
-              <div>
-                <WiHumidity className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Humedad</small>
-                <p className="text-base">Sur Este</p>
-              </div>
-            </article>
-            <article className="flex items-center">
-              <div>
-                <WiCelsius className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Temperatura</small>
-                <p className="text-base">7 °C</p>
-              </div>
-            </article>
-          </div>
-        )}
-        {weatherType === "soleado" && (
-          <div className="bg-gradient-to-br from-white/20 backdrop-blur-lg grid grid-cols-4 border-t shadow-md border-t-white/40 to-gray-200/10 w-[85%] h-full rounded-lg mx-auto">
-            <article className="flex items-center">
-              <div>
-                <WiDaySunny className="text-5xl text-amber-300" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Clima Actual</small>
-                <p className="text-base">Soleado</p>
-              </div>
-            </article>
-            <article className="flex items-center">
-              <div>
-                <WiDirectionDownRight className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Dirección del viento</small>
-                <p className="text-base">Sur Este</p>
-              </div>
-            </article>
-            <article className="flex items-center">
-              <div>
-                <WiHumidity className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Humedad</small>
-                <p className="text-base">Sur Este</p>
-              </div>
-            </article>
-            <article className="flex items-center">
-              <div>
-                <WiCelsius className="text-5xl" />
-              </div>
-              <div className="px-3 py-1 text-nowrap">
-                <small>Temperatura</small>
-                <p className="text-base">7 °C</p>
-              </div>
-            </article>
-          </div>
-        )}
-      </div>
+      <MapHeader weatherType={weatherType} />
       {weatherType === "nublado" && (
         <div className="absolute z-[9999] left-0 top-19 px-5 w-full h-10 bg-gradient-to-br from-red-500/50  to-rose-500/60">
           <div className="  flex justify-start items-center  w-full gap-4 h-full  mx-auto">
@@ -394,7 +266,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
           }
 
           .sun-glow {
-            animation: sunGlow 10s ease-in-out infinite  forwards;
+            animation: sunGlow 10s ease-in-out infinite alternate forwards;
           }
 
           .sun-glow2 {
@@ -403,7 +275,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
           }
 
           .sun-rays {
-            animation: sunRays 20s linear infinite;
+            animation: sunRays 20s linear infinite ;
           }
 
           .pulse-glow {
@@ -416,3 +288,5 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
 };
 
 export default WeatherEffects;
+
+// MapHeader component moved to a separate file
