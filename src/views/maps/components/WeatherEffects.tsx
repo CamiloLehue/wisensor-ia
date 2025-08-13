@@ -19,7 +19,13 @@ interface Raindrop {
   size: number; // Tamaño de la gota en píxeles
 }
 
-const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType, temperatura, viento, precipitacion, fecha }) => {
+const WeatherEffects: React.FC<WeatherEffectsProps> = ({
+  weatherType,
+  temperatura,
+  viento,
+  precipitacion,
+  fecha,
+}) => {
   // Estado para almacenar las propiedades de las gotas de lluvia (solo relevantes para 'lluvioso')
   const [raindrops, setRaindrops] = useState<Raindrop[]>([]);
   // Número total de gotas de lluvia a renderizar
@@ -28,10 +34,15 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType, temperatur
   useEffect(() => {
     console.log("WeatherEffects recibió nuevo clima:", weatherType);
   }, [weatherType]);
-  
+
   // Log datos climáticos cuando cambian
   useEffect(() => {
-    console.log("WeatherEffects recibió datos climáticos:", { temperatura, viento, precipitacion, fecha });
+    console.log("WeatherEffects recibió datos climáticos:", {
+      temperatura,
+      viento,
+      precipitacion,
+      fecha,
+    });
   }, [temperatura, viento, precipitacion, fecha]);
 
   // Efecto para generar las gotas de lluvia solo cuando el clima es 'lluvioso'
@@ -81,7 +92,12 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType, temperatur
       <div className={`absolute inset-0 ${gradientBackgroundClass}`}></div>
       {/* Ensure MapHeader has highest z-index to be visible */}
       <div className="absolute inset-0 z-[9999]">
-        <MapHeader weatherType={weatherType} temperatura={temperatura} viento={viento} precipitacion={precipitacion} />
+        <MapHeader
+          weatherType={weatherType}
+          temperatura={temperatura}
+          viento={viento}
+          precipitacion={precipitacion}
+        />
       </div>
 
       {weatherType === "lluvioso" && (
@@ -184,27 +200,24 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType, temperatur
 
       {/* Contenedor del indicador de clima (ya está incluido arriba) */}
       {/* <MapHeader weatherType={weatherType} /> */}
-      {weatherType === "nublado"  || weatherType === "soleado" || weatherType === "lluvioso" &&  (
-        <div className="absolute z-[9999] left-0 top-19 px-5 w-full h-10 bg-gradient-to-br from-red-500/50  to-rose-500/60">
+      {(weatherType === "nublado" ||
+        weatherType === "soleado" ||
+        weatherType === "lluvioso") && (
+        <div className="absolute z-[9999] left-9 top-17 px-5 w-full h-10 ">
           <div className="  flex justify-start items-center  w-full gap-4 h-full  mx-auto">
             <article className="flex justify-center items-center gap-1 bg-red-500 border-t shadow-md border-t-red-400 rounded-lg px-4 py-1">
               <WiTime3 size={17} />
               <p className="text-nowrap">
                 Fecha Histórica:{" "}
                 <span className="text-lime-200">
-                  {fecha ? new Date(fecha).toLocaleDateString('es-ES', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                  }) : '12 Julio 2025'}
+                  {fecha
+                    ? new Date(fecha).toLocaleDateString("es-ES", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "12 Julio 2025"}
                 </span>
-              </p>
-            </article>
-            <article className="flex justify-center items-center gap-1 bg-red-500 border-t shadow-md border-t-red-400 rounded-lg px-4 py-1">
-              <WiTime3 size={17} />
-              <p className="text-nowrap">
-                Centro seleccionado:{" "}
-                <span className="text-lime-200">Pirquen</span>
               </p>
             </article>
           </div>
