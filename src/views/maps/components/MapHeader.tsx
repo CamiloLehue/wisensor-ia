@@ -2,9 +2,12 @@ import { WiRain, WiDirectionDownRight, WiHumidity, WiCelsius, WiCloudy, WiDaySun
 
 interface MapHeaderProps {
   weatherType: 'lluvioso' | 'nublado' | 'soleado';
+  temperatura?: number;
+  viento?: number;
+  precipitacion?: number;
 }
 
-const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
+const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento, precipitacion }) => {
   return (
     <div className="absolute right-2 top-3 w-full h-15">
       {weatherType === "lluvioso" && (
@@ -24,7 +27,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Dirección del viento</small>
-              <p className="text-base">Sur Este</p>
+              <p className="text-base">{viento ? `${viento} km/h` : 'Sur Este'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -32,8 +35,8 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
               <WiHumidity className="text-5xl" />
             </div>
             <div className="px-3 py-1 text-nowrap">
-              <small>Humedad</small>
-              <p className="text-base">Sur Este</p>
+              <small>Precipitación</small>
+              <p className="text-base">{precipitacion ? `${precipitacion} mm` : 'Moderada'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -42,7 +45,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Temperatura</small>
-              <p className="text-base">7 °C</p>
+              <p className="text-base">{temperatura ? `${temperatura} °C` : '7 °C'}</p>
             </div>
           </article>
         </div>
@@ -64,7 +67,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Dirección del viento</small>
-              <p className="text-base">Sur Este</p>
+              <p className="text-base">{viento ? `${viento} km/h` : 'Sur Este'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -72,8 +75,8 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
               <WiHumidity className="text-5xl" />
             </div>
             <div className="px-3 py-1 text-nowrap">
-              <small>Humedad</small>
-              <p className="text-base">Sur Este</p>
+              <small>Precipitación</small>
+              <p className="text-base">{precipitacion ? `${precipitacion} mm` : 'Baja'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -82,7 +85,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Temperatura</small>
-              <p className="text-base">7 °C</p>
+              <p className="text-base">{temperatura ? `${temperatura} °C` : '7 °C'}</p>
             </div>
           </article>
         </div>
@@ -104,7 +107,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Dirección del viento</small>
-              <p className="text-base">Sur Este</p>
+              <p className="text-base">{viento ? `${viento} km/h` : 'Sur Este'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -112,8 +115,8 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
               <WiHumidity className="text-5xl" />
             </div>
             <div className="px-3 py-1 text-nowrap">
-              <small>Humedad</small>
-              <p className="text-base">Sur Este</p>
+              <small>Precipitación</small>
+              <p className="text-base">{precipitacion ? `${precipitacion} mm` : '0 mm'}</p>
             </div>
           </article>
           <article className="flex items-center">
@@ -122,7 +125,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType }) => {
             </div>
             <div className="px-3 py-1 text-nowrap">
               <small>Temperatura</small>
-              <p className="text-base">7 °C</p>
+              <p className="text-base">{temperatura ? `${temperatura} °C` : '7 °C'}</p>
             </div>
           </article>
         </div>

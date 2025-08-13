@@ -12,10 +12,16 @@ interface MapViewProps {
   coordinates?: [number, number];
   zoom?: number;
   tipoClima?: WeatherType;
+  temperatura?: number;
+  viento?: number;
+  precipitacion?: number;
 }
 
 interface WeatherEffectsControllerProps {
   weatherType: WeatherType;
+  temperatura?: number;
+  viento?: number;
+  precipitacion?: number;
 }
 
 const ResizeMap = ({ height }: { height: string }) => {
@@ -55,7 +61,7 @@ const MapCenterUpdater = ({
   return null;
 };
 
-const WeatherEffectsController: React.FC<WeatherEffectsControllerProps> = ({ weatherType }) => {
+const WeatherEffectsController: React.FC<WeatherEffectsControllerProps> = ({ weatherType, temperatura, viento, precipitacion }) => {
   const map = useMap();
   const [currentZoom, setCurrentZoom] = useState(map.getZoom());
   
@@ -88,7 +94,7 @@ const WeatherEffectsController: React.FC<WeatherEffectsControllerProps> = ({ wea
         pointerEvents: "none",
       }}
     >
-      {currentZoom > 6 && <WeatherEffects weatherType={weatherType} />}
+      {currentZoom > 6 && <WeatherEffects weatherType={weatherType} temperatura={temperatura} viento={viento} precipitacion={precipitacion} />}
     </div>
   );
 };
@@ -99,7 +105,10 @@ const MapView = ({
   onFlyEnd,
   coordinates,
   zoom = 8,
-  tipoClima = "soleado"
+  tipoClima = "soleado",
+  temperatura,
+  viento,
+  precipitacion
 }: MapViewProps) => {
   const { BaseLayer, Overlay } = LayersControl;
   
@@ -148,7 +157,7 @@ const MapView = ({
             zoom={zoom}
           />
         </LayersControl>
-        <WeatherEffectsController weatherType={tipoClima} />
+        <WeatherEffectsController weatherType={tipoClima} temperatura={temperatura} viento={viento} precipitacion={precipitacion} />
       </MapContainer>
 
       <div className="absolute bottom-5 right-2 z-[999] flex flex-col gap-2 items-end">

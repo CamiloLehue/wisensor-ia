@@ -5,6 +5,9 @@ import { WeatherType } from "../../zones/types/Zone";
 
 interface WeatherEffectsProps {
   weatherType: WeatherType; // La prop que determinará el clima a mostrar
+  temperatura?: number;
+  viento?: number;
+  precipitacion?: number;
 }
 
 interface Raindrop {
@@ -15,7 +18,7 @@ interface Raindrop {
   size: number; // Tamaño de la gota en píxeles
 }
 
-const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
+const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType, temperatura, viento, precipitacion }) => {
   // Estado para almacenar las propiedades de las gotas de lluvia (solo relevantes para 'lluvioso')
   const [raindrops, setRaindrops] = useState<Raindrop[]>([]);
   // Número total de gotas de lluvia a renderizar
@@ -70,6 +73,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({ weatherType }) => {
       className={`relative h-screen w-full overflow-hidden flex items-center justify-center`}
     >
       <div className={`absolute inset-0 ${gradientBackgroundClass}`}></div>
+      <MapHeader weatherType={weatherType} temperatura={temperatura} viento={viento} precipitacion={precipitacion} />
 
       {weatherType === "lluvioso" && (
         <div className="absolute inset-0 z-10 pointer-events-none">
