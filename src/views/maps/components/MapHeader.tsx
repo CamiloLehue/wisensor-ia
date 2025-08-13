@@ -31,6 +31,7 @@ const MapHeader: React.FC<MapHeaderProps> = ({ weatherType, temperatura, viento,
   }, [weatherType, temperatura, viento, precipitacion]);
   
   return (
+    temperatura !== undefined  &&
     <div className="absolute right-2 top-3 w-full h-15">
       {weatherType === "lluvioso" && (
         <div className="bg-gradient-to-br from-white/20 backdrop-blur-lg grid grid-cols-4 border-t shadow-md border-t-white/40 to-gray-200/10 w-[85%] h-full rounded-lg mx-auto">

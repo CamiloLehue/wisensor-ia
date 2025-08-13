@@ -200,7 +200,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({
 
       {/* Contenedor del indicador de clima (ya está incluido arriba) */}
       {/* <MapHeader weatherType={weatherType} /> */}
-      {(weatherType === "nublado" ||
+      {fecha && (weatherType === "nublado" ||
         weatherType === "soleado" ||
         weatherType === "lluvioso") && (
         <div className="absolute z-[9999] left-9 top-17 px-5 w-full h-10 ">
