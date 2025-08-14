@@ -20,7 +20,6 @@ interface ChatBoxProps {
   chatContainerRef: React.RefObject<HTMLDivElement | null>;
   currentlyPlayingAudio: string | null;
   isLoadingAudio: boolean;
-  textAudio: string | null;
   audioRef: RefObject<HTMLAudioElement | null>;
   setCurrentlyPlayingAudio: (text: string | null) => void;
   handlePlayAudioFunction: (text: string, autoPlay: boolean) => void;
@@ -41,7 +40,6 @@ export const ChatBox: React.FC<ChatBoxProps> = ({
   chatContainerRef,
   currentlyPlayingAudio,
   isLoadingAudio,
-  textAudio,
   audioRef,
   setCurrentlyPlayingAudio,
   handlePlayAudioFunction,
@@ -63,7 +61,6 @@ export const ChatBox: React.FC<ChatBoxProps> = ({
               chatContainerRef={chatContainerRef}
               currentlyPlayingAudio={currentlyPlayingAudio}
               isLoadingAudio={isLoadingAudio}
-              textAudio={textAudio}
               audioRef={audioRef}
               setCurrentlyPlayingAudio={setCurrentlyPlayingAudio}
               handlePlayAudioFunction={handlePlayAudioFunction}

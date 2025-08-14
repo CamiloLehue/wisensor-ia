@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSetCoordenadasFromMessages } from "../Analisis/hooks/useSetCoordenadasFromMessages.js";
 import { useChatIA } from "./hooks/useChatIA";
 import { WeatherType } from "../zones/types/Zone";
@@ -66,15 +66,11 @@ export const Analisis = () => {
     setZoomMap(11);
   };
 
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-  const { isRecording, startRecording, stopRecording, audioRef } =
+  const { isRecording, startRecording, stopRecording } =
     useAudioRecorder(setQuestion, setAnswer);
+
+  // Separate ref for audio playback
+  const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
 
   useSetCoordenadasFromMessages(
     messages as MessagesType[],
@@ -87,20 +83,30 @@ export const Analisis = () => {
     setFecha
   );
 
-  const { handleTextAudio, textAudio, isLoadingAudio } = useTextAudio();
+  const { handleTextAudio, isLoadingAudio } = useTextAudio();
+  // Cache maps text -> object URL for audio
   const audioCache = useRef<Map<string, string>>(new Map());
+  const currentlyPlayingRef = useRef<string | null>(null);
 
-  const handlePlayAudioFunction = async (text: string, autoPlay = false) => {
+  // Sync ref with state
+  useEffect(() => {
+    currentlyPlayingRef.current = currentlyPlayingAudio;
+  }, [currentlyPlayingAudio]);
+
+  const handlePlayAudioFunction = useCallback(async (text: string, autoPlay = false) => {
+    console.log("🎬 handlePlayAudioFunction called:", { text, autoPlay });
+    
     // Si ya está en caché, reproducir directamente
     if (audioCache.current.has(text)) {
-      if (audioRef.current) {
-        audioRef.current.src = `data:audio/wav;base64,${audioCache.current.get(
-          text
-        )}`;
-        audioRef.current.currentTime = 0;
+      console.log("💾 Using cached audio for:", text);
+      if (playbackAudioRef.current) {
+        const cachedUrl = audioCache.current.get(text) || "";
+        playbackAudioRef.current.src = cachedUrl;
+        playbackAudioRef.current.currentTime = 0;
         setCurrentlyPlayingAudio(text);
+        console.log("🔊 Audio src set to:", cachedUrl);
         if (autoPlay) {
-          audioRef.current.play();
+          playbackAudioRef.current.play().catch(console.error);
         }
       }
       return;
@@ -108,44 +114,51 @@ export const Analisis = () => {
 
     // Marcar que este audio se está cargando
     setCurrentlyPlayingAudio(text);
+    console.log("⏳ Loading audio for:", text);
 
     try {
-      await handleTextAudio(text);
+      const audioUrl = await handleTextAudio(text);
+      console.log("🎵 Received audio URL:", audioUrl);
+      console.log("🎧 playbackAudioRef.current exists:", !!playbackAudioRef.current);
 
-      if (textAudio && audioRef.current) {
-        // Guardar en caché
-        audioCache.current.set(text, textAudio);
-
-        // Configurar el audio solo si sigue siendo el audio actual que queremos reproducir
-        if (currentlyPlayingAudio === text) {
-          audioRef.current.src = `data:audio/wav;base64,${textAudio}`;
-          audioRef.current.currentTime = 0;
-
-          // Reproducir automáticamente solo si es autoPlay (respuesta del servidor)
-          if (autoPlay) {
-            audioRef.current.play();
-          }
+      if (audioUrl) {
+        if (!playbackAudioRef.current) {
+          console.error("❌ playbackAudioRef.current is null!");
+          return;
         }
+
+        // Guardar en caché
+        audioCache.current.set(text, audioUrl);
+        console.log("💾 Cached audio URL for:", text);
+
+        // Configurar el audio siempre (sin verificar currentlyPlayingRef para debug)
+        console.log("🔍 Setting audio src unconditionally for debug");
+        playbackAudioRef.current.src = audioUrl;
+        playbackAudioRef.current.currentTime = 0;
+        console.log("🔊 Audio src set to URL:", audioUrl);
+
+        // Reproducir automáticamente solo si es autoPlay (respuesta del servidor)
+        if (autoPlay) {
+          console.log("▶️ Auto-playing audio");
+          playbackAudioRef.current.play().catch(console.error);
+        }
+      } else {
+        console.log("❌ No audio URL received");
       }
     } catch (error) {
-      console.error("Error al generar audio:", error);
+      console.error("💥 Error al generar audio:", error);
       setCurrentlyPlayingAudio(null);
     }
-  };
+  }, [handleTextAudio]); // Removed audioRef dependency
 
   useEffect(() => {
-    if (messages.length > 0) {
-      const lastMessage = messages[messages.length - 1];
-      // Solo auto-reproducir si es respuesta del bot y no es el mensaje inicial
-      if (
-        lastMessage.sender === "bot" &&
-        lastMessage.text !== "sin-pregunta" &&
-        lastMessage.text !== "Buscando en WI-DB... Por favor, espera."
-      ) {
-        handlePlayAudioFunction(lastMessage.text, true);
-      }
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Removed auto-play functionality - audio will only play when user clicks the button
   return (
     <div className="flex h-full w-full text-white p-4 gap-4">
       {/* Sección del Mapa */}
@@ -184,8 +197,7 @@ export const Analisis = () => {
               chatContainerRef={chatContainerRef}
               currentlyPlayingAudio={currentlyPlayingAudio}
               isLoadingAudio={isLoadingAudio}
-              textAudio={textAudio}
-              audioRef={audioRef}
+              audioRef={playbackAudioRef}
               setCurrentlyPlayingAudio={setCurrentlyPlayingAudio}
               handlePlayAudioFunction={handlePlayAudioFunction}
             />

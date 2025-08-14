@@ -18,7 +18,6 @@ interface BotMessageProps {
   message: Message;
   currentlyPlayingAudio: string | null;
   isLoadingAudio: boolean;
-  textAudio: string | null;
   audioRef: RefObject<HTMLAudioElement | null>;
   setCurrentlyPlayingAudio: (text: string | null) => void;
   handlePlayAudioFunction: (text: string, autoPlay: boolean) => void;
@@ -28,7 +27,6 @@ export const BotMessage: React.FC<BotMessageProps> = ({
   message,
   currentlyPlayingAudio,
   isLoadingAudio,
-  textAudio,
   audioRef,
   setCurrentlyPlayingAudio,
   handlePlayAudioFunction,
@@ -128,8 +126,21 @@ export const BotMessage: React.FC<BotMessageProps> = ({
           <React.Fragment />
         )}
 
-        {/* Renderizar audio si existe */}
+        {/* Renderizar audio si existe - siempre presente para mantener la ref */}
         <div className="mt-2 flex items-center space-x-1">
+          {/* Audio element - always present but hidden when not needed */}
+          <audio
+            ref={audioRef}
+            controls={currentlyPlayingAudio === message.text && !isLoadingAudio}
+            onEnded={() => setCurrentlyPlayingAudio(null)}
+            onLoadedData={() => console.log("🎵 Audio loaded and ready to play")}
+            onError={(e) => console.error("❌ Audio error:", e)}
+            onCanPlay={() => console.log("✅ Audio can play")}
+            className={`custom-audio ${
+              currentlyPlayingAudio === message.text && !isLoadingAudio ? 'block' : 'hidden'
+            }`}
+          />
+          
           {currentlyPlayingAudio === message.text ? (
             isLoadingAudio ? (
               <button
@@ -158,22 +169,13 @@ export const BotMessage: React.FC<BotMessageProps> = ({
                 </svg>
                 <span className="text-amber-300">Cargando audio...</span>
               </button>
-            ) : (
-              <div className="relative w-full">
-                <div className="absolute -left-8 top-7 w-10 h-10 z-10 bg-[#03080c] "></div>
-                <div className="absolute -right-7 top-7 w-[98%] h-10 z-10 bg-[#03080c] "></div>
-                <audio
-                  ref={audioRef}
-                  src={`data:audio/wav;base64,${textAudio}`}
-                  controls
-                  onEnded={() => setCurrentlyPlayingAudio(null)}
-                  className="custom-audio"
-                />
-              </div>
-            )
+            ) : null
           ) : (
             <button
-              onClick={() => handlePlayAudioFunction(message.text, false)}
+              onClick={() => {
+                console.log("🔘 Audio button clicked for:", message.text);
+                handlePlayAudioFunction(message.text, false);
+              }}
               className="border border-lime-300 rounded-full hover:bg-blue-700 text-white px-3 py-2 text-xs flex items-center space-x-1"
               disabled={isLoadingAudio}
             >

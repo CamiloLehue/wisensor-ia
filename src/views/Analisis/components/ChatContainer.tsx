@@ -9,7 +9,6 @@ interface ChatContainerProps {
   chatContainerRef: React.RefObject<HTMLDivElement | null>;
   currentlyPlayingAudio: string | null;
   isLoadingAudio: boolean;
-  textAudio: string | null;
   audioRef: React.RefObject<HTMLAudioElement | null>;
   setCurrentlyPlayingAudio: (text: string | null) => void;
   handlePlayAudioFunction: (text: string, autoPlay: boolean) => void;
@@ -20,7 +19,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   chatContainerRef,
   currentlyPlayingAudio,
   isLoadingAudio,
-  textAudio,
   audioRef,
   setCurrentlyPlayingAudio,
   handlePlayAudioFunction,
@@ -50,7 +48,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                     message={message}
                     currentlyPlayingAudio={currentlyPlayingAudio}
                     isLoadingAudio={isLoadingAudio}
-                    textAudio={textAudio}
                     audioRef={audioRef}
                     setCurrentlyPlayingAudio={setCurrentlyPlayingAudio}
                     handlePlayAudioFunction={handlePlayAudioFunction}
