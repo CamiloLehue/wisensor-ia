@@ -52,7 +52,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({
         <div className="relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53] p-3 flex flex-col shadow-lg h-full min-h-[280px]">
           <div className="w-[700px] h-[300px] rounded-full transition-all duration-1000 group-hover:w-full group-hover:h-[500px] group-hover:bg-blue-950/50 bg-blue-800 blur-3xl absolute -bottom-70 right-10"></div>
           <div className="w-[500px] h-[300px] rounded-full transition-all duration-1000 group-hover:w-full group-hover:bg-amber-800/20 bg-amber-800 blur-3xl absolute -bottom-70 left-20"></div>
-          <div className="relative w-full h-240 pb-10 flex flex-col">
+          <div className="relative w-full h-200 pb-10 flex flex-col">
             <ChatHeader
               handleToggleInfoModal={handleToggleInfoModal}
               handleClearChat={handleClearChat}

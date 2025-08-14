@@ -26,21 +26,14 @@ export const Analisis = () => {
 
   // Efecto para monitorear cambios en tipoClima
   useEffect(() => {
-    console.log("Analisis: tipoClima cambió a:", tipoClima);
   }, [tipoClima]);
   
   // Efecto para monitorear cambios en los datos climáticos
   useEffect(() => {
-    console.log("Analisis: datos climáticos actualizados:", {
-      temperatura: temperatura !== undefined ? temperatura : 'undefined',
-      viento: viento !== undefined ? viento : 'undefined', 
-      precipitacion: precipitacion !== undefined ? precipitacion : 'undefined'
-    });
   }, [temperatura, viento, precipitacion]);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
-  console.log(setTipoClima);
 
   // Chat IA hook
   const {

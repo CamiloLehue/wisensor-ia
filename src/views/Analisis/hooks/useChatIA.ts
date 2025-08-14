@@ -20,8 +20,6 @@ export function useChatIA({ onWeatherChange }: UseChatIAProps = {}) {
     },
   ]);
 
-  console.log(answer);
-
   const handleAskQuestion = async () => {
     if (!question.trim() || isLoadingResponse) return;
     setIsLoadingResponse(true);
@@ -45,9 +43,6 @@ export function useChatIA({ onWeatherChange }: UseChatIAProps = {}) {
         contexto_previo: messages,
       });
 
-      // Log de la respuesta completa para depuración
-      console.log("Respuesta del servidor:", response);
-      console.log("Debug context:", response.debug_context);
       
       // Si hay un debug_context con clima, actualizamos el estado del clima
       if (response.debug_context?.coordendadas?.clima && onWeatherChange) {
