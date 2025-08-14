@@ -115,22 +115,6 @@ const MapView = ({
 }: MapViewProps) => {
   const { BaseLayer, Overlay } = LayersControl;
   
-  useEffect(() => {
-    console.log('MapView - Clima recibido:', tipoClima);
-  }, [tipoClima]);
-  
-  useEffect(() => {
-    console.log('MapView - Datos climáticos recibidos:', {
-      temperatura: temperatura !== undefined ? temperatura : 'undefined',
-      viento: viento !== undefined ? viento : 'undefined', 
-      precipitacion: precipitacion !== undefined ? precipitacion : 'undefined',
-      fecha: fecha !== undefined ? fecha : 'undefined',
-      typeOfTemperatura: typeof temperatura,
-      typeOfViento: typeof viento,
-      typeOfPrecipitacion: typeof precipitacion,
-      typeOfFecha: typeof fecha
-    });
-  }, [temperatura, viento, precipitacion, fecha]);
 
   return (
     <div

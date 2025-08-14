@@ -20,79 +20,60 @@ export const useSetCoordenadasFromMessages = (
     // Verificar la estructura completa del último mensaje y sus datos climáticos
     if (messages.length > 0) {
       const lastMsg = messages[messages.length - 1];
-      console.log("DEBUG - Estructura completa del último mensaje:", lastMsg);
-      console.log("DEBUG - Clima data:", lastMsg?.debug_context?.datos_centros);
     }
 
     // Verificar si hay mensajes
     if (messages.length > 0) {
       // Obtener el último mensaje
       const lastMessage = messages[messages.length - 1] as MessagesType;
-      console.log("Último mensaje:", lastMessage);
       
-      // Verificar la estructura del debug_context
-      console.log("debug_context:", lastMessage?.debug_context);
-      console.log("coordenadas:", lastMessage?.debug_context?.coordendadas);
       
       // Verificar si el mensaje tiene las coordenadas en debug_context
       if (lastMessage?.debug_context?.coordendadas?.coordinates?.length > 0) {
         // Obtener la primera coordenada del arreglo de coordinates
         const firstCoordinate = lastMessage.debug_context.coordendadas.coordinates[0];
-        console.log("Primera coordenada encontrada:", firstCoordinate);
         const zoom = lastMessage.debug_context.coordendadas.zoom;
         const clima = lastMessage.debug_context.coordendadas.clima as WeatherType;
         
-        console.log("Clima recibido:", clima);
         
         // Extraer lat y lng del primer par de coordenadas y actualizar estado
         const [lat, lng] = firstCoordinate;
-        console.log("Actualizando coordenadas a:", [lat, lng]);
         setCoordenadas([lat, lng]);
         setZoomMap(zoom);
         
         if (clima) {
-          console.log("Actualizando clima a:", clima);
           setTipoClima(clima);
         }
         
         // Extraer datos del clima si existen
-        console.log("Verificando datos_centros:", lastMessage?.debug_context?.datos_centros);
         
         if (lastMessage?.debug_context?.datos_centros?.length > 0) {
-          console.log("datos_centros tiene datos, obteniendo el primero:", lastMessage.debug_context.datos_centros[0]);
           // Intentamos ambas posibles estructuras
           const datosCentroObj = lastMessage.debug_context.datos_centros[0] as any;
           
-          console.log("datosCentro completo:", datosCentroObj);
           
           // Primero intentamos acceder asumiendo que es un objeto DatosCentroClass
           if (datosCentroObj && typeof datosCentroObj === 'object') {
             // Comprobar si hay una propiedad data directa
             const dataArray = datosCentroObj.data || [];
-            console.log("dataArray encontrado:", dataArray);
             
             if (dataArray.length > 0) {
               const ultimoDato = dataArray[0]; // Obtenemos el dato más reciente
               
-              console.log("Datos climáticos encontrados:", ultimoDato);
             
             if (setTemperatura && ultimoDato.temperatura_maxima !== undefined) {
-              console.log("Actualizando temperatura a:", ultimoDato.temperatura_maxima);
               setTemperatura(ultimoDato.temperatura_maxima);
             }
             
             if (setViento && ultimoDato.viento !== undefined) {
-              console.log("Actualizando viento a:", ultimoDato.viento);
               setViento(ultimoDato.viento);
             }
             
             if (setPrecipitacion && ultimoDato.precipitacion !== undefined) {
-              console.log("Actualizando precipitación a:", ultimoDato.precipitacion);
               setPrecipitacion(ultimoDato.precipitacion);
             }
             
             if (setFecha && ultimoDato.fecha !== undefined) {
-              console.log("Actualizando fecha a:", ultimoDato.fecha);
               setFecha(ultimoDato.fecha);
             }
             }
