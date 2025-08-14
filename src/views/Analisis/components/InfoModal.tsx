@@ -91,7 +91,7 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
       {
         <div className="flex  gap-2 items-start justify-center">
           <CardStyles
-            subtitle="Rango de 2025-05-03 a 2025-07-14"
+            subtitle="Rango de 2023-01-01 a 2024-08-01"
             title="Datos Climáticos"
           >
             <div className="mb-2 w-full max-w-[300px] mx-auto">
@@ -121,7 +121,7 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
             </div>
           </CardStyles>
           <CardStyles
-            subtitle="Rango de 2024-09-01 a 2025-06-24"
+            subtitle="Rango de 2023-04-01 a 2024-01-01"
             title=" Sistema de Alimentación"
           >
             <div className="mb-2 w-full max-w-[300px] mx-auto">
@@ -151,7 +151,7 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
             </div>
           </CardStyles>
           <CardStyles
-            subtitle="Rango de 8 informes del 2023 al 2024"
+            subtitle="Rango alimentación clima"
             title="General Ambientales"
           >
             <div className="mb-2 w-full max-w-[300px] mx-auto">
