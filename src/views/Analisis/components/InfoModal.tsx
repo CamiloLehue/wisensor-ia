@@ -1,7 +1,6 @@
 import { X } from "lucide-react";
 
 export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
-
   type InfoModalProps = {
     children?: React.ReactNode;
     title?: string;
@@ -20,7 +19,7 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
     };
 
     return (
-      <div className="relative  cursor-pointer hover:mx-2 transition-all duration-300 bg-gradient-to-b from-[#04040a] to-[#0dcac7] h-160 w-100 rounded-2xl p-[1px] shadow-xl shadow-amber-400/10">
+      <div className="relative z-[9999]  cursor-pointer hover:mx-2 transition-all duration-300 bg-gradient-to-b from-[#04040a] to-[#0dcac7] h-160 w-100 rounded-2xl p-[1px] shadow-xl shadow-amber-400/10">
         <div className="relative bg-[#04090a] opacity-90 overflow-hidden   h-full w-full rounded-2xl">
           <div className="absolute -bottom-20 left-[50%] -translate-x-1/2 h-20 w-50 rounded-full bg-lime-500 blur-3xl opacity-15"></div>
           <div
@@ -55,13 +54,13 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-lg  flex flex-col items-center justify-center gap-2 z-50 p-4">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-lg  flex flex-col items-center justify-center gap-2 z-[99999] p-4">
       <div className="w-full max-w-3xl mx-auto flex flex-col justify-center items-center mb-5 ">
         <p className="text-balance text-center text-gray-200">
           ¡Te damos la bienvenida a la sección de Análisis!
         </p>
         <p className="text-balance text-center text-amber-500 mb-4">
-          (Versión beta) Beta 1.0.2
+          (Versión beta) Beta 1.0.3
         </p>
         <p className="text-balance text-center text-gray-300">
           Actualmente, puedes acceder a información de los centros{"  "}
@@ -110,15 +109,13 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
               </p>
               <ul className="mb-3 space-y-0.5 text-sm text-white">
                 <li className="hover:bg-sky-950 border-s border-s-sky-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  Muestra un gráfico de registros de temperatura del 1 de junio
-                  para Pirquen
+                  Muéstrame los datos de temperatura mensual para los centros
                 </li>
                 <li className="hover:bg-sky-950 border-s border-s-sky-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  ¿Cuál fue la temperatura el 3 de mayo en pirquen?
+                  Que variables puede mostrarme para cada centro de cultivo
                 </li>
                 <li className="hover:bg-sky-950 border-s border-s-sky-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  ¿Me puedes dar un grafico de clima y alimentación para
-                  pirquen?
+                 Puedes mostrarme las temperaturas promedio mensual de los centros de cultivo, para todos los meses del ciclo productivo
                 </li>
               </ul>
             </div>
@@ -142,21 +139,20 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
               </p>
               <ul className="mb-3 space-y-0.5 text-sm text-white">
                 <li className="hover:bg-amber-950 border-s border-s-amber-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  Muestrame datos de alimentación para pirquen
+                  Muéstrame el peso inicial y el peso final de los peces para el centro pirquen
                 </li>
                 <li className="hover:bg-amber-950 border-s border-s-amber-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  Generame un gráfico de alimentación para pirquen
+                  Muéstrame el consumo de alimento agrupado por mes para cada centro de cultivo en kilos
                 </li>
                 <li className="hover:bg-amber-950 border-s border-s-amber-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  Entrégame un análisis de los últimos datos de alimentación de
-                  pirquen
+                 Compara la alimentación de cada centro y dime cuál implementó una mejor estrategia
                 </li>
               </ul>
             </div>
           </CardStyles>
           <CardStyles
             subtitle="Rango de 8 informes del 2023 al 2024"
-            title="Informes Ambientales"
+            title="General Ambientales"
           >
             <div className="mb-2 w-full max-w-[300px] mx-auto">
               <p className="mb-5 text-gray-100 text-center font-bold ">
@@ -173,13 +169,13 @@ export const InfoModal = ({ onClose: onClose }: { onClose: () => void }) => {
               </p>
               <ul className="mb-3 space-y-0.5 text-sm text-white">
                 <li className="hover:bg-lime-950 border-s border-s-lime-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  Muestra el último informe ambiental de Pirquen
+                  Muéstrame la mortalidad de cada centro de cultivo
                 </li>
                 <li className="hover:bg-lime-950 border-s border-s-lime-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  ¿Dame datos del último informe comparativo de pirquen?
+                  Muéstrame la cantidad de peces sembrados en cada centro de cultivo. Pirquen y Polocuhe
                 </li>
                 <li className="hover:bg-lime-950 border-s border-s-lime-400 ps-3 min-h-16 border-b border-neutral-400/40 py-3">
-                  ¿Según el último informe consideras que es un ambiente óptimo para el crecimiento de salmones, en pirquen?
+                  Muéstrame la evolución del peso de los peces mes a mes de Pirquen
                 </li>
               </ul>
             </div>

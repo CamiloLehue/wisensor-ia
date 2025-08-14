@@ -21,7 +21,7 @@ export const WelcomeMessage: React.FC = () => {
         ¡Te damos la bienvenida a la sección de Análisis!
       </p>
       <p className="text-balance text-center text-amber-500 mb-4">
-        (Versión beta) Beta 1.0.2
+        (Versión beta) Beta 1.0.3
       </p>
       <p className="text-balance text-center text-gray-300">
         Actualmente, puedes acceder a información de los centros{"  "}
