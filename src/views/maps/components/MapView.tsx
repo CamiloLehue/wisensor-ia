@@ -5,6 +5,26 @@ import { GeoButtons, GeofenceLayer } from "../../zones";
 import WeatherEffects from "./WeatherEffects";
 import { WeatherType } from "../../zones/types/Zone";
 
+// Componente para rastrear el zoom y pasarlo a GeofenceLayer
+const ZoomAwareGeofenceLayer: React.FC<{ onZoneClick?: (name: string, clima?: WeatherType) => void }> = ({ onZoneClick }) => {
+  const map = useMap();
+  const [currentZoom, setCurrentZoom] = useState(map.getZoom());
+
+  useEffect(() => {
+    const handleZoomEnd = () => {
+      setCurrentZoom(map.getZoom());
+    };
+
+    map.on("zoomend", handleZoomEnd);
+
+    return () => {
+      map.off("zoomend", handleZoomEnd);
+    };
+  }, [map]);
+
+  return <GeofenceLayer onZoneClick={onZoneClick} zoom={currentZoom} />;
+};
+
 interface MapViewProps {
   height?: string;
   handleFlyToZone?: (lat: number, lng: number) => void;
@@ -146,10 +166,10 @@ const MapView = ({
             />
           </BaseLayer>
           <Overlay checked name="Polígonos de Zonas">
-            <GeofenceLayer />
+            <ZoomAwareGeofenceLayer />
           </Overlay>
           <Overlay checked name="Iconos de Zonas">
-            <GeofenceLayer />
+            <ZoomAwareGeofenceLayer />
           </Overlay>
           <GeoButtons
             handleFlyToZone={handleFlyToZone}
