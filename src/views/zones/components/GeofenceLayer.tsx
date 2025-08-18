@@ -8,9 +8,10 @@ import { WeatherType } from "../../../types/Trazabilidad";
 
 interface GeofenceLayerProps {
   onZoneClick?: (name: string, clima?: WeatherType) => void;
+  zoom?: number; // Nivel de zoom del mapa
 }
 
-const GeofenceLayer = ({ onZoneClick }: GeofenceLayerProps) => {
+const GeofenceLayer = ({ onZoneClick, zoom = 10 }: GeofenceLayerProps) => {
   const handleClick = (name: string, clima?: WeatherType) => {
     if (onZoneClick) {
       onZoneClick(name, clima);
@@ -42,6 +43,7 @@ const GeofenceLayer = ({ onZoneClick }: GeofenceLayerProps) => {
                         key={`marker-${zone?.id}`}
                         name={zone.name || "Zona sin nombre"}
                         coordinates={zone.coordinates || []}
+                        zoom={zoom}
                         onClick={() => handleClick(zone.name || "Zona sin nombre", zone.clima as WeatherType)}
                     />
                 ))}

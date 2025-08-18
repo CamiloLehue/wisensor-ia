@@ -26,7 +26,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
       <div className="w-full flex gap-2 bg-gray-900 p-0.5 rounded-2xl">
         <textarea
           rows={1}
-          className="flex-1 px-5 py-3 bg-transparent text-white text-xs focus:outline-none focus:ring focus:ring-transparent focus:bg-slate-950 focus:rounded-2xl transition-all duration-500 resize-none overflow-hidden min-h-[44px] max-h-[200px]"
+          className="input flex-1 px-5 py-3 bg-transparent text-white text-xs focus:outline-none focus:ring focus:ring-transparent focus:bg-slate-950 focus:rounded-2xl transition-all duration-500 resize-none overflow-hidden min-h-[44px] max-h-[200px]"
           placeholder="Haz una pregunta sobre los centros o informes..."
           value={question}
           onChange={(e) => {

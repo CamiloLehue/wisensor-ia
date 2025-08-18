@@ -320,3 +320,36 @@
 .colorGenerate{
   color: #00ccff;
 }
+
+
+.input {
+  background-color: #1a1a1a;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  outline: none;
+  color: white;
+  transition: ease-in-out 0.3s;
+}
+
+.input:focus {
+  animation: rotateShadow 5s infinite linear;
+}
+
+@keyframes rotateShadow {
+  0% {
+    box-shadow: -1px -1px 7px 1px #ff6f00, 1px 1px 7px 1px #3700ff;
+  }
+  25% {
+    box-shadow: -1px 1px 7px 1px #ff6f00, 1px -1px 7px 1px #3700ff;
+  }
+  50% {
+    box-shadow: 1px 1px 7px 1px #ff6f00, -1px -1px 7px 1px #3700ff;
+  }
+  75% {
+    box-shadow: 1px -1px 7px 1px #ff6f00, -1px 1px 7px 1px #3700ff;
+  }
+  100% {
+    box-shadow: -1px -1px 7px 1px #ff6f00, 1px 1px 7px 1px #3700ff;
+  }
+}
