@@ -34,8 +34,8 @@ export interface ClimaValue {
 }
 
 export interface PromedioMensual {
-    temperatura:        number;
-    precipitacionTotal: number;
+    temperatura:   number;
+    precipitacion: number;
 }
 
 export interface ConsumoAlimento {

@@ -17,6 +17,11 @@
   --font-montserrat: Montserrat;
 }
 
+html,
+body{
+  background-color: #08121a ;
+}
+
 /* Estilos personalizados */
 .sidebar {
   transition: all 0.2s ease;
