@@ -1,4 +1,4 @@
-import { MessagesType, DatosCentroClass, Datum } from "../types/MessageType"; 
+import { MessagesType } from "../types/MessageType"; 
 import { Dispatch, SetStateAction, useEffect } from "react";
 
 import { WeatherType } from "../../zones/types/Zone";

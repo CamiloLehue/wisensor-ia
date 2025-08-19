@@ -87,10 +87,7 @@ const WeatherEffectsController: React.FC<WeatherEffectsControllerProps> = ({ wea
   const map = useMap();
   const [currentZoom, setCurrentZoom] = useState(map.getZoom());
   
-  useEffect(() => {
-    console.log('WeatherEffectsController - tipo de clima actual:', weatherType);
-  }, [weatherType]);
-  
+
   useEffect(() => {
     const handleZoomEnd = () => {
       setCurrentZoom(map.getZoom());

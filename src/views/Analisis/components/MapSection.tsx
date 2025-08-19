@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { MapView } from '../../maps/index.js';
 
 import { WeatherType } from '../../zones/types/Zone';
@@ -26,9 +26,6 @@ export const MapSection: React.FC<MapSectionProps> = ({
   precipitacion,
   fecha,
 }) => {
-  useEffect(() => {
-    console.log("MapSection recibió tipoClima:", tipoClima);
-  }, [tipoClima]);
   return (
     <div className="bg-[#08141e] w-5/12 h-full flex flex-col z-0 rounded-lg border border-[#182a38] shadow-lg">
       <div className="flex-1 rounded-md overflow-hidden">

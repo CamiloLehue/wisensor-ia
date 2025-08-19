@@ -31,19 +31,7 @@ const WeatherEffects: React.FC<WeatherEffectsProps> = ({
   // Número total de gotas de lluvia a renderizar
   const numRaindrops: number = 150;
 
-  useEffect(() => {
-    console.log("WeatherEffects recibió nuevo clima:", weatherType);
-  }, [weatherType]);
 
-  // Log datos climáticos cuando cambian
-  useEffect(() => {
-    console.log("WeatherEffects recibió datos climáticos:", {
-      temperatura,
-      viento,
-      precipitacion,
-      fecha,
-    });
-  }, [temperatura, viento, precipitacion, fecha]);
 
   // Efecto para generar las gotas de lluvia solo cuando el clima es 'lluvioso'
   useEffect(() => {
