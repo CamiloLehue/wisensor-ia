@@ -1,7 +1,7 @@
 
 function MainContent() {
   return (
-    <main className="flex-1 overflow-auto no-scrollbar bg-red-500 p-2">
+    <main className="flex-1  bg-red-500 p-2">
       {/* Grid Layout */}
       <div className="flex h-full gap-2">
         hola
