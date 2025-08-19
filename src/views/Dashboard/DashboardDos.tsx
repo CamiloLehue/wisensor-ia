@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { CardProps } from "../../assets/types/Dashboard";
-import { Users, Package, Settings, Activity, TrendingUp, Shield, Database, BarChart3 } from "lucide-react";
+import {  TrendingUp } from "lucide-react";
 import {
-  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
+  LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
-import { MapPin, AlertTriangle, Cpu, Zap, Thermometer, Droplet, Activity as ActivityIcon } from "lucide-react";
+import { AlertTriangle, Cpu, Zap, Thermometer, Activity as ActivityIcon } from "lucide-react";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';

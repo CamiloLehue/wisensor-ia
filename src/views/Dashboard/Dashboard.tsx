@@ -2,7 +2,7 @@ import { useDashboard } from "./hooks/useDashboard";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, Area, AreaChart } from 'recharts';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 
-function Dashboard() {
+function DashboardOld() {
   const { data } = useDashboard();
 
   // Estados para los filtros
@@ -639,4 +639,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default DashboardOld;

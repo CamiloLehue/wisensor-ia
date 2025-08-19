@@ -147,15 +147,7 @@ export const DashboardFiltersPanel = ({
         <div className="flex flex-col">
           <label className="text-sm font-medium text-gray-300 mb-2">Centros</label>
           <div className="flex flex-col gap-2">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={compareCenters}
-                onChange={(e) => setCompareCenters(e.target.checked)}
-                className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
-              />
-              <span className="text-white text-sm">Comparar Centros</span>
-            </label>
+           
             <div className="flex flex-wrap gap-1 max-w-48">
               {availableCenters.map((center) => (
                 <button
