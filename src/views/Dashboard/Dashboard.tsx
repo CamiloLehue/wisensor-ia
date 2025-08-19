@@ -1,26 +1,34 @@
 import { useDashboard } from "./hooks/useDashboard";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, Area, AreaChart } from 'recharts';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 
 function Dashboard() {
   const { data } = useDashboard();
 
   // Estados para los filtros
   const [selectedYears, setSelectedYears] = useState<number[]>([]);
-  const [selectedMonths, setSelectedMonths] = useState<number[]>([]);
+  // const [selectedMonths, setSelectedMonths] = useState<number[]>([]);
   const [selectedMetric, setSelectedMetric] = useState<string>('all');
-  const [dateRange, setDateRange] = useState<{start: string, end: string}>({
-    start: '',
-    end: ''
-  });
+  // const [dateRange, setDateRange] = useState<{start: string, end: string}>({
+  //   start: '',
+  //   end: ''
+  // });
   const [chartType, setChartType] = useState<string>('line');
   const [showComparison, setShowComparison] = useState<boolean>(true);
+  const [selectedCenters, setSelectedCenters] = useState<string[]>([]);
+  const [compareCenters, setCompareCenters] = useState<boolean>(false);
 
   // Función para obtener el nombre del mes
   const getMonthName = (monthId: number): string => {
     const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     return months[monthId - 1] || `Mes ${monthId}`;
   };
+
+  // Obtener centros disponibles
+  const availableCenters = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    return data.map(center => center.nombreCentro);
+  }, [data]);
 
   // Obtener años disponibles en los datos
   const availableYears = useMemo(() => {
@@ -34,6 +42,13 @@ function Dashboard() {
     return allYears.length > 0 ? allYears.sort() : [2024, 2025];
   }, [data]);
 
+  // Inicializar centros seleccionados
+  useEffect(() => {
+    if (selectedCenters.length === 0 && availableCenters.length > 0) {
+      setSelectedCenters([availableCenters[0]]); // Seleccionar el primer centro por defecto
+    }
+  }, [availableCenters, selectedCenters.length, setSelectedCenters]);
+
   // Inicializar años seleccionados
   useEffect(() => {
     if (selectedYears.length === 0) {
@@ -41,97 +56,137 @@ function Dashboard() {
     }
   }, [availableYears, selectedYears.length, setSelectedYears]);
 
+  // Función para filtrar datos por centros seleccionados
+  const getFilteredDataForCenters = useCallback(() => {
+    if (!data || data.length === 0) return [];
+    
+    if (compareCenters && selectedCenters.length > 1) {
+      // Modo comparación entre centros
+      return data.filter(center => selectedCenters.includes(center.nombreCentro));
+    } else {
+      // Modo centro único (primer centro seleccionado)
+      const centerData = data.find(center => selectedCenters.includes(center.nombreCentro)) || data[0];
+      return [centerData];
+    }
+  }, [data, selectedCenters, compareCenters]);
+
   // Transformar datos de clima para gráfico comparativo por años
   const prepareClimaData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
-    const climaData = data[0]?.ciclos?.clima || [];
-    const filteredClimaData = climaData.filter(yearData => 
-      selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
-    );
-    
+    const filteredCenters = getFilteredDataForCenters();
     const chartData: Array<Record<string, string | number>> = [];
     
     // Crear estructura base con 12 meses
     for (let mes = 1; mes <= 12; mes++) {
       const monthData: Record<string, string | number> = { month: getMonthName(mes) };
       
-      filteredClimaData.forEach(yearData => {
-        const mesData = yearData.meses.find(m => m.id_mes === mes);
-        if (mesData?.datos?.promedioMensual) {
-          monthData[`temp_${yearData.id_año}`] = mesData.datos.promedioMensual.temperatura;
-          monthData[`precip_${yearData.id_año}`] = mesData.datos.promedioMensual.precipitacionTotal;
-        }
+      filteredCenters.forEach(centerData => {
+        const climaData = centerData?.ciclos?.clima || [];
+        const filteredClimaData = climaData.filter(yearData => 
+          selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
+        );
+        
+        filteredClimaData.forEach(yearData => {
+          const mesData = yearData.meses.find(m => m.id_mes === mes);
+          if (mesData?.datos?.promedioMensual) {
+            const keyPrefix = compareCenters && selectedCenters.length > 1 
+              ? `${centerData.nombreCentro}_temp_${yearData.id_año}`
+              : `temp_${yearData.id_año}`;
+            monthData[keyPrefix] = mesData.datos.promedioMensual.temperatura;
+            
+            const precipKey = compareCenters && selectedCenters.length > 1 
+              ? `${centerData.nombreCentro}_precip_${yearData.id_año}`
+              : `precip_${yearData.id_año}`;
+            monthData[precipKey] = mesData.datos.promedioMensual.precipitacionTotal;
+          }
+        });
       });
       
       chartData.push(monthData);
     }
     
     return chartData;
-  }, [data, selectedYears]);
+  }, [data, selectedYears, getFilteredDataForCenters, compareCenters, selectedCenters]);
 
   // Transformar datos de consumo de alimentos
   const prepareConsumoData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
-    const consumoData = data[0]?.ciclos?.consumo_alimentos || [];
-    const filteredConsumoData = consumoData.filter(yearData => 
-      selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
-    );
-    
+    const filteredCenters = getFilteredDataForCenters();
     const chartData: Array<Record<string, string | number>> = [];
     
     for (let mes = 1; mes <= 12; mes++) {
       const monthData: Record<string, string | number> = { month: getMonthName(mes) };
       
-      filteredConsumoData.forEach(yearData => {
-        const mesData = yearData.meses.find(m => m.id_mes === mes);
-        if (mesData?.datos?.consumoTotalMensual) {
-          monthData[`consumo_${yearData.id_año}`] = mesData.datos.consumoTotalMensual;
-        }
+      filteredCenters.forEach(centerData => {
+        const consumoData = centerData?.ciclos?.consumo_alimentos || [];
+        const filteredConsumoData = consumoData.filter(yearData => 
+          selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
+        );
+        
+        filteredConsumoData.forEach(yearData => {
+          const mesData = yearData.meses.find(m => m.id_mes === mes);
+          if (mesData?.datos?.consumoTotalMensual) {
+            const keyPrefix = compareCenters && selectedCenters.length > 1 
+              ? `${centerData.nombreCentro}_consumo_${yearData.id_año}`
+              : `consumo_${yearData.id_año}`;
+            monthData[keyPrefix] = mesData.datos.consumoTotalMensual;
+          }
+        });
       });
       
       chartData.push(monthData);
     }
     
     return chartData;
-  }, [data, selectedYears]);
+  }, [data, selectedYears, getFilteredDataForCenters, compareCenters, selectedCenters]);
 
   // Transformar datos de FCR
   const prepareFcrData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
-    const fcrData = data[0]?.ciclos?.fcr || [];
-    const filteredFcrData = fcrData.filter(yearData => 
-      selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
-    );
-    
+    const filteredCenters = getFilteredDataForCenters();
     const chartData: Array<Record<string, string | number>> = [];
     
     for (let mes = 1; mes <= 12; mes++) {
       const monthData: Record<string, string | number> = { month: getMonthName(mes) };
       
-      filteredFcrData.forEach(yearData => {
-        const mesData = yearData.meses.find(m => m.id_mes === mes);
-        if (mesData?.datos?.dias) {
-          // Calcular promedio del FCR del mes
-          const dias = Object.values(mesData.datos.dias) as number[];
-          const promedio = dias.length > 0 ? dias.reduce((a, b) => a + b, 0) / dias.length : 0;
-          monthData[`fcr_${yearData.id_año}`] = promedio;
-        }
+      filteredCenters.forEach(centerData => {
+        const fcrData = centerData?.ciclos?.fcr || [];
+        const filteredFcrData = fcrData.filter(yearData => 
+          selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
+        );
+        
+        filteredFcrData.forEach(yearData => {
+          const mesData = yearData.meses.find(m => m.id_mes === mes);
+          if (mesData?.datos?.dias) {
+            // Calcular promedio del FCR del mes
+            const dias = Object.values(mesData.datos.dias) as number[];
+            const promedio = dias.length > 0 ? dias.reduce((a, b) => a + b, 0) / dias.length : 0;
+            const keyPrefix = compareCenters && selectedCenters.length > 1 
+              ? `${centerData.nombreCentro}_fcr_${yearData.id_año}`
+              : `fcr_${yearData.id_año}`;
+            monthData[keyPrefix] = promedio;
+          }
+        });
       });
       
       chartData.push(monthData);
     }
     
     return chartData;
-  }, [data, selectedYears]);
+  }, [data, selectedYears, getFilteredDataForCenters, compareCenters, selectedCenters]);
 
   // Datos semanales para gráfico de líneas
   const prepareSemanalesData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
-    const semanales = data[0]?.semanales;
+    const filteredCenters = getFilteredDataForCenters();
+    const firstCenter = filteredCenters[0];
+    if (!firstCenter) return [];
+    
+    const semanales = firstCenter?.semanales;
     if (!semanales) return [];
     
     const chartData: Array<Record<string, string | number>> = [];
@@ -149,7 +204,7 @@ function Dashboard() {
     });
     
     return chartData;
-  }, [data]);
+  }, [data, getFilteredDataForCenters]);
 
   const climaData = prepareClimaData;
   const consumoData = prepareConsumoData;
@@ -231,7 +286,13 @@ function Dashboard() {
       {/* Header con información del centro */}
       <div className="w-full">
         <h1 className="text-2xl font-bold text-white mb-2">
-          Dashboard - {data?.[0]?.nombreCentro || 'Centro de Datos'}
+          Dashboard - {
+            compareCenters && selectedCenters.length > 1 
+              ? `Comparación: ${selectedCenters.join(', ')}`
+              : selectedCenters.length > 0 
+                ? selectedCenters[0]
+                : 'Centro de Datos'
+          }
         </h1>
         <div className="grid grid-cols-4 gap-4 mb-4">
           {data?.[0]?.promedios && (
@@ -333,6 +394,57 @@ function Dashboard() {
             </label>
           </div>
 
+          {/* Filtro de Centros */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-300 mb-2">Centros</label>
+            <div className="flex flex-col gap-2">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={compareCenters}
+                  onChange={(e) => setCompareCenters(e.target.checked)}
+                  className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+                />
+                <span className="text-white text-sm">Comparar Centros</span>
+              </label>
+              <div className="flex flex-wrap gap-1 max-w-48">
+                {availableCenters.map((center) => (
+                  <button
+                    key={center}
+                    onClick={() => {
+                      if (compareCenters) {
+                        // En modo comparación, permite múltiples selecciones
+                        setSelectedCenters(prev => 
+                          prev.includes(center)
+                            ? prev.filter(c => c !== center)
+                            : [...prev, center]
+                        );
+                      } else {
+                        // En modo individual, solo uno a la vez
+                        setSelectedCenters([center]);
+                      }
+                    }}
+                    className={`px-2 py-1 rounded text-xs ${
+                      selectedCenters.includes(center)
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-600 text-gray-300 hover:bg-gray-500"
+                    }`}
+                  >
+                    {center}
+                  </button>
+                ))}
+                {availableCenters.length > 1 && (
+                  <button
+                    onClick={() => setSelectedCenters(availableCenters)}
+                    className="px-2 py-1 rounded text-xs bg-green-600 text-white hover:bg-green-700"
+                  >
+                    Todos
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Botones de Acción */}
           <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-300 mb-2">Acciones</label>
@@ -340,11 +452,11 @@ function Dashboard() {
               <button
                 onClick={() => {
                   setSelectedYears(availableYears);
-                  setSelectedMonths([]);
                   setSelectedMetric('all');
-                  setDateRange({start: '', end: ''});
                   setChartType('line');
                   setShowComparison(true);
+                  setSelectedCenters(availableCenters);
+                  setCompareCenters(true);
                 }}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded-lg transition-colors"
               >
@@ -353,9 +465,9 @@ function Dashboard() {
               <button
                 onClick={() => {
                   setSelectedYears([]);
-                  setSelectedMonths([]);
                   setSelectedMetric('all');
-                  setDateRange({start: '', end: ''});
+                  setSelectedCenters(availableCenters.length > 0 ? [availableCenters[0]] : []);
+                  setCompareCenters(false);
                 }}
                 className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-3 py-1 rounded-lg transition-colors"
               >
