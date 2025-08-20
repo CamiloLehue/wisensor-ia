@@ -11,71 +11,25 @@
       }
 
       .cls-3 {
-        fill: #fff;
+        fill: url(#linear-gradient-4);
       }
 
       .cls-4 {
-        fill: #fff;
+        fill: url(#linear-gradient-3);
       }
 
       .cls-5 {
-        fill: #fff;
+        fill: url(#linear-gradient-2);
       }
 
       .cls-6 {
         fill: url(#linear-gradient);
       }
-
-      /* Animaciones de destellos para las estrellas */
-      .cls-3 {
-        animation: destello-pequeño 2s ease-in-out infinite;
-      }
-
-      .cls-4 {
-        animation: destello-mediano 1.8s ease-in-out infinite 0.3s;
-      }
-
-      .cls-5 {
-        animation: destello-grande 2.2s ease-in-out infinite 0.6s;
-      }
-
-      @keyframes destello-pequeño {
-        0%, 100% {
-          opacity: 0.6;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 1;
-          transform: scale(1.1);
-        }
-      }
-
-      @keyframes destello-mediano {
-        0%, 100% {
-          opacity: 0.5;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 1;
-          transform: scale(1.15);
-        }
-      }
-
-      @keyframes destello-grande {
-        0%, 100% {
-          opacity: 0.4;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 1;
-          transform: scale(1.2);
-        }
-      }
     </style>
     <linearGradient id="linear-gradient" x1="165.77" y1="124.14" x2="335.83" y2="294.19" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#6fc"/>
-      <stop offset="3" stop-color="#bf3dd1"/>
-      <stop offset="1" stop-color="#6fc"/>
+      <stop offset="0" stop-color="#bf3dd1"/>
+      <stop offset=".51" stop-color="#6fc"/>
+      <stop offset="1" stop-color="#3e5cbf"/>
     </linearGradient>
     <linearGradient id="linear-gradient-2" x1="118.27" y1="39.86" x2="171.47" y2="93.05" xlink:href="#linear-gradient"/>
     <linearGradient id="linear-gradient-3" x1="49.58" y1="127.38" x2="99.72" y2="177.52" xlink:href="#linear-gradient"/>
@@ -85,11 +39,9 @@
   </defs>
   <g id="Layer_1-2" data-name="Layer 1">
     <path class="cls-6" d="M360.17,102.3v136.98c0,43.71-35.56,79.26-79.26,79.26h-136.98c-43.71,0-79.26-35.56-79.26-79.26,0-6.35,5.15-11.5,11.5-11.5s11.5,5.15,11.5,11.5c0,31.02,25.24,56.26,56.26,56.26h136.98c31.02,0,56.26-25.24,56.26-56.26V102.3c0-31.02-25.24-56.26-56.26-56.26h-65.05c-6.35,0-11.5-5.15-11.5-11.5s5.15-11.5,11.5-11.5h65.05c43.71,0,79.26,35.56,79.26,79.26Z"/>
-    
     <path class="cls-5" d="M140.68,124.53h0c0-34.39,27.88-62.26,62.26-62.26h0c-34.39,0-62.26-27.88-62.26-62.26h0c0,34.39-27.88,62.26-62.26,62.26h0c34.39,0,62.26,27.88,62.26,62.26Z"/>
     <path class="cls-4" d="M70.7,207.19c0-32.41,26.27-58.69,58.69-58.69h0c-32.41,0-58.69-26.27-58.69-58.69h0c0,32.41-26.27,58.69-58.69,58.69h0c32.41,0,58.69,26.27,58.69,58.69h0Z"/>
     <path class="cls-3" d="M38.13,80.42h0c0-21.06,17.07-38.13,38.13-38.13h0c-21.06,0-38.13-17.07-38.13-38.13h0c0,21.06-17.07,38.13-38.13,38.13h0c21.06,0,38.13,17.07,38.13,38.13Z"/>
-    
     <rect class="cls-1" x="166.5" y="123.73" width="21.58" height="107.57"/>
     <path class="cls-2" d="M266.51,123.58h-25.12l-38.68,107.72h22.65l7.09-20.5h42.84l7.09,20.5h22.81l-38.68-107.72ZM238.31,193.54l15.56-45,15.56,45h-31.13Z"/>
   </g>
