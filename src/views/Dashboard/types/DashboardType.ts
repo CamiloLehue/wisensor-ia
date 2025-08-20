@@ -1,4 +1,3 @@
-
 export interface DashboardType {
     nombreCentro: string;
     semanales:    Semanales;
@@ -7,64 +6,38 @@ export interface DashboardType {
 }
 
 export interface Ciclos {
-    consumo_alimentos: ConsumoAlimento[];
-    fcr:               Fcr[];
-    peso_promedio:     Fcr[];
-    clima:             ClimaElement[];
+    id_ciclo:      string;
+    fecha_inicio:  string; // Cambio de Date a string para coincidir con el JSON
+    fecha_termino: string; // Cambio de Date a string para coincidir con el JSON
+    meses:         Mese[];
+    resumen_ciclo: Resumen;
 }
 
-export interface ClimaElement {
-    id_año: number;
-    meses:  ClimaMese[];
+export interface Mese {
+    idMes: number;
+    año: number; // Año al que pertenece este mes en el ciclo
+    datos: Datos;
 }
 
-export interface ClimaMese {
-    id_mes: number;
-    datos:  PurpleDatos | null;
+export interface Datos {
+    consumo_alimentos: { [key: string]: number };
+    fcr:               { [key: string]: number };
+    peso_promedio:     { [key: string]: number };
+    clima:             { [key: string]: Clima };
+    resumen_mensual:   Resumen;
 }
 
-export interface PurpleDatos {
-    dias:            { [key: string]: ClimaValue };
-    promedioMensual: PromedioMensual;
-}
-
-export interface ClimaValue {
+export interface Clima {
     temperatura:   number;
     precipitacion: number;
 }
 
-export interface PromedioMensual {
-    temperatura:   number;
-    precipitacion: number;
-}
-
-export interface ConsumoAlimento {
-    id_año: number;
-    meses:  ConsumoAlimentoMese[];
-}
-
-export interface ConsumoAlimentoMese {
-    id_mes: number;
-    datos:  FluffyDatos | null;
-}
-
-export interface FluffyDatos {
-    dias:                { [key: string]: number };
-    consumoTotalMensual: number;
-}
-
-export interface Fcr {
-    id_año: number;
-    meses:  FcrMese[];
-}
-
-export interface FcrMese {
-    id_mes: number;
-    datos:  TentacledDatos | null;
-}
-
-export interface TentacledDatos {
-    dias: { [key: string]: number };
+export interface Resumen {
+    consumoTotal:        number;
+    fcrPromedio:         number;
+    pesoPromedio:        number;
+    temperaturaPromedio: number;
+    precipitacionTotal:  number;
 }
 
 export interface Promedios {
@@ -78,5 +51,5 @@ export interface Semanales {
     consumo_alimentos: { [key: string]: number };
     fcr:               { [key: string]: number };
     peso_promedio:     { [key: string]: number };
-    clima:             { [key: string]: ClimaValue };
+    clima:             { [key: string]: Clima };
 }

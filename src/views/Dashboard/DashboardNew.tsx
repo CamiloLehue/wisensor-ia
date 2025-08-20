@@ -12,7 +12,7 @@ function Dashboard() {
     filters,
     setters,
     availableCenters,
-    availableYears,
+    availableCiclos,
     getFilteredDataForCenters,
     getDataKeys,
     chartColors,
@@ -39,7 +39,6 @@ function Dashboard() {
       ];
       return months[monthId - 1] || `Mes ${monthId}`;
     },
-    filters.selectedYears,
     filters.selectedCenters,
     filters.compareCenters
   );
@@ -48,7 +47,7 @@ function Dashboard() {
     <div className="relative w-full h-full p-4 gap-4 flex flex-col">
       <DashboardFiltersPanel
         filters={filters}
-        availableYears={availableYears}
+        availableCiclos={availableCiclos}
         availableCenters={availableCenters}
         setters={setters}
       />
@@ -61,7 +60,7 @@ function Dashboard() {
       <ChartsGrid
         selectedMetric={filters.selectedMetric}
         chartType={filters.chartType}
-        selectedYears={filters.selectedYears}
+        selectedYears={filters.selectedCiclos}
         showComparison={filters.showComparison}
         climaData={climaData}
         consumoData={consumoData}

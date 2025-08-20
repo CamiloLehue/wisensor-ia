@@ -5,48 +5,54 @@ export const usePreparedData = (
   data: DashboardData[],
   getFilteredDataForCenters: () => DashboardData[],
   getMonthName: (monthId: number) => string,
-  selectedYears: number[],
   selectedCenters: string[],
   compareCenters: boolean
 ) => {
-  // Transformar datos de clima para gráfico comparativo por años
+  // Transformar datos de clima para gráfico comparativo por ciclos
   const prepareClimaData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
     const filteredCenters = getFilteredDataForCenters();
     const chartData: ChartData[] = [];
     
-    // Crear estructura base con 12 meses
-    for (let mes = 1; mes <= 12; mes++) {
+    // Obtener todos los meses únicos del ciclo actual
+    const allMonths = new Set<number>();
+    filteredCenters.forEach(centerData => {
+      if (centerData?.ciclos?.meses) {
+        centerData.ciclos.meses.forEach(mes => {
+          allMonths.add(mes.idMes);
+        });
+      }
+    });
+    
+    const sortedMonths = Array.from(allMonths).sort((a, b) => a - b);
+    
+    // Crear estructura base con todos los meses del ciclo
+    sortedMonths.forEach(mes => {
       const monthData: ChartData = { month: getMonthName(mes) };
       
       filteredCenters.forEach(centerData => {
-        const climaData = centerData?.ciclos?.clima || [];
-        const filteredClimaData = climaData.filter((yearData) => 
-          selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
-        );
-        
-        filteredClimaData.forEach((yearData) => {
-          const mesData = yearData.meses.find((m) => m.id_mes === mes);
-          if (mesData?.datos?.promedioMensual) {
+        if (centerData?.ciclos) {
+          const mesData = centerData.ciclos.meses.find((m) => m.idMes === mes);
+          if (mesData?.datos?.resumen_mensual) {
             const keyPrefix = compareCenters && selectedCenters.length > 1 
-              ? `${centerData.nombreCentro}_temp_${yearData.id_año}`
-              : `temp_${yearData.id_año}`;
-            monthData[keyPrefix] = mesData.datos.promedioMensual.temperatura;
+              ? `${centerData.nombreCentro}_temp_${centerData.ciclos.id_ciclo}`
+              : `temp_${centerData.ciclos.id_ciclo}`;
+            monthData[keyPrefix] = mesData.datos.resumen_mensual.temperaturaPromedio;
             
             const precipKey = compareCenters && selectedCenters.length > 1 
-              ? `${centerData.nombreCentro}_precip_${yearData.id_año}`
-              : `precip_${yearData.id_año}`;
-            monthData[precipKey] = mesData.datos.promedioMensual.precipitacion;
+              ? `${centerData.nombreCentro}_precip_${centerData.ciclos.id_ciclo}`
+              : `precip_${centerData.ciclos.id_ciclo}`;
+            monthData[precipKey] = mesData.datos.resumen_mensual.precipitacionTotal;
           }
-        });
+        }
       });
       
       chartData.push(monthData);
-    }
+    });
     
     return chartData;
-  }, [data, selectedYears, getFilteredDataForCenters, compareCenters, selectedCenters, getMonthName]);
+  }, [data, getFilteredDataForCenters, compareCenters, selectedCenters, getMonthName]);
 
   // Transformar datos de consumo
   const prepareConsumoData = useMemo(() => {
@@ -55,34 +61,38 @@ export const usePreparedData = (
     const filteredCenters = getFilteredDataForCenters();
     const chartData: ChartData[] = [];
     
-    for (let mes = 1; mes <= 12; mes++) {
+    // Obtener todos los meses únicos del ciclo actual
+    const allMonths = new Set<number>();
+    filteredCenters.forEach(centerData => {
+      if (centerData?.ciclos?.meses) {
+        centerData.ciclos.meses.forEach(mes => {
+          allMonths.add(mes.idMes);
+        });
+      }
+    });
+    
+    const sortedMonths = Array.from(allMonths).sort((a, b) => a - b);
+    
+    sortedMonths.forEach(mes => {
       const monthData: ChartData = { month: getMonthName(mes) };
       
       filteredCenters.forEach(centerData => {
-        const consumoData = centerData?.ciclos?.consumo_alimentos || [];
-        const filteredConsumoData = consumoData.filter((yearData) => 
-          selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
-        );
-        
-        filteredConsumoData.forEach((yearData) => {
-          const mesData = yearData.meses.find((m) => m.id_mes === mes);
-          if (mesData?.datos?.dias) {
-            // Calcular promedio del consumo del mes
-            const dias = Object.values(mesData.datos.dias) as number[];
-            const promedio = dias.length > 0 ? dias.reduce((a, b) => a + b, 0) / dias.length : 0;
+        if (centerData?.ciclos) {
+          const mesData = centerData.ciclos.meses.find((m) => m.idMes === mes);
+          if (mesData?.datos?.resumen_mensual) {
             const keyPrefix = compareCenters && selectedCenters.length > 1 
-              ? `${centerData.nombreCentro}_consumo_${yearData.id_año}`
-              : `consumo_${yearData.id_año}`;
-            monthData[keyPrefix] = promedio;
+              ? `${centerData.nombreCentro}_consumo_${centerData.ciclos.id_ciclo}`
+              : `consumo_${centerData.ciclos.id_ciclo}`;
+            monthData[keyPrefix] = mesData.datos.resumen_mensual.consumoTotal;
           }
-        });
+        }
       });
       
       chartData.push(monthData);
-    }
+    });
     
     return chartData;
-  }, [data, selectedYears, getFilteredDataForCenters, compareCenters, selectedCenters, getMonthName]);
+  }, [data, getFilteredDataForCenters, compareCenters, selectedCenters, getMonthName]);
 
   // Transformar datos de FCR
   const prepareFcrData = useMemo(() => {
@@ -91,34 +101,38 @@ export const usePreparedData = (
     const filteredCenters = getFilteredDataForCenters();
     const chartData: ChartData[] = [];
     
-    for (let mes = 1; mes <= 12; mes++) {
+    // Obtener todos los meses únicos del ciclo actual
+    const allMonths = new Set<number>();
+    filteredCenters.forEach(centerData => {
+      if (centerData?.ciclos?.meses) {
+        centerData.ciclos.meses.forEach(mes => {
+          allMonths.add(mes.idMes);
+        });
+      }
+    });
+    
+    const sortedMonths = Array.from(allMonths).sort((a, b) => a - b);
+    
+    sortedMonths.forEach(mes => {
       const monthData: ChartData = { month: getMonthName(mes) };
       
       filteredCenters.forEach(centerData => {
-        const fcrData = centerData?.ciclos?.fcr || [];
-        const filteredFcrData = fcrData.filter((yearData) => 
-          selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
-        );
-        
-        filteredFcrData.forEach((yearData) => {
-          const mesData = yearData.meses.find((m) => m.id_mes === mes);
-          if (mesData?.datos?.dias) {
-            // Calcular promedio del FCR del mes
-            const dias = Object.values(mesData.datos.dias) as number[];
-            const promedio = dias.length > 0 ? dias.reduce((a, b) => a + b, 0) / dias.length : 0;
+        if (centerData?.ciclos) {
+          const mesData = centerData.ciclos.meses.find((m) => m.idMes === mes);
+          if (mesData?.datos?.resumen_mensual) {
             const keyPrefix = compareCenters && selectedCenters.length > 1 
-              ? `${centerData.nombreCentro}_fcr_${yearData.id_año}`
-              : `fcr_${yearData.id_año}`;
-            monthData[keyPrefix] = promedio;
+              ? `${centerData.nombreCentro}_fcr_${centerData.ciclos.id_ciclo}`
+              : `fcr_${centerData.ciclos.id_ciclo}`;
+            monthData[keyPrefix] = mesData.datos.resumen_mensual.fcrPromedio;
           }
-        });
+        }
       });
       
       chartData.push(monthData);
-    }
+    });
     
     return chartData;
-  }, [data, selectedYears, getFilteredDataForCenters, compareCenters, selectedCenters, getMonthName]);
+  }, [data, getFilteredDataForCenters, compareCenters, selectedCenters, getMonthName]);
 
   // Datos semanales para gráfico de líneas
   const prepareSemanalesData = useMemo(() => {

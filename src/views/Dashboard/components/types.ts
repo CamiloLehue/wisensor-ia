@@ -2,12 +2,13 @@
 export type { DashboardType as DashboardData } from '../types/DashboardType';
 
 export interface DashboardFilters {
-  selectedYears: number[];
+  selectedCiclos: string[];      // Cambio de selectedYears a selectedCiclos
   selectedMetric: string;
   chartType: string;
   showComparison: boolean;
   selectedCenters: string[];
   compareCenters: boolean;
+  compareCiclos: boolean;        // Nueva opción para comparar ciclos
 }
 
 export interface ChartData {

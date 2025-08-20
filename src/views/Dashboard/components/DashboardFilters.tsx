@@ -2,47 +2,50 @@ import { type DashboardFilters } from "./types";
 
 interface DashboardFiltersProps {
   filters: DashboardFilters;
-  availableYears: number[];
+  availableCiclos: string[];
   availableCenters: string[];
   setters: {
-    setSelectedYears: (years: number[]) => void;
+    setSelectedCiclos: (ciclos: string[]) => void;
     setSelectedMetric: (metric: string) => void;
     setChartType: (type: string) => void;
     setShowComparison: (show: boolean) => void;
     setSelectedCenters: (centers: string[]) => void;
     setCompareCenters: (compare: boolean) => void;
+    setCompareCiclos: (compare: boolean) => void;
   };
 }
 
 export const DashboardFiltersPanel = ({
   filters,
-  availableYears,
+  availableCiclos,
   availableCenters,
   setters,
 }: DashboardFiltersProps) => {
   const {
-    selectedYears,
+    selectedCiclos,
     selectedMetric,
     chartType,
     showComparison,
     selectedCenters,
     compareCenters,
+    compareCiclos,
   } = filters;
 
   const {
-    setSelectedYears,
+    setSelectedCiclos,
     setSelectedMetric,
     setChartType,
     setShowComparison,
     setSelectedCenters,
     setCompareCenters,
+    setCompareCiclos,
   } = setters;
 
-  const handleYearChange = (year: number, checked: boolean) => {
+  const handleCicloChange = (ciclo: string, checked: boolean) => {
     if (checked) {
-      setSelectedYears([...selectedYears, year]);
+      setSelectedCiclos([...selectedCiclos, ciclo]);
     } else {
-      setSelectedYears(selectedYears.filter((y) => y !== year));
+      setSelectedCiclos(selectedCiclos.filter((c) => c !== ciclo));
     }
   };
 
@@ -60,8 +63,8 @@ export const DashboardFiltersPanel = ({
     }
   };
 
-  const handleSelectAllYears = () => {
-    setSelectedYears(availableYears);
+  const handleSelectAllCiclos = () => {
+    setSelectedCiclos(availableCiclos);
     setSelectedMetric("all");
     setChartType("line");
     setShowComparison(true);
@@ -70,7 +73,7 @@ export const DashboardFiltersPanel = ({
   };
 
   const handleClearAll = () => {
-    setSelectedYears([]);
+    setSelectedCiclos([]);
     setSelectedMetric("all");
     setSelectedCenters(
       availableCenters.length > 0 ? [availableCenters[0]] : []
@@ -80,23 +83,67 @@ export const DashboardFiltersPanel = ({
   // bg-gradient-to-l to-[#18182a] from-[#070714]
   return (
     <div className="relative group  rounded-lg border border-[#283a53] p-3 grid grid-cols-6 place-items-start place-content-between gap-6 shadow-lg h-full">
-      {/* Selector de Años */}
+      {/* Selector de Centros */}
       <CardFilter className="flex flex-col w-full">
         <label className="text-sm font-medium text-gray-300 mb-2">
-          Años a Comparar
+          Centro
         </label>
-        <div className="flex gap-2">
-          {availableYears.map((year) => (
-            <label key={year} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedYears.includes(year)}
-                onChange={(e) => handleYearChange(year, e.target.checked)}
-                className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
-              />
-              <span className="text-white text-sm">{year}</span>
-            </label>
-          ))}
+        <div className="flex flex-col gap-2">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={compareCenters}
+              onChange={(e) => setCompareCenters(e.target.checked)}
+              className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+            />
+            <span className="text-white text-sm">Comparar Centros</span>
+          </label>
+          <div className="flex flex-wrap gap-1 max-w-48">
+            {availableCenters.map((center) => (
+              <button
+                key={center}
+                onClick={() => handleCenterSelection(center)}
+                className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                  selectedCenters.includes(center)
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                }`}
+              >
+                {center}
+              </button>
+            ))}
+          </div>
+        </div>
+      </CardFilter>
+
+      {/* Selector de Ciclos */}
+      <CardFilter className="flex flex-col w-full">
+        <label className="text-sm font-medium text-gray-300 mb-2">
+          Ciclos a Comparar
+        </label>
+        <div className="flex flex-col gap-2">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={compareCiclos}
+              onChange={(e) => setCompareCiclos(e.target.checked)}
+              className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+            />
+            <span className="text-white text-sm">Comparar Ciclos</span>
+          </label>
+          <div className="flex gap-2 flex-wrap">
+            {availableCiclos.map((ciclo) => (
+              <label key={ciclo} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={selectedCiclos.includes(ciclo)}
+                  onChange={(e) => handleCicloChange(ciclo, e.target.checked)}
+                  className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+                />
+                <span className="text-white text-sm">{ciclo}</span>
+              </label>
+            ))}
+          </div>
         </div>
       </CardFilter>
 
@@ -147,50 +194,18 @@ export const DashboardFiltersPanel = ({
             onChange={(e) => setShowComparison(e.target.checked)}
             className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
           />
-          <span className="text-white text-sm">Comparar Años</span>
+          <span className="text-white text-sm">Comparar Ciclos</span>
         </label>
       </div>
 
-      {/* Filtro de Centros */}
-      <div className="flex flex-col">
-        <label className="text-sm font-medium text-gray-300 mb-2">
-          Centros
-        </label>
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-wrap gap-1 max-w-48">
-            {availableCenters.map((center) => (
-              <button
-                key={center}
-                onClick={() => handleCenterSelection(center)}
-                className={`px-2 py-1 rounded text-xs ${
-                  selectedCenters.includes(center)
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-600 text-gray-300 hover:bg-gray-500"
-                }`}
-              >
-                {center}
-              </button>
-            ))}
-            {availableCenters.length > 1 && (
-              <button
-                onClick={() => setSelectedCenters(availableCenters)}
-                className="px-2 py-1 rounded text-xs bg-green-600 text-white hover:bg-green-700"
-              >
-                Todos
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Botones de Acción */}
+      {/* Selector de Métrica */}
       <div className="flex flex-col">
         <label className="text-sm font-medium text-gray-300 mb-2">
           Acciones
         </label>
         <div className="flex gap-2">
           <button
-            onClick={handleSelectAllYears}
+            onClick={handleSelectAllCiclos}
             className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded-lg transition-colors"
           >
             Todos

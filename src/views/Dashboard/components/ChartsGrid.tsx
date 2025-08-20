@@ -5,7 +5,7 @@ import { ChartData } from './types';
 interface ChartsGridProps {
   selectedMetric: string;
   chartType: string;
-  selectedYears: number[];
+  selectedYears: string[];  // Cambio de number[] a string[] para ciclos
   showComparison: boolean;
   climaData: ChartData[];
   consumoData: ChartData[];
@@ -49,7 +49,7 @@ export const ChartsGrid = ({
       {(selectedMetric === 'all' || selectedMetric === 'temperatura') && (
         <ChartCard
           title={`Temperatura Mensual (${getChartTypeLabel()})`}
-          subtitle={`Años: ${getYearsLabel()}`}
+          subtitle={`Ciclos: ${getYearsLabel()}`}
           data={climaData.length > 0 ? climaData : fallbackData}
           dataKeys={getDataKeys('temperatura')}
           colors={chartColors}
@@ -61,7 +61,7 @@ export const ChartsGrid = ({
       {(selectedMetric === 'all' || selectedMetric === 'consumo') && (
         <ChartCard
           title={`Consumo de Alimentos (${getChartTypeLabel()})`}
-          subtitle={`Años: ${getYearsLabel()}`}
+          subtitle={`Ciclos: ${getYearsLabel()}`}
           data={consumoData.length > 0 ? consumoData : fallbackData}
           dataKeys={getDataKeys('consumo')}
           colors={chartColors.slice(2)}
@@ -73,7 +73,7 @@ export const ChartsGrid = ({
       {(selectedMetric === 'all' || selectedMetric === 'fcr') && (
         <ChartCard
           title={`FCR Mensual (${getChartTypeLabel()})`}
-          subtitle={`Años: ${getYearsLabel()} | FCR: Factor de Conversión Alimenticia`}
+          subtitle={`Ciclos: ${getYearsLabel()} | FCR: Factor de Conversión Alimenticia`}
           data={fcrData.length > 0 ? fcrData : fallbackData}
           dataKeys={getDataKeys('fcr')}
           colors={chartColors.slice(4)}
@@ -85,7 +85,7 @@ export const ChartsGrid = ({
       {(selectedMetric === 'all' || selectedMetric === 'precipitacion') && (
         <ChartCard
           title={`Precipitación Mensual (${getChartTypeLabel()})`}
-          subtitle={`Años: ${getYearsLabel()}`}
+          subtitle={`Ciclos: ${getYearsLabel()}`}
           data={climaData.length > 0 ? climaData : fallbackData}
           dataKeys={getDataKeys('precipitacion')}
           colors={chartColors.slice(1)}
@@ -102,7 +102,7 @@ export const ChartsGrid = ({
       {selectedMetric === 'all' && showComparison && (
         <ChartCard
           title="Vista Comparativa Unificada"
-          subtitle={`Todas las métricas por años seleccionados: ${getYearsLabel()}`}
+          subtitle={`Todas las métricas por ciclos seleccionados: ${getYearsLabel()}`}
           data={climaData.length > 0 ? climaData : fallbackData}
           dataKeys={getDataKeys('all')}
           colors={chartColors}

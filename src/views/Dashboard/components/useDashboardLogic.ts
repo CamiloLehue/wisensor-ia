@@ -6,12 +6,13 @@ export const useDashboardLogic = () => {
   const { data } = useDashboard();
 
   // Estados para los filtros
-  const [selectedYears, setSelectedYears] = useState<number[]>([]);
+  const [selectedCiclos, setSelectedCiclos] = useState<string[]>([]);
   const [selectedMetric, setSelectedMetric] = useState<string>('all');
   const [chartType, setChartType] = useState<string>('line');
   const [showComparison, setShowComparison] = useState<boolean>(true);
   const [selectedCenters, setSelectedCenters] = useState<string[]>([]);
   const [compareCenters, setCompareCenters] = useState<boolean>(false);
+  const [compareCiclos, setCompareCiclos] = useState<boolean>(false);
 
   // Función para obtener el nombre del mes
   const getMonthName = (monthId: number): string => {
@@ -25,16 +26,18 @@ export const useDashboardLogic = () => {
     return data.map(center => center.nombreCentro);
   }, [data]);
 
-  // Obtener años disponibles en los datos
-  const availableYears = useMemo(() => {
-    if (!data || data.length === 0) return [2024, 2025];
+  // Obtener ciclos disponibles en los datos
+  const availableCiclos = useMemo(() => {
+    if (!data || data.length === 0) return [];
     
-    const climaYears = data[0]?.ciclos?.clima?.map(c => c.id_año) || [];
-    const consumoYears = data[0]?.ciclos?.consumo_alimentos?.map(c => c.id_año) || [];
-    const fcrYears = data[0]?.ciclos?.fcr?.map(c => c.id_año) || [];
+    const ciclos = new Set<string>();
+    data.forEach(center => {
+      if (center.ciclos?.id_ciclo) {
+        ciclos.add(center.ciclos.id_ciclo);
+      }
+    });
     
-    const allYears = [...new Set([...climaYears, ...consumoYears, ...fcrYears])];
-    return allYears.length > 0 ? allYears.sort() : [2024, 2025];
+    return Array.from(ciclos).sort();
   }, [data]);
 
   // Inicializar centros seleccionados
@@ -44,12 +47,12 @@ export const useDashboardLogic = () => {
     }
   }, [availableCenters, selectedCenters.length, setSelectedCenters]);
 
-  // Inicializar años seleccionados
+  // Inicializar ciclos seleccionados
   useEffect(() => {
-    if (selectedYears.length === 0) {
-      setSelectedYears(availableYears.slice(0, 2)); // Seleccionar los primeros 2 años por defecto
+    if (selectedCiclos.length === 0 && availableCiclos.length > 0) {
+      setSelectedCiclos([availableCiclos[0]]); // Seleccionar el primer ciclo por defecto
     }
-  }, [availableYears, selectedYears.length, setSelectedYears]);
+  }, [availableCiclos, selectedCiclos.length, setSelectedCiclos]);
 
   // Función para filtrar datos por centros seleccionados
   const getFilteredDataForCenters = useCallback(() => {
@@ -69,51 +72,53 @@ export const useDashboardLogic = () => {
   const getDataKeys = (dataType: string) => {
     if (!showComparison) return [];
     
-    const years = selectedYears.length > 0 ? selectedYears : availableYears;
+    const ciclos = selectedCiclos.length > 0 ? selectedCiclos : availableCiclos;
     
     switch (dataType) {
       case 'temperatura':
-        return years.map(year => `temp_${year}`);
+        return ciclos.map(ciclo => `temp_${ciclo}`);
       case 'precipitacion':
-        return years.map(year => `precip_${year}`);
+        return ciclos.map(ciclo => `precip_${ciclo}`);
       case 'consumo':
-        return years.map(year => `consumo_${year}`);
+        return ciclos.map(ciclo => `consumo_${ciclo}`);
       case 'fcr':
-        return years.map(year => `fcr_${year}`);
+        return ciclos.map(ciclo => `fcr_${ciclo}`);
       default:
-        return years.flatMap(year => [`temp_${year}`, `consumo_${year}`, `fcr_${year}`]);
+        return ciclos.flatMap(ciclo => [`temp_${ciclo}`, `consumo_${ciclo}`, `fcr_${ciclo}`]);
     }
   };
 
-  // Colores para diferentes años y métricas
+  // Colores para diferentes ciclos y métricas
   const chartColors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#F97316', '#84CC16'];
 
   // Datos estáticos como respaldo si no hay datos reales
   const fallbackData = [
-    { month: 'Ene', temp_2024: 25.5, temp_2025: 26.2, consumo_2024: 120, consumo_2025: 115, fcr_2024: 1.2, fcr_2025: 1.1 },
-    { month: 'Feb', temp_2024: 26.1, temp_2025: 25.8, consumo_2024: 125, consumo_2025: 118, fcr_2024: 1.3, fcr_2025: 1.2 },
-    { month: 'Mar', temp_2024: 24.8, temp_2025: 27.1, consumo_2024: 110, consumo_2025: 122, fcr_2024: 1.1, fcr_2025: 1.3 },
-    { month: 'Abr', temp_2024: 23.5, temp_2025: 28.0, consumo_2024: 105, consumo_2025: 130, fcr_2024: 1.0, fcr_2025: 1.4 },
-    { month: 'May', temp_2024: 22.8, temp_2025: 24.6, consumo_2024: 98, consumo_2025: 108, fcr_2024: 0.9, fcr_2025: 1.1 },
-    { month: 'Jun', temp_2024: 21.2, temp_2025: 23.2, consumo_2024: 92, consumo_2025: 102, fcr_2024: 0.8, fcr_2025: 1.0 }
+    { month: 'Ene', temp_I23F24: 25.5, consumo_I23F24: 120, fcr_I23F24: 1.2 },
+    { month: 'Feb', temp_I23F24: 26.1, consumo_I23F24: 125, fcr_I23F24: 1.3 },
+    { month: 'Mar', temp_I23F24: 24.8, consumo_I23F24: 110, fcr_I23F24: 1.1 },
+    { month: 'Abr', temp_I23F24: 23.5, consumo_I23F24: 105, fcr_I23F24: 1.0 },
+    { month: 'May', temp_I23F24: 22.8, consumo_I23F24: 98, fcr_I23F24: 0.9 },
+    { month: 'Jun', temp_I23F24: 21.2, consumo_I23F24: 92, fcr_I23F24: 0.8 }
   ];
 
   const filters: DashboardFilters = {
-    selectedYears,
+    selectedCiclos,
     selectedMetric,
     chartType,
     showComparison,
     selectedCenters,
-    compareCenters
+    compareCenters,
+    compareCiclos
   };
 
   const setters = {
-    setSelectedYears,
+    setSelectedCiclos,
     setSelectedMetric,
     setChartType,
     setShowComparison,
     setSelectedCenters,
-    setCompareCenters
+    setCompareCenters,
+    setCompareCiclos
   };
 
   return {
@@ -121,7 +126,7 @@ export const useDashboardLogic = () => {
     filters,
     setters,
     availableCenters,
-    availableYears,
+    availableCiclos,
     getFilteredDataForCenters,
     getDataKeys,
     getMonthName,
