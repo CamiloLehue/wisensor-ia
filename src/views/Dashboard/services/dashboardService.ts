@@ -35,8 +35,63 @@ const mockDashboardData: DashboardType[] = [
       fecha_termino: "2024-01-15",
       meses: [
         {
+          idMes: 1,
+          año: 2023,
+          orden_en_ciclo: 0, // Mes vacío antes del inicio del ciclo
+          datos: {
+            consumo_alimentos: {},
+            fcr: {},
+            peso_promedio: {},
+            clima: {},
+            resumen_mensual: {
+              consumoTotal: 0,
+              fcrPromedio: 0,
+              pesoPromedio: 0,
+              temperaturaPromedio: 0,
+              precipitacionTotal: 0
+            }
+          }
+        },
+        {
+          idMes: 2,
+          año: 2023,
+          orden_en_ciclo: 0, // Mes vacío antes del inicio del ciclo
+          datos: {
+            consumo_alimentos: {},
+            fcr: {},
+            peso_promedio: {},
+            clima: {},
+            resumen_mensual: {
+              consumoTotal: 0,
+              fcrPromedio: 0,
+              pesoPromedio: 0,
+              temperaturaPromedio: 0,
+              precipitacionTotal: 0
+            }
+          }
+        },
+        {
+          idMes: 3,
+          año: 2023,
+          orden_en_ciclo: 0, // Mes vacío antes del inicio del ciclo
+          datos: {
+            consumo_alimentos: {},
+            fcr: {},
+            peso_promedio: {},
+            clima: {},
+            resumen_mensual: {
+              consumoTotal: 0,
+              fcrPromedio: 0,
+              pesoPromedio: 0,
+              temperaturaPromedio: 0,
+              precipitacionTotal: 0
+            }
+          }
+        },
+        {
           idMes: 4,
           año: 2023,
+          orden_en_ciclo: 1, // Primer mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-04-08": 75,
@@ -78,6 +133,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 5,
           año: 2023,
+          orden_en_ciclo: 2, // Segundo mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-05-01": 8931,
@@ -119,6 +175,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 6,
           año: 2023,
+          orden_en_ciclo: 3, // Tercer mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-06-01": 19846,
@@ -160,6 +217,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 7,
           año: 2023,
+          orden_en_ciclo: 4, // Cuarto mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-07-01": 27426,
@@ -201,6 +259,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 8,
           año: 2023,
+          orden_en_ciclo: 5, // Quinto mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-08-01": 77152,
@@ -242,6 +301,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 9,
           año: 2023,
+          orden_en_ciclo: 6, // Sexto mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-09-01": 85988,
@@ -283,6 +343,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 10,
           año: 2023,
+          orden_en_ciclo: 7, // Séptimo mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-10-01": 112808,
@@ -324,6 +385,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 11,
           año: 2023,
+          orden_en_ciclo: 8, // Octavo mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-11-01": 204498,
@@ -365,6 +427,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 12,
           año: 2023,
+          orden_en_ciclo: 9, // Noveno mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-12-01": 207439,
@@ -406,6 +469,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 1,
           año: 2024,
+          orden_en_ciclo: 10, // Décimo mes del ciclo (último)
           datos: {
             consumo_alimentos: {
               "2024-01-01": 302100,
@@ -494,8 +558,63 @@ const mockDashboardData: DashboardType[] = [
       fecha_termino: "2024-01-15",
       meses: [
         {
+          idMes: 1,
+          año: 2023,
+          orden_en_ciclo: 0, // Mes vacío antes del inicio del ciclo
+          datos: {
+            consumo_alimentos: {},
+            fcr: {},
+            peso_promedio: {},
+            clima: {},
+            resumen_mensual: {
+              consumoTotal: 0,
+              fcrPromedio: 0,
+              pesoPromedio: 0,
+              temperaturaPromedio: 0,
+              precipitacionTotal: 0
+            }
+          }
+        },
+        {
+          idMes: 2,
+          año: 2023,
+          orden_en_ciclo: 0, // Mes vacío antes del inicio del ciclo
+          datos: {
+            consumo_alimentos: {},
+            fcr: {},
+            peso_promedio: {},
+            clima: {},
+            resumen_mensual: {
+              consumoTotal: 0,
+              fcrPromedio: 0,
+              pesoPromedio: 0,
+              temperaturaPromedio: 0,
+              precipitacionTotal: 0
+            }
+          }
+        },
+        {
+          idMes: 3,
+          año: 2023,
+          orden_en_ciclo: 0, // Mes vacío antes del inicio del ciclo
+          datos: {
+            consumo_alimentos: {},
+            fcr: {},
+            peso_promedio: {},
+            clima: {},
+            resumen_mensual: {
+              consumoTotal: 0,
+              fcrPromedio: 0,
+              pesoPromedio: 0,
+              temperaturaPromedio: 0,
+              precipitacionTotal: 0
+            }
+          }
+        },
+        {
           idMes: 4,
           año: 2023,
+          orden_en_ciclo: 1, // Primer mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-04-08": 80,
@@ -537,6 +656,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 5,
           año: 2023,
+          orden_en_ciclo: 2, // Segundo mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-05-01": 9200,
@@ -578,6 +698,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 6,
           año: 2023,
+          orden_en_ciclo: 3, // Tercer mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-06-01": 21000,
@@ -619,6 +740,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 7,
           año: 2023,
+          orden_en_ciclo: 4, // Cuarto mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-07-01": 28500,
@@ -660,6 +782,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 8,
           año: 2023,
+          orden_en_ciclo: 5, // Quinto mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-08-01": 80000,
@@ -701,6 +824,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 9,
           año: 2023,
+          orden_en_ciclo: 6, // Sexto mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-09-01": 89000,
@@ -742,6 +866,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 10,
           año: 2023,
+          orden_en_ciclo: 7, // Séptimo mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-10-01": 116500,
@@ -783,6 +908,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 11,
           año: 2023,
+          orden_en_ciclo: 8, // Octavo mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-11-01": 211000,
@@ -824,6 +950,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 12,
           año: 2023,
+          orden_en_ciclo: 9, // Noveno mes del ciclo
           datos: {
             consumo_alimentos: {
               "2023-12-01": 214500,
@@ -865,6 +992,7 @@ const mockDashboardData: DashboardType[] = [
         {
           idMes: 1,
           año: 2024,
+          orden_en_ciclo: 10, // Décimo mes del ciclo (último)
           datos: {
             consumo_alimentos: {
               "2024-01-01": 315000,

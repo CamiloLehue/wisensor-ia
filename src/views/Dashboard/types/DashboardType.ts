@@ -16,6 +16,7 @@ export interface Ciclos {
 export interface Mese {
     idMes: number;
     año: number; // Año al que pertenece este mes en el ciclo
+    orden_en_ciclo: number; // Posición cronológica en el ciclo (1=primer mes, 2=segundo mes, etc.)
     datos: Datos;
 }
 
