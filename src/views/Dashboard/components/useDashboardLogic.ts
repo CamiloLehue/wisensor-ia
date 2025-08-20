@@ -14,10 +14,11 @@ export const useDashboardLogic = () => {
   const [compareCenters, setCompareCenters] = useState<boolean>(false);
   const [compareCiclos, setCompareCiclos] = useState<boolean>(false);
 
-  // Función para obtener el nombre del mes
-  const getMonthName = (monthId: number): string => {
+  // Función para obtener el nombre del mes con año
+  const getMonthName = (monthId: number, year?: number): string => {
     const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-    return months[monthId - 1] || `Mes ${monthId}`;
+    const monthName = months[monthId - 1] || `Mes ${monthId}`;
+    return year ? `${monthName} ${year}` : monthName;
   };
 
   // Obtener centros disponibles
@@ -93,12 +94,16 @@ export const useDashboardLogic = () => {
 
   // Datos estáticos como respaldo si no hay datos reales
   const fallbackData = [
-    { month: 'Ene', temp_I23F24: 25.5, consumo_I23F24: 120, fcr_I23F24: 1.2 },
-    { month: 'Feb', temp_I23F24: 26.1, consumo_I23F24: 125, fcr_I23F24: 1.3 },
-    { month: 'Mar', temp_I23F24: 24.8, consumo_I23F24: 110, fcr_I23F24: 1.1 },
-    { month: 'Abr', temp_I23F24: 23.5, consumo_I23F24: 105, fcr_I23F24: 1.0 },
-    { month: 'May', temp_I23F24: 22.8, consumo_I23F24: 98, fcr_I23F24: 0.9 },
-    { month: 'Jun', temp_I23F24: 21.2, consumo_I23F24: 92, fcr_I23F24: 0.8 }
+    { month: 'Abr 2023', temp_I23F24: 25.5, consumo_I23F24: 120, fcr_I23F24: 1.2 },
+    { month: 'May 2023', temp_I23F24: 26.1, consumo_I23F24: 125, fcr_I23F24: 1.3 },
+    { month: 'Jun 2023', temp_I23F24: 24.8, consumo_I23F24: 110, fcr_I23F24: 1.1 },
+    { month: 'Jul 2023', temp_I23F24: 23.5, consumo_I23F24: 105, fcr_I23F24: 1.0 },
+    { month: 'Ago 2023', temp_I23F24: 22.8, consumo_I23F24: 98, fcr_I23F24: 0.9 },
+    { month: 'Sep 2023', temp_I23F24: 21.2, consumo_I23F24: 92, fcr_I23F24: 0.8 },
+    { month: 'Oct 2023', temp_I23F24: 19.8, consumo_I23F24: 88, fcr_I23F24: 0.85 },
+    { month: 'Nov 2023', temp_I23F24: 18.5, consumo_I23F24: 95, fcr_I23F24: 0.9 },
+    { month: 'Dic 2023', temp_I23F24: 17.2, consumo_I23F24: 102, fcr_I23F24: 0.95 },
+    { month: 'Ene 2024', temp_I23F24: 16.8, consumo_I23F24: 108, fcr_I23F24: 1.0 }
   ];
 
   const filters: DashboardFilters = {

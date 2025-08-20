@@ -15,6 +15,7 @@ function Dashboard() {
     availableCiclos,
     getFilteredDataForCenters,
     getDataKeys,
+    getMonthName,
     chartColors,
     fallbackData,
   } = useDashboardLogic();
@@ -22,23 +23,7 @@ function Dashboard() {
   const { climaData, consumoData, fcrData, semanalesData } = usePreparedData(
     data || [],
     getFilteredDataForCenters,
-    (monthId: number) => {
-      const months = [
-        "Ene",
-        "Feb",
-        "Mar",
-        "Abr",
-        "May",
-        "Jun",
-        "Jul",
-        "Ago",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dic",
-      ];
-      return months[monthId - 1] || `Mes ${monthId}`;
-    },
+    getMonthName,
     filters.selectedCenters,
     filters.compareCenters
   );

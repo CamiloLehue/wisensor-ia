@@ -4,7 +4,7 @@ import { ChartData, DashboardData } from './types';
 export const usePreparedData = (
   data: DashboardData[],
   getFilteredDataForCenters: () => DashboardData[],
-  getMonthName: (monthId: number) => string,
+  getMonthName: (monthId: number, year?: number) => string,
   selectedCenters: string[],
   compareCenters: boolean
 ) => {
@@ -15,25 +15,42 @@ export const usePreparedData = (
     const filteredCenters = getFilteredDataForCenters();
     const chartData: ChartData[] = [];
     
-    // Obtener todos los meses únicos del ciclo actual
-    const allMonths = new Set<number>();
+    // Obtener todos los meses del ciclo ordenados por orden_en_ciclo
+    const allMonths: Array<{idMes: number, año: number, orden_en_ciclo: number}> = [];
     filteredCenters.forEach(centerData => {
       if (centerData?.ciclos?.meses) {
         centerData.ciclos.meses.forEach(mes => {
-          allMonths.add(mes.idMes);
+          if (mes.orden_en_ciclo > 0) { // Solo incluir meses que no están vacíos
+            const existingMonth = allMonths.find(m => 
+              m.idMes === mes.idMes && 
+              m.año === mes.año && 
+              m.orden_en_ciclo === mes.orden_en_ciclo
+            );
+            if (!existingMonth) {
+              allMonths.push({
+                idMes: mes.idMes,
+                año: mes.año,
+                orden_en_ciclo: mes.orden_en_ciclo
+              });
+            }
+          }
         });
       }
     });
     
-    const sortedMonths = Array.from(allMonths).sort((a, b) => a - b);
+    const sortedMonths = allMonths.sort((a, b) => a.orden_en_ciclo - b.orden_en_ciclo);
     
-    // Crear estructura base con todos los meses del ciclo
-    sortedMonths.forEach(mes => {
-      const monthData: ChartData = { month: getMonthName(mes) };
+    // Crear estructura base con todos los meses del ciclo ordenados cronológicamente
+    sortedMonths.forEach(mesInfo => {
+      const monthData: ChartData = { month: getMonthName(mesInfo.idMes, mesInfo.año) };
       
       filteredCenters.forEach(centerData => {
         if (centerData?.ciclos) {
-          const mesData = centerData.ciclos.meses.find((m) => m.idMes === mes);
+          const mesData = centerData.ciclos.meses.find((m) => 
+            m.idMes === mesInfo.idMes && 
+            m.año === mesInfo.año &&
+            m.orden_en_ciclo === mesInfo.orden_en_ciclo
+          );
           if (mesData?.datos?.resumen_mensual) {
             const keyPrefix = compareCenters && selectedCenters.length > 1 
               ? `${centerData.nombreCentro}_temp_${centerData.ciclos.id_ciclo}`
@@ -61,24 +78,41 @@ export const usePreparedData = (
     const filteredCenters = getFilteredDataForCenters();
     const chartData: ChartData[] = [];
     
-    // Obtener todos los meses únicos del ciclo actual
-    const allMonths = new Set<number>();
+    // Obtener todos los meses del ciclo ordenados por orden_en_ciclo
+    const allMonths: Array<{idMes: number, año: number, orden_en_ciclo: number}> = [];
     filteredCenters.forEach(centerData => {
       if (centerData?.ciclos?.meses) {
         centerData.ciclos.meses.forEach(mes => {
-          allMonths.add(mes.idMes);
+          if (mes.orden_en_ciclo > 0) { // Solo incluir meses que no están vacíos
+            const existingMonth = allMonths.find(m => 
+              m.idMes === mes.idMes && 
+              m.año === mes.año && 
+              m.orden_en_ciclo === mes.orden_en_ciclo
+            );
+            if (!existingMonth) {
+              allMonths.push({
+                idMes: mes.idMes,
+                año: mes.año,
+                orden_en_ciclo: mes.orden_en_ciclo
+              });
+            }
+          }
         });
       }
     });
     
-    const sortedMonths = Array.from(allMonths).sort((a, b) => a - b);
+    const sortedMonths = allMonths.sort((a, b) => a.orden_en_ciclo - b.orden_en_ciclo);
     
-    sortedMonths.forEach(mes => {
-      const monthData: ChartData = { month: getMonthName(mes) };
+    sortedMonths.forEach(mesInfo => {
+      const monthData: ChartData = { month: getMonthName(mesInfo.idMes, mesInfo.año) };
       
       filteredCenters.forEach(centerData => {
         if (centerData?.ciclos) {
-          const mesData = centerData.ciclos.meses.find((m) => m.idMes === mes);
+          const mesData = centerData.ciclos.meses.find((m) => 
+            m.idMes === mesInfo.idMes && 
+            m.año === mesInfo.año &&
+            m.orden_en_ciclo === mesInfo.orden_en_ciclo
+          );
           if (mesData?.datos?.resumen_mensual) {
             const keyPrefix = compareCenters && selectedCenters.length > 1 
               ? `${centerData.nombreCentro}_consumo_${centerData.ciclos.id_ciclo}`
@@ -101,24 +135,41 @@ export const usePreparedData = (
     const filteredCenters = getFilteredDataForCenters();
     const chartData: ChartData[] = [];
     
-    // Obtener todos los meses únicos del ciclo actual
-    const allMonths = new Set<number>();
+    // Obtener todos los meses del ciclo ordenados por orden_en_ciclo
+    const allMonths: Array<{idMes: number, año: number, orden_en_ciclo: number}> = [];
     filteredCenters.forEach(centerData => {
       if (centerData?.ciclos?.meses) {
         centerData.ciclos.meses.forEach(mes => {
-          allMonths.add(mes.idMes);
+          if (mes.orden_en_ciclo > 0) { // Solo incluir meses que no están vacíos
+            const existingMonth = allMonths.find(m => 
+              m.idMes === mes.idMes && 
+              m.año === mes.año && 
+              m.orden_en_ciclo === mes.orden_en_ciclo
+            );
+            if (!existingMonth) {
+              allMonths.push({
+                idMes: mes.idMes,
+                año: mes.año,
+                orden_en_ciclo: mes.orden_en_ciclo
+              });
+            }
+          }
         });
       }
     });
     
-    const sortedMonths = Array.from(allMonths).sort((a, b) => a - b);
+    const sortedMonths = allMonths.sort((a, b) => a.orden_en_ciclo - b.orden_en_ciclo);
     
-    sortedMonths.forEach(mes => {
-      const monthData: ChartData = { month: getMonthName(mes) };
+    sortedMonths.forEach(mesInfo => {
+      const monthData: ChartData = { month: getMonthName(mesInfo.idMes, mesInfo.año) };
       
       filteredCenters.forEach(centerData => {
         if (centerData?.ciclos) {
-          const mesData = centerData.ciclos.meses.find((m) => m.idMes === mes);
+          const mesData = centerData.ciclos.meses.find((m) => 
+            m.idMes === mesInfo.idMes && 
+            m.año === mesInfo.año &&
+            m.orden_en_ciclo === mesInfo.orden_en_ciclo
+          );
           if (mesData?.datos?.resumen_mensual) {
             const keyPrefix = compareCenters && selectedCenters.length > 1 
               ? `${centerData.nombreCentro}_fcr_${centerData.ciclos.id_ciclo}`
