@@ -55,7 +55,7 @@ function Sidebar() {
 
                 {item.path === "/analisis" ? (
                   <img
-                    src="/public/logo-ia.svg"
+                    src="/public/logo-ia-animate.svg"
                     alt="Logo ia"
                     className="w-9"
                   />

@@ -1,10 +1,10 @@
-import { 
-  DashboardHeader, 
-  DashboardFiltersPanel, 
+import {
+  DashboardHeader,
+  DashboardFiltersPanel,
   ChartsGrid,
   useDashboardLogic,
-  usePreparedData
-} from './components';
+  usePreparedData,
+} from "./components";
 
 function Dashboard() {
   const {
@@ -16,19 +16,27 @@ function Dashboard() {
     getFilteredDataForCenters,
     getDataKeys,
     chartColors,
-    fallbackData
+    fallbackData,
   } = useDashboardLogic();
 
-  const {
-    climaData,
-    consumoData,
-    fcrData,
-    semanalesData
-  } = usePreparedData(
+  const { climaData, consumoData, fcrData, semanalesData } = usePreparedData(
     data || [],
     getFilteredDataForCenters,
     (monthId: number) => {
-      const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+      const months = [
+        "Ene",
+        "Feb",
+        "Mar",
+        "Abr",
+        "May",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dic",
+      ];
       return months[monthId - 1] || `Mes ${monthId}`;
     },
     filters.selectedYears,
@@ -38,17 +46,16 @@ function Dashboard() {
 
   return (
     <div className="relative w-full h-full p-4 gap-4 flex flex-col">
-      <DashboardHeader 
-        data={data}
-        selectedCenters={filters.selectedCenters}
-        compareCenters={filters.compareCenters}
-      />
-
       <DashboardFiltersPanel
         filters={filters}
         availableYears={availableYears}
         availableCenters={availableCenters}
         setters={setters}
+      />
+      <DashboardHeader
+        data={data}
+        selectedCenters={filters.selectedCenters}
+        compareCenters={filters.compareCenters}
       />
 
       <ChartsGrid
