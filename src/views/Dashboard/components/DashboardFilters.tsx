@@ -1,4 +1,5 @@
 import { type DashboardFilters } from "./types";
+import { CustomCheckbox } from "./CustomCheckbox";
 
 interface DashboardFiltersProps {
   filters: DashboardFilters;
@@ -111,20 +112,18 @@ export const DashboardFiltersPanel = ({
             Centro
           </label>
           <div className="flex flex-col gap-2">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
+            <div className="flex items-center">
+              <CustomCheckbox
                 checked={compareCenters}
-                onChange={(e) => handleCompareCentersChange(e.target.checked)}
-                className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+                onChange={handleCompareCentersChange}
+                label="Comparar Centros"
               />
-              <span className="text-white text-sm">Comparar Centros</span>
               {compareCenters && (
                 <span className="ml-2 px-2 py-1 text-xs bg-gradient-to-tl from-[#032e79]  to-[#0baeef] text-[#ffffff] rounded-full">
                   {selectedCenters.length} seleccionados
                 </span>
               )}
-            </label>
+            </div>
             <div className="flex flex-nowrap gap-1 w-full">
               {availableCenters.map((center) => (
                 <button
@@ -156,26 +155,19 @@ export const DashboardFiltersPanel = ({
             Ciclos a Comparar
           </label>
           <div className="flex flex-col gap-2">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={compareCiclos}
-                onChange={(e) => setCompareCiclos(e.target.checked)}
-                className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
-              />
-              <span className="text-white text-sm">Comparar Ciclos</span>
-            </label>
+            <CustomCheckbox
+              checked={compareCiclos}
+              onChange={setCompareCiclos}
+              label="Comparar Ciclos"
+            />
             <div className="flex gap-2 flex-wrap">
               {availableCiclos.map((ciclo) => (
-                <label key={ciclo} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedCiclos.includes(ciclo)}
-                    onChange={(e) => handleCicloChange(ciclo, e.target.checked)}
-                    className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
-                  />
-                  <span className="text-white text-sm">{ciclo}</span>
-                </label>
+                <CustomCheckbox
+                  key={ciclo}
+                  checked={selectedCiclos.includes(ciclo)}
+                  onChange={(checked) => handleCicloChange(ciclo, checked)}
+                  label={ciclo}
+                />
               ))}
             </div>
           </div>
@@ -222,15 +214,11 @@ export const DashboardFiltersPanel = ({
         <label className="text-sm font-medium text-gray-300 mb-2">
           Modo Comparación
         </label>
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            checked={showComparison}
-            onChange={(e) => setShowComparison(e.target.checked)}
-            className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
-          />
-          <span className="text-white text-sm">Comparar Ciclos</span>
-        </label>
+        <CustomCheckbox
+          checked={showComparison}
+          onChange={setShowComparison}
+          label="Comparar Ciclos"
+        />
       </CardFilter>
 
       {/* Selector de Métrica */}
