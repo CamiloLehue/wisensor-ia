@@ -71,9 +71,88 @@ export const useDashboardLogic = () => {
 
   // Función para obtener las claves de datos según la métrica seleccionada
   const getDataKeys = (dataType: string) => {
-    if (!showComparison) return [];
-    
     const ciclos = selectedCiclos.length > 0 ? selectedCiclos : availableCiclos;
+    const filteredCenters = getFilteredDataForCenters();
+    
+    // Si se están comparando centros, generar claves con nombres de centros
+    if (compareCenters && selectedCenters.length > 1) {
+      return filteredCenters.flatMap(center => {
+        if (!center?.ciclos?.id_ciclo) return [];
+        const ciclo = center.ciclos.id_ciclo;
+        switch (dataType) {
+          case 'temperatura':
+            return [`${center.nombreCentro}_temp_${ciclo}`];
+          case 'precipitacion':
+            return [`${center.nombreCentro}_precip_${ciclo}`];
+          case 'consumo':
+            return [`${center.nombreCentro}_consumo_${ciclo}`];
+          case 'fcr':
+            return [`${center.nombreCentro}_fcr_${ciclo}`];
+          default:
+            return [
+              `${center.nombreCentro}_temp_${ciclo}`, 
+              `${center.nombreCentro}_consumo_${ciclo}`, 
+              `${center.nombreCentro}_fcr_${ciclo}`
+            ];
+        }
+      });
+    }
+    
+    // Verificar si hay datos reales disponibles
+    const hasRealData = filteredCenters.length > 0 && filteredCenters[0]?.ciclos?.id_ciclo;
+    
+    // Si no hay comparación activa, usar modo individual
+    if (!showComparison && !compareCenters) {
+      if (!hasRealData) {
+        // Usar claves del fallbackData cuando no hay datos reales
+        switch (dataType) {
+          case 'temperatura':
+            return ['temp_I23F24'];
+          case 'precipitacion':
+            return ['precip_I23F24'];
+          case 'consumo':
+            return ['consumo_I23F24'];
+          case 'fcr':
+            return ['fcr_I23F24'];
+          default:
+            return ['temp_I23F24', 'consumo_I23F24', 'fcr_I23F24'];
+        }
+      }
+      
+      // Usar datos reales del centro seleccionado
+      const centerData = filteredCenters[0];
+      const ciclo = centerData.ciclos.id_ciclo;
+      
+      switch (dataType) {
+        case 'temperatura':
+          return [`temp_${ciclo}`];
+        case 'precipitacion':
+          return [`precip_${ciclo}`];
+        case 'consumo':
+          return [`consumo_${ciclo}`];
+        case 'fcr':
+          return [`fcr_${ciclo}`];
+        default:
+          return [`temp_${ciclo}`, `consumo_${ciclo}`, `fcr_${ciclo}`];
+      }
+    }
+    
+    // Modo comparación de ciclos
+    if (!hasRealData) {
+      // Usar claves del fallbackData cuando no hay datos reales
+      switch (dataType) {
+        case 'temperatura':
+          return ['temp_I23F24'];
+        case 'precipitacion':
+          return ['precip_I23F24'];
+        case 'consumo':
+          return ['consumo_I23F24'];
+        case 'fcr':
+          return ['fcr_I23F24'];
+        default:
+          return ['temp_I23F24', 'consumo_I23F24', 'fcr_I23F24'];
+      }
+    }
     
     switch (dataType) {
       case 'temperatura':

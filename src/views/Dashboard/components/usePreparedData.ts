@@ -13,6 +13,10 @@ export const usePreparedData = (
     if (!data || data.length === 0) return [];
     
     const filteredCenters = getFilteredDataForCenters();
+    
+    // Si no hay centros filtrados, retornar array vacío
+    if (!filteredCenters || filteredCenters.length === 0) return [];
+    
     const chartData: ChartData[] = [];
     
     // Obtener todos los meses del ciclo ordenados por orden_en_ciclo
@@ -37,6 +41,9 @@ export const usePreparedData = (
         });
       }
     });
+    
+    // Si no hay meses, retornar array vacío
+    if (allMonths.length === 0) return [];
     
     const sortedMonths = allMonths.sort((a, b) => a.orden_en_ciclo - b.orden_en_ciclo);
     
@@ -76,6 +83,10 @@ export const usePreparedData = (
     if (!data || data.length === 0) return [];
     
     const filteredCenters = getFilteredDataForCenters();
+    
+    // Si no hay centros filtrados, retornar array vacío
+    if (!filteredCenters || filteredCenters.length === 0) return [];
+    
     const chartData: ChartData[] = [];
     
     // Obtener todos los meses del ciclo ordenados por orden_en_ciclo
@@ -100,6 +111,9 @@ export const usePreparedData = (
         });
       }
     });
+    
+    // Si no hay meses, retornar array vacío
+    if (allMonths.length === 0) return [];
     
     const sortedMonths = allMonths.sort((a, b) => a.orden_en_ciclo - b.orden_en_ciclo);
     
@@ -133,6 +147,10 @@ export const usePreparedData = (
     if (!data || data.length === 0) return [];
     
     const filteredCenters = getFilteredDataForCenters();
+    
+    // Si no hay centros filtrados, retornar array vacío
+    if (!filteredCenters || filteredCenters.length === 0) return [];
+    
     const chartData: ChartData[] = [];
     
     // Obtener todos los meses del ciclo ordenados por orden_en_ciclo
@@ -157,6 +175,9 @@ export const usePreparedData = (
         });
       }
     });
+    
+    // Si no hay meses, retornar array vacío
+    if (allMonths.length === 0) return [];
     
     const sortedMonths = allMonths.sort((a, b) => a.orden_en_ciclo - b.orden_en_ciclo);
     

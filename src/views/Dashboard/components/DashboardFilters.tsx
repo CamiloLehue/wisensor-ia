@@ -52,14 +52,33 @@ export const DashboardFiltersPanel = ({
   const handleCenterSelection = (center: string) => {
     if (compareCenters) {
       // En modo comparación, permite múltiples selecciones
-      setSelectedCenters(
-        selectedCenters.includes(center)
-          ? selectedCenters.filter((c) => c !== center)
-          : [...selectedCenters, center]
-      );
+      const newSelection = selectedCenters.includes(center)
+        ? selectedCenters.filter((c) => c !== center)
+        : [...selectedCenters, center];
+      
+      // Asegurar que al menos un centro esté seleccionado
+      if (newSelection.length > 0) {
+        setSelectedCenters(newSelection);
+      }
     } else {
       // En modo individual, solo uno a la vez
       setSelectedCenters([center]);
+    }
+  };
+
+  const handleCompareCentersChange = (checked: boolean) => {
+    setCompareCenters(checked);
+    
+    if (!checked && selectedCenters.length > 1) {
+      // Si se desactiva la comparación y hay múltiples centros seleccionados,
+      // mantener solo el primero
+      setSelectedCenters([selectedCenters[0]]);
+    } else if (checked && selectedCenters.length === 0) {
+      // Si se activa la comparación y no hay centros seleccionados,
+      // seleccionar el primer centro disponible
+      if (availableCenters.length > 0) {
+        setSelectedCenters([availableCenters[0]]);
+      }
     }
   };
 
@@ -79,6 +98,8 @@ export const DashboardFiltersPanel = ({
       availableCenters.length > 0 ? [availableCenters[0]] : []
     );
     setCompareCenters(false);
+    setCompareCiclos(false);
+    setShowComparison(false);
   };
   // bg-gradient-to-l to-[#18182a] from-[#070714]
   return (
@@ -93,20 +114,30 @@ export const DashboardFiltersPanel = ({
             <input
               type="checkbox"
               checked={compareCenters}
-              onChange={(e) => setCompareCenters(e.target.checked)}
+              onChange={(e) => handleCompareCentersChange(e.target.checked)}
               className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
             />
             <span className="text-white text-sm">Comparar Centros</span>
+            {compareCenters && (
+              <span className="ml-2 px-2 py-1 text-xs bg-blue-600 text-white rounded-full">
+                {selectedCenters.length} seleccionados
+              </span>
+            )}
           </label>
           <div className="flex flex-wrap gap-1 max-w-48">
             {availableCenters.map((center) => (
               <button
                 key={center}
                 onClick={() => handleCenterSelection(center)}
+                disabled={!compareCenters && selectedCenters.includes(center)}
                 className={`px-2 py-1 text-xs rounded-md transition-colors ${
                   selectedCenters.includes(center)
                     ? "bg-blue-600 text-white"
                     : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                } ${
+                  !compareCenters && selectedCenters.includes(center)
+                    ? "opacity-75 cursor-default"
+                    : ""
                 }`}
               >
                 {center}
