@@ -2,7 +2,7 @@
   --primary: #00ffd0;
   --primary-dark: #0096cc;
   --primary-light: #88ffdd;
-  --size: 20px;
+  --size: 18px;
   position: relative;
   width: var(--size);
   height: var(--size);

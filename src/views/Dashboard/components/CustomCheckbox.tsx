@@ -66,7 +66,7 @@ export const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
           </div>
         </div>
       </label>
-      {label && <span className="text-white text-sm ml-3">{label}</span>}
+      {label && <span className="text-white text-xs ml-3">{label}</span>}
     </div>
   );
 };

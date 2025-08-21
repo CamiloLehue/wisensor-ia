@@ -119,7 +119,7 @@ export const DashboardFiltersPanel = ({
                 label="Comparar Centros"
               />
               {compareCenters && (
-                <span className="ml-2 px-2 py-1 text-xs bg-gradient-to-tl from-[#032e79]  to-[#0baeef] text-[#ffffff] rounded-full">
+                <span className="ml-2 px-2 py-1 text-xs text-nowrap border-b border-[#0baeef]">
                   {selectedCenters.length} seleccionados
                 </span>
               )}
