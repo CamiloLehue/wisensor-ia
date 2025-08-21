@@ -1,5 +1,6 @@
 import { type DashboardFilters } from "./types";
 import { CustomCheckbox } from "./CustomCheckbox";
+import { AdvancedButton } from "../../../components/ui/AdvancedButton";
 
 interface DashboardFiltersProps {
   filters: DashboardFilters;
@@ -126,22 +127,24 @@ export const DashboardFiltersPanel = ({
             </div>
             <div className="flex flex-nowrap gap-1 w-full">
               {availableCenters.map((center) => (
-                <button
+                <AdvancedButton
                   key={center}
+                  variant={selectedCenters.includes(center) ? "solid" : "border"}
+                  size="small"
                   onClick={() => handleCenterSelection(center)}
                   disabled={!compareCenters && selectedCenters.includes(center)}
-                  className={`px-5 py-2  rounded-md font-semibold w-full transition-colors cursor-pointer ${
+                  className={`w-full text-sm font-semibold ${
                     selectedCenters.includes(center)
-                      ? "bg-gradient-to-tl from-[#032e79]  to-[#0baeef] text-[#ffffff] border border-[#0baeef] text-lg"
-                      : "border border-dashed border-[#3f88d0] text-gray-300 hover:bg-[#032e79] hover:text-white"
+                      ? "!bg-gradient-to-tl !from-[#032e79] !to-[#0baeef] !border-[#0baeef]"
+                      : "!border-dashed !border-[#3f88d0] !text-gray-300 hover:!bg-[#032e79]"
                   } ${
                     !compareCenters && selectedCenters.includes(center)
-                      ? "cursor-default"
+                      ? "!cursor-default"
                       : ""
                   }`}
                 >
                   {center}
-                </button>
+                </AdvancedButton>
               ))}
             </div>
           </div>
@@ -227,18 +230,20 @@ export const DashboardFiltersPanel = ({
           Acciones
         </label>
         <div className="flex gap-2">
-          <button
+          <AdvancedButton
+            variant="success"
+            size="small"
             onClick={handleSelectAllCiclos}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded-lg transition-colors"
           >
             Todos
-          </button>
-          <button
+          </AdvancedButton>
+          <AdvancedButton
+            variant="ghost"
+            size="small"
             onClick={handleClearAll}
-            className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-3 py-1 rounded-lg transition-colors"
           >
             Limpiar
-          </button>
+          </AdvancedButton>
         </div>
       </CardFilter>
     </div>
