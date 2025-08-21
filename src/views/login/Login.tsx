@@ -1,8 +1,9 @@
-import { ArrowBigRightDash, LogIn, Mail, Lock } from "lucide-react";
+import { LogIn, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import Version from "../../components/Version";
 import { useLogin } from "./hooks/useLogin";
+import { AdvancedButton } from "../../components/ui/AdvancedButton";
 
 export const Login = () => {
   const { login: loginContext } = useAuth();
@@ -103,14 +104,16 @@ export const Login = () => {
                 </div>
               </div>
 
-              <button
+              <AdvancedButton
                 type="submit"
-                className="w-full bg-cyan-500/90 hover:bg-cyan-600 text-white font-medium py-2 rounded-lg transition duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-md mt-2"
+                variant="solid"
+                size="large"
+                className="w-full !bg-cyan-500/90 hover:!bg-cyan-600 flex items-center justify-center gap-2 !shadow-md mt-2"
                 disabled={loading}
               >
                 <LogIn className="h-5 w-5" />
                 {loading ? 'Ingresando...' : 'Ingresar al sistema'}
-              </button>
+              </AdvancedButton>
             </form>
           </div>
           {/* Footer fuera del card, centrado */}

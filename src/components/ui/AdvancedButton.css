@@ -1,0 +1,267 @@
+/* CSS Variables for Color Management */
+:root {
+  /* Primary Colors */
+  --primary: #007bff;
+  --primary-dark: #0056b3;
+  --primary-light: #4dabf7;
+  
+  /* Default Colors */
+  --default: #ffffff;
+  --default-dark: #f8f9fa;
+  --default-light: #ffffff;
+  --default-text: #000000;
+  
+  /* Success Colors */
+  --success: #28a745;
+  --success-dark: #218838;
+  --success-light: #40c057;
+  
+  /* Danger Colors */
+  --danger: #dc3545;
+  --danger-dark: #c82333;
+  --danger-light: #fa5252;
+  
+  /* Warning Colors */
+  --warning: #ffc107;
+  --warning-dark: #e0a800;
+  --warning-light: #ffd43b;
+  --warning-text: #212529;
+  
+  /* Info Colors */
+  --info: #17a2b8;
+  --info-dark: #138496;
+  --info-light: #22b8cf;
+  
+  /* Ghost Colors */
+  --ghost: #6c757d;
+  --ghost-dark: #495057;
+  --ghost-light: #adb5bd;
+  
+  /* Disabled Colors */
+  --disabled: #e9ecef;
+  --disabled-text: #6c757d;
+  
+  /* Common Colors */
+  --white: #ffffff;
+  --black: #000000;
+  --transparent: transparent;
+}
+
+/* Base Button Styles */
+.btn {
+  position: relative;
+  font-size: 17px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1em 2.5em;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 1em;
+  transition: all 0.2s;
+  border: none;
+  font-family: inherit;
+  font-weight: 500;
+  outline: none;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn::after {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border-radius: 1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  transition: all 0.4s;
+}
+
+.btn:hover::after {
+  transform: scaleX(1.4) scaleY(1.6);
+  opacity: 0;
+}
+
+/* Size Variants */
+.btn--small {
+  font-size: 14px;
+  padding: 0.7em 2em;
+}
+
+.btn--medium {
+  font-size: 17px;
+  padding: 1em 2.5em;
+}
+
+.btn--large {
+  font-size: 20px;
+  padding: 1.3em 3em;
+}
+
+/* Default Variant */
+.btn--default {
+  color: var(--default-text);
+  background-color: var(--default);
+}
+
+.btn--default::after {
+  background-color: var(--default);
+}
+
+/* Solid Variant */
+.btn--solid {
+  color: var(--white);
+  background-color: var(--primary);
+}
+
+.btn--solid::after {
+  background-color: var(--primary);
+}
+
+.btn--solid:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Border Variant */
+.btn--border {
+  color: var(--primary);
+  background-color: var(--transparent);
+  border: 1px solid var(--primary);
+}
+
+.btn--border::after {
+  background-color: var(--primary);
+}
+
+.btn--border:hover {
+  color: var(--white);
+  background-color: var(--primary);
+}
+
+/* Ghost Variant */
+.btn--ghost {
+  color: var(--ghost);
+  background-color: rgba(108, 117, 125, 0.1);
+  border: 1px solid rgba(108, 117, 125, 0.3);
+}
+
+.btn--ghost::after {
+  background-color: rgba(108, 117, 125, 0.2);
+}
+
+.btn--ghost:hover {
+  color: var(--ghost-dark);
+  background-color: rgba(108, 117, 125, 0.2);
+}
+
+/* Danger Variant */
+.btn--danger {
+  color: var(--white);
+  background-color: var(--danger);
+}
+
+.btn--danger::after {
+  background-color: var(--danger);
+}
+
+.btn--danger:hover {
+  background-color: var(--danger-dark);
+}
+
+/* Success Variant */
+.btn--success {
+  color: var(--white);
+  background-color: var(--success);
+}
+
+.btn--success::after {
+  background-color: var(--success);
+}
+
+.btn--success:hover {
+  background-color: var(--success-dark);
+}
+
+/* Warning Variant */
+.btn--warning {
+  color: var(--warning-text);
+  background-color: var(--warning);
+}
+
+.btn--warning::after {
+  background-color: var(--warning);
+}
+
+.btn--warning:hover {
+  background-color: var(--warning-dark);
+}
+
+/* Info Variant */
+.btn--info {
+  color: var(--white);
+  background-color: var(--info);
+}
+
+.btn--info::after {
+  background-color: var(--info);
+}
+
+.btn--info:hover {
+  background-color: var(--info-dark);
+}
+
+/* Disabled Variant */
+.btn--disabled {
+  color: var(--disabled-text);
+  background-color: var(--disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn--disabled::after {
+  background-color: var(--disabled);
+}
+
+.btn--disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.btn--disabled:hover::after {
+  transform: none;
+  opacity: 1;
+}
+
+.btn--disabled:active {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Dark Theme Adaptations */
+@media (prefers-color-scheme: dark) {
+  .btn--default {
+    color: var(--black);
+    background-color: var(--default-dark);
+  }
+  
+  .btn--ghost {
+    color: var(--ghost-light);
+    background-color: rgba(173, 181, 189, 0.1);
+    border: 1px solid rgba(173, 181, 189, 0.3);
+  }
+  
+  .btn--ghost:hover {
+    color: #dee2e6;
+    background-color: rgba(173, 181, 189, 0.2);
+  }
+}

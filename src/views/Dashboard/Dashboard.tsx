@@ -1,308 +1,642 @@
-import { useState } from "react";
-import { CardProps } from "../../assets/types/Dashboard";
-import { Users, Package, Settings, Activity, TrendingUp, Shield, Database, BarChart3 } from "lucide-react";
-import {
-  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
-} from "recharts";
-import { MapPin, AlertTriangle, Cpu, Zap, Thermometer, Droplet, Activity as ActivityIcon } from "lucide-react";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import { useDashboard } from "./hooks/useDashboard";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, Area, AreaChart } from 'recharts';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 
-// Icono custom para los centros
-const centerIcon = new L.Icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  shadowSize: [41, 41],
-});
+function DashboardOld() {
+  const { data } = useDashboard();
 
-const mockCenters = [
-  { name: 'Pirquen', position: [-41.59, -73.00] },
-  { name: 'Reloncaví', position: [-41.67, -72.68] },
-  { name: 'Chiloé', position: [-42.45, -73.78] },
-  { name: 'Aysén', position: [-45.39, -73.00] },
-  { name: 'Magallanes', position: [-51.72, -72.50] },
-];
+  // Estados para los filtros
+  const [selectedYears, setSelectedYears] = useState<number[]>([]);
+  // const [selectedMonths, setSelectedMonths] = useState<number[]>([]);
+  const [selectedMetric, setSelectedMetric] = useState<string>('all');
+  // const [dateRange, setDateRange] = useState<{start: string, end: string}>({
+  //   start: '',
+  //   end: ''
+  // });
+  const [chartType, setChartType] = useState<string>('line');
+  const [showComparison, setShowComparison] = useState<boolean>(true);
+  const [selectedCenters, setSelectedCenters] = useState<string[]>([]);
+  const [compareCenters, setCompareCenters] = useState<boolean>(false);
 
-function Card({ children }: CardProps) {
+  // Función para obtener el nombre del mes
+  const getMonthName = (monthId: number): string => {
+    const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    return months[monthId - 1] || `Mes ${monthId}`;
+  };
+
+  // Obtener centros disponibles
+  const availableCenters = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    return data.map(center => center.nombreCentro);
+  }, [data]);
+
+  // Obtener años disponibles en los datos
+  const availableYears = useMemo(() => {
+    if (!data || data.length === 0) return [2024, 2025];
+    
+    const climaYears = data[0]?.ciclos?.clima?.map(c => c.id_año) || [];
+    const consumoYears = data[0]?.ciclos?.consumo_alimentos?.map(c => c.id_año) || [];
+    const fcrYears = data[0]?.ciclos?.fcr?.map(c => c.id_año) || [];
+    
+    const allYears = [...new Set([...climaYears, ...consumoYears, ...fcrYears])];
+    return allYears.length > 0 ? allYears.sort() : [2024, 2025];
+  }, [data]);
+
+  // Inicializar centros seleccionados
+  useEffect(() => {
+    if (selectedCenters.length === 0 && availableCenters.length > 0) {
+      setSelectedCenters([availableCenters[0]]); // Seleccionar el primer centro por defecto
+    }
+  }, [availableCenters, selectedCenters.length, setSelectedCenters]);
+
+  // Inicializar años seleccionados
+  useEffect(() => {
+    if (selectedYears.length === 0) {
+      setSelectedYears(availableYears.slice(0, 2)); // Seleccionar los primeros 2 años por defecto
+    }
+  }, [availableYears, selectedYears.length, setSelectedYears]);
+
+  // Función para filtrar datos por centros seleccionados
+  const getFilteredDataForCenters = useCallback(() => {
+    if (!data || data.length === 0) return [];
+    
+    if (compareCenters && selectedCenters.length > 1) {
+      // Modo comparación entre centros
+      return data.filter(center => selectedCenters.includes(center.nombreCentro));
+    } else {
+      // Modo centro único (primer centro seleccionado)
+      const centerData = data.find(center => selectedCenters.includes(center.nombreCentro)) || data[0];
+      return [centerData];
+    }
+  }, [data, selectedCenters, compareCenters]);
+
+  // Transformar datos de clima para gráfico comparativo por años
+  const prepareClimaData = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    
+    const filteredCenters = getFilteredDataForCenters();
+    const chartData: Array<Record<string, string | number>> = [];
+    
+    // Crear estructura base con 12 meses
+    for (let mes = 1; mes <= 12; mes++) {
+      const monthData: Record<string, string | number> = { month: getMonthName(mes) };
+      
+      filteredCenters.forEach(centerData => {
+        const climaData = centerData?.ciclos?.clima || [];
+        const filteredClimaData = climaData.filter(yearData => 
+          selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
+        );
+        
+        filteredClimaData.forEach(yearData => {
+          const mesData = yearData.meses.find(m => m.id_mes === mes);
+          if (mesData?.datos?.promedioMensual) {
+            const keyPrefix = compareCenters && selectedCenters.length > 1 
+              ? `${centerData.nombreCentro}_temp_${yearData.id_año}`
+              : `temp_${yearData.id_año}`;
+            monthData[keyPrefix] = mesData.datos.promedioMensual.temperatura;
+            
+            const precipKey = compareCenters && selectedCenters.length > 1 
+              ? `${centerData.nombreCentro}_precip_${yearData.id_año}`
+              : `precip_${yearData.id_año}`;
+            monthData[precipKey] = mesData.datos.promedioMensual.precipitacionTotal;
+          }
+        });
+      });
+      
+      chartData.push(monthData);
+    }
+    
+    return chartData;
+  }, [data, selectedYears, getFilteredDataForCenters, compareCenters, selectedCenters]);
+
+  // Transformar datos de consumo de alimentos
+  const prepareConsumoData = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    
+    const filteredCenters = getFilteredDataForCenters();
+    const chartData: Array<Record<string, string | number>> = [];
+    
+    for (let mes = 1; mes <= 12; mes++) {
+      const monthData: Record<string, string | number> = { month: getMonthName(mes) };
+      
+      filteredCenters.forEach(centerData => {
+        const consumoData = centerData?.ciclos?.consumo_alimentos || [];
+        const filteredConsumoData = consumoData.filter(yearData => 
+          selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
+        );
+        
+        filteredConsumoData.forEach(yearData => {
+          const mesData = yearData.meses.find(m => m.id_mes === mes);
+          if (mesData?.datos?.consumoTotalMensual) {
+            const keyPrefix = compareCenters && selectedCenters.length > 1 
+              ? `${centerData.nombreCentro}_consumo_${yearData.id_año}`
+              : `consumo_${yearData.id_año}`;
+            monthData[keyPrefix] = mesData.datos.consumoTotalMensual;
+          }
+        });
+      });
+      
+      chartData.push(monthData);
+    }
+    
+    return chartData;
+  }, [data, selectedYears, getFilteredDataForCenters, compareCenters, selectedCenters]);
+
+  // Transformar datos de FCR
+  const prepareFcrData = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    
+    const filteredCenters = getFilteredDataForCenters();
+    const chartData: Array<Record<string, string | number>> = [];
+    
+    for (let mes = 1; mes <= 12; mes++) {
+      const monthData: Record<string, string | number> = { month: getMonthName(mes) };
+      
+      filteredCenters.forEach(centerData => {
+        const fcrData = centerData?.ciclos?.fcr || [];
+        const filteredFcrData = fcrData.filter(yearData => 
+          selectedYears.length === 0 || selectedYears.includes(yearData.id_año)
+        );
+        
+        filteredFcrData.forEach(yearData => {
+          const mesData = yearData.meses.find(m => m.id_mes === mes);
+          if (mesData?.datos?.dias) {
+            // Calcular promedio del FCR del mes
+            const dias = Object.values(mesData.datos.dias) as number[];
+            const promedio = dias.length > 0 ? dias.reduce((a, b) => a + b, 0) / dias.length : 0;
+            const keyPrefix = compareCenters && selectedCenters.length > 1 
+              ? `${centerData.nombreCentro}_fcr_${yearData.id_año}`
+              : `fcr_${yearData.id_año}`;
+            monthData[keyPrefix] = promedio;
+          }
+        });
+      });
+      
+      chartData.push(monthData);
+    }
+    
+    return chartData;
+  }, [data, selectedYears, getFilteredDataForCenters, compareCenters, selectedCenters]);
+
+  // Datos semanales para gráfico de líneas
+  const prepareSemanalesData = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    
+    const filteredCenters = getFilteredDataForCenters();
+    const firstCenter = filteredCenters[0];
+    if (!firstCenter) return [];
+    
+    const semanales = firstCenter?.semanales;
+    if (!semanales) return [];
+    
+    const chartData: Array<Record<string, string | number>> = [];
+    const semanas = Object.keys(semanales.clima || {});
+    
+    semanas.forEach(semana => {
+      chartData.push({
+        semana,
+        temperatura: semanales.clima[semana]?.temperatura || 0,
+        precipitacion: semanales.clima[semana]?.precipitacion || 0,
+        consumo: semanales.consumo_alimentos[semana] || 0,
+        fcr: semanales.fcr[semana] || 0,
+        peso: semanales.peso_promedio[semana] || 0
+      });
+    });
+    
+    return chartData;
+  }, [data, getFilteredDataForCenters]);
+
+  const climaData = prepareClimaData;
+  const consumoData = prepareConsumoData;
+  const fcrData = prepareFcrData;
+  const semanalesData = prepareSemanalesData;
+
+  // Función para renderizar gráfico dinámicamente
+  const renderChart = (data: Array<Record<string, string | number>>, dataKeys: string[], colors: string[]) => {
+    const ChartComponent = chartType === 'bar' ? BarChart : chartType === 'area' ? AreaChart : LineChart;
+    
+    return (
+      <ResponsiveContainer width="100%" height="100%">
+        <ChartComponent data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
+          <XAxis dataKey="month" stroke="#E5E7EB" fontSize={12} />
+          <YAxis stroke="#E5E7EB" fontSize={12} />
+          <Tooltip 
+            contentStyle={{
+              backgroundColor: '#1F2937',
+              border: '1px solid #374151',
+              borderRadius: '8px',
+              color: '#F9FAFB'
+            }}
+          />
+          <Legend />
+          {chartType === 'bar' ? (
+            dataKeys.map((key, index) => (
+              <Bar key={key} dataKey={key} fill={colors[index % colors.length]} name={key} />
+            ))
+          ) : chartType === 'area' ? (
+            dataKeys.map((key, index) => (
+              <Area key={key} type="monotone" dataKey={key} stackId={index + 1} stroke={colors[index % colors.length]} fill={colors[index % colors.length]} name={key} />
+            ))
+          ) : (
+            dataKeys.map((key, index) => (
+              <Line key={key} type="monotone" dataKey={key} stroke={colors[index % colors.length]} name={key} strokeWidth={2} />
+            ))
+          )}
+        </ChartComponent>
+      </ResponsiveContainer>
+    );
+  };
+
+  // Función para obtener las claves de datos según la métrica seleccionada
+  const getDataKeys = (dataType: string) => {
+    if (!showComparison) return [];
+    
+    const years = selectedYears.length > 0 ? selectedYears : availableYears;
+    
+    switch (dataType) {
+      case 'temperatura':
+        return years.map(year => `temp_${year}`);
+      case 'precipitacion':
+        return years.map(year => `precip_${year}`);
+      case 'consumo':
+        return years.map(year => `consumo_${year}`);
+      case 'fcr':
+        return years.map(year => `fcr_${year}`);
+      default:
+        return years.flatMap(year => [`temp_${year}`, `consumo_${year}`, `fcr_${year}`]);
+    }
+  };
+
+  // Colores para diferentes años y métricas
+  const chartColors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#F97316', '#84CC16'];
+
+  // Datos estáticos como respaldo si no hay datos reales
+  const fallbackData = [
+    { month: 'Ene', temp_2024: 25.5, temp_2025: 26.2, consumo_2024: 120, consumo_2025: 115, fcr_2024: 1.2, fcr_2025: 1.1 },
+    { month: 'Feb', temp_2024: 26.1, temp_2025: 25.8, consumo_2024: 125, consumo_2025: 118, fcr_2024: 1.3, fcr_2025: 1.2 },
+    { month: 'Mar', temp_2024: 24.8, temp_2025: 27.1, consumo_2024: 110, consumo_2025: 122, fcr_2024: 1.1, fcr_2025: 1.3 },
+    { month: 'Abr', temp_2024: 23.5, temp_2025: 28.0, consumo_2024: 105, consumo_2025: 130, fcr_2024: 1.0, fcr_2025: 1.4 },
+    { month: 'May', temp_2024: 22.8, temp_2025: 24.6, consumo_2024: 98, consumo_2025: 108, fcr_2024: 0.9, fcr_2025: 1.1 },
+    { month: 'Jun', temp_2024: 21.2, temp_2025: 23.2, consumo_2024: 92, consumo_2025: 102, fcr_2024: 0.8, fcr_2025: 1.0 }
+  ];
+  
   return (
-    <div className="flex-1 h-full overflow-hidden bg-[#08141e] rounded-lg border border-[#182a38] shadow-sm">
-      {children}
+    <div className="relative w-full h-full p-4 gap-4 flex flex-col">
+      {/* Header con información del centro */}
+      <div className="w-full">
+        <h1 className="text-2xl font-bold text-white mb-2">
+          Dashboard - {
+            compareCenters && selectedCenters.length > 1 
+              ? `Comparación: ${selectedCenters.join(', ')}`
+              : selectedCenters.length > 0 
+                ? selectedCenters[0]
+                : 'Centro de Datos'
+          }
+        </h1>
+        <div className="grid grid-cols-4 gap-4 mb-4">
+          {data?.[0]?.promedios && (
+            <>
+              <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-4 rounded-lg">
+                <h3 className="text-white text-sm font-medium">FCR Promedio</h3>
+                <p className="text-2xl font-bold text-white">{data[0].promedios.fcr_promedio.toFixed(2)}</p>
+              </div>
+              <div className="bg-gradient-to-r from-green-600 to-green-800 p-4 rounded-lg">
+                <h3 className="text-white text-sm font-medium">Peso Promedio</h3>
+                <p className="text-2xl font-bold text-white">{data[0].promedios.peso_promedio.toFixed(1)} kg</p>
+              </div>
+              <div className="bg-gradient-to-r from-orange-600 to-orange-800 p-4 rounded-lg">
+                <h3 className="text-white text-sm font-medium">Temperatura Promedio</h3>
+                <p className="text-2xl font-bold text-white">{data[0].promedios.temperatura_promedio.toFixed(1)}°C</p>
+              </div>
+              <div className="bg-gradient-to-r from-purple-600 to-purple-800 p-4 rounded-lg">
+                <h3 className="text-white text-sm font-medium">Precipitación Promedio</h3>
+                <p className="text-2xl font-bold text-white">{data[0].promedios.precipitacion_promedio.toFixed(1)} mm</p>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Panel de Filtros */}
+      <div className="w-full bg-gradient-to-r from-gray-800 to-gray-900 p-4 rounded-lg border border-gray-700 mb-4">
+        <div className="flex flex-wrap gap-6 items-center">
+          
+          {/* Selector de Años */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-300 mb-2">Años a Comparar</label>
+            <div className="flex gap-2">
+              {availableYears.map(year => (
+                <label key={year} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedYears.includes(year)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedYears([...selectedYears, year]);
+                      } else {
+                        setSelectedYears(selectedYears.filter(y => y !== year));
+                      }
+                    }}
+                    className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+                  />
+                  <span className="text-white text-sm">{year}</span>
+                </label>
+              ))}
+            </div>
+          </div>         
+
+          {/* Selector de Métrica */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-300 mb-2">Métrica Principal</label>
+            <select
+              value={selectedMetric}
+              onChange={(e) => setSelectedMetric(e.target.value)}
+              className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg p-2 w-36"
+            >
+              <option value="all">Todas</option>
+              <option value="temperatura">Temperatura</option>
+              <option value="precipitacion">Precipitación</option>
+              <option value="consumo">Consumo</option>
+              <option value="fcr">FCR</option>
+              <option value="peso">Peso</option>
+            </select>
+          </div>
+
+          {/* Tipo de Gráfico */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-300 mb-2">Tipo de Gráfico</label>
+            <select
+              value={chartType}
+              onChange={(e) => setChartType(e.target.value)}
+              className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg p-2 w-32"
+            >
+              <option value="line">Líneas</option>
+              <option value="bar">Barras</option>
+              <option value="area">Área</option>
+            </select>
+          </div>
+
+          {/* Rango de Fechas */}
+         
+
+          {/* Toggle Comparación */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-300 mb-2">Modo Comparación</label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={showComparison}
+                onChange={(e) => setShowComparison(e.target.checked)}
+                className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+              />
+              <span className="text-white text-sm">Comparar Años</span>
+            </label>
+          </div>
+
+          {/* Filtro de Centros */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-300 mb-2">Centros</label>
+            <div className="flex flex-col gap-2">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={compareCenters}
+                  onChange={(e) => setCompareCenters(e.target.checked)}
+                  className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+                />
+                <span className="text-white text-sm">Comparar Centros</span>
+              </label>
+              <div className="flex flex-wrap gap-1 max-w-48">
+                {availableCenters.map((center) => (
+                  <button
+                    key={center}
+                    onClick={() => {
+                      if (compareCenters) {
+                        // En modo comparación, permite múltiples selecciones
+                        setSelectedCenters(prev => 
+                          prev.includes(center)
+                            ? prev.filter(c => c !== center)
+                            : [...prev, center]
+                        );
+                      } else {
+                        // En modo individual, solo uno a la vez
+                        setSelectedCenters([center]);
+                      }
+                    }}
+                    className={`px-2 py-1 rounded text-xs ${
+                      selectedCenters.includes(center)
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-600 text-gray-300 hover:bg-gray-500"
+                    }`}
+                  >
+                    {center}
+                  </button>
+                ))}
+                {availableCenters.length > 1 && (
+                  <button
+                    onClick={() => setSelectedCenters(availableCenters)}
+                    className="px-2 py-1 rounded text-xs bg-green-600 text-white hover:bg-green-700"
+                  >
+                    Todos
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Botones de Acción */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-300 mb-2">Acciones</label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setSelectedYears(availableYears);
+                  setSelectedMetric('all');
+                  setChartType('line');
+                  setShowComparison(true);
+                  setSelectedCenters(availableCenters);
+                  setCompareCenters(true);
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded-lg transition-colors"
+              >
+                Todos
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedYears([]);
+                  setSelectedMetric('all');
+                  setSelectedCenters(availableCenters.length > 0 ? [availableCenters[0]] : []);
+                  setCompareCenters(false);
+                }}
+                className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-3 py-1 rounded-lg transition-colors"
+              >
+                Limpiar
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Grid de gráficos */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        
+        {/* Gráfico Principal Dinámico */}
+        {(selectedMetric === 'all' || selectedMetric === 'temperatura') && (
+          <div className="relative bg-gradient-to-bl to-[#115dd7] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg h-full">
+            <div className="relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53] p-4 flex flex-col shadow-lg h-full">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-white mb-2">
+                  Temperatura Mensual ({chartType === 'line' ? 'Líneas' : chartType === 'bar' ? 'Barras' : 'Área'})
+                </h2>
+                <p className="text-sm text-gray-400">
+                  Años: {selectedYears.length > 0 ? selectedYears.join(', ') : 'Todos'}
+                </p>
+              </div>
+              
+              <div className="flex-1 w-full" style={{ minHeight: '300px' }}>
+                {renderChart(
+                  climaData.length > 0 ? climaData : fallbackData,
+                  getDataKeys('temperatura'),
+                  chartColors
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Gráfico de Consumo */}
+        {(selectedMetric === 'all' || selectedMetric === 'consumo') && (
+          <div className="relative bg-gradient-to-bl to-[#115dd7] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg h-full">
+            <div className="relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53] p-4 flex flex-col shadow-lg h-full">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-white mb-2">
+                  Consumo de Alimentos ({chartType === 'line' ? 'Líneas' : chartType === 'bar' ? 'Barras' : 'Área'})
+                </h2>
+                <p className="text-sm text-gray-400">
+                  Años: {selectedYears.length > 0 ? selectedYears.join(', ') : 'Todos'}
+                </p>
+              </div>
+              
+              <div className="flex-1 w-full" style={{ minHeight: '300px' }}>
+                {renderChart(
+                  consumoData.length > 0 ? consumoData : fallbackData,
+                  getDataKeys('consumo'),
+                  chartColors.slice(2)
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Gráfico de FCR */}
+        {(selectedMetric === 'all' || selectedMetric === 'fcr') && (
+          <div className="relative bg-gradient-to-bl to-[#115dd7] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg h-full">
+            <div className="relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53] p-4 flex flex-col shadow-lg h-full">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-white mb-2">
+                  FCR Mensual ({chartType === 'line' ? 'Líneas' : chartType === 'bar' ? 'Barras' : 'Área'})
+                </h2>
+                <p className="text-sm text-gray-400">
+                  Años: {selectedYears.length > 0 ? selectedYears.join(', ') : 'Todos'} | FCR: Factor de Conversión Alimenticia
+                </p>
+              </div>
+              
+              <div className="flex-1 w-full" style={{ minHeight: '300px' }}>
+                {renderChart(
+                  fcrData.length > 0 ? fcrData : fallbackData,
+                  getDataKeys('fcr'),
+                  chartColors.slice(4)
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Gráfico de Precipitación */}
+        {(selectedMetric === 'all' || selectedMetric === 'precipitacion') && (
+          <div className="relative bg-gradient-to-bl to-[#115dd7] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg h-full">
+            <div className="relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53] p-4 flex flex-col shadow-lg h-full">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-white mb-2">
+                  Precipitación Mensual ({chartType === 'line' ? 'Líneas' : chartType === 'bar' ? 'Barras' : 'Área'})
+                </h2>
+                <p className="text-sm text-gray-400">
+                  Años: {selectedYears.length > 0 ? selectedYears.join(', ') : 'Todos'}
+                </p>
+              </div>
+              
+              <div className="flex-1 w-full" style={{ minHeight: '300px' }}>
+                {renderChart(
+                  climaData.length > 0 ? climaData : fallbackData,
+                  getDataKeys('precipitacion'),
+                  chartColors.slice(1)
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Gráfico de Datos Semanales - Solo se muestra si selectedMetric es 'all' o 'peso' */}
+        {(selectedMetric === 'all' || selectedMetric === 'peso') && (
+          <div className="relative bg-gradient-to-bl to-[#115dd7] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg h-full">
+            <div className="relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53] p-4 flex flex-col shadow-lg h-full">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-white mb-2">Tendencias Semanales</h2>
+                <p className="text-sm text-gray-400">Datos semanales combinados - Últimas 8 semanas</p>
+              </div>
+              
+              <div className="flex-1 w-full" style={{ minHeight: '300px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={semanalesData.length > 0 ? semanalesData.slice(0, 8) : []}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
+                    <XAxis dataKey="semana" stroke="#E5E7EB" fontSize={12} />
+                    <YAxis stroke="#E5E7EB" fontSize={12} />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: '#1F2937',
+                        border: '1px solid #374151',
+                        borderRadius: '8px',
+                        color: '#F9FAFB'
+                      }}
+                    />
+                    <Legend />
+                    <Line type="monotone" dataKey="temperatura" stroke="#F59E0B" name="Temperatura" strokeWidth={2} />
+                    <Line type="monotone" dataKey="fcr" stroke="#8B5CF6" name="FCR" strokeWidth={2} />
+                    <Line type="monotone" dataKey="peso" stroke="#10B981" name="Peso" strokeWidth={2} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Gráfico Comparativo Unificado - Solo cuando selectedMetric es 'all' */}
+        {selectedMetric === 'all' && showComparison && (
+          <div className="relative bg-gradient-to-bl to-[#115dd7] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg h-full lg:col-span-2">
+            <div className="relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53] p-4 flex flex-col shadow-lg h-full">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-white mb-2">Vista Comparativa Unificada</h2>
+                <p className="text-sm text-gray-400">
+                  Todas las métricas por años seleccionados: {selectedYears.length > 0 ? selectedYears.join(', ') : 'Todos'}
+                </p>
+              </div>
+              
+              <div className="flex-1 w-full" style={{ minHeight: '400px' }}>
+                {renderChart(
+                  climaData.length > 0 ? climaData : fallbackData,
+                  getDataKeys('all'),
+                  chartColors
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+      </div>
     </div>
   );
 }
 
-export const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState(0);
-
-
-  const anomalyData = [
-    { day: 'Lun', value: 2 },
-    { day: 'Mar', value: 1 },
-    { day: 'Mié', value: 3 },
-    { day: 'Jue', value: 0 },
-    { day: 'Vie', value: 4 },
-    { day: 'Sáb', value: 1 },
-    { day: 'Dom', value: 2 },
-  ];
-  const feedData = [
-    { day: 'Lun', value: 120 },
-    { day: 'Mar', value: 150 },
-    { day: 'Mié', value: 110 },
-    { day: 'Jue', value: 180 },
-    { day: 'Vie', value: 140 },
-    { day: 'Sáb', value: 170 },
-    { day: 'Dom', value: 130 },
-  ];
-  const alertData = [
-    { name: 'Críticas', value: 3 },
-    { name: 'Medias', value: 7 },
-    { name: 'Bajas', value: 15 },
-  ];
-  const sensorStatus = [
-    { name: 'Activos', value: 12 },
-    { name: 'Inactivos', value: 2 },
-    { name: 'Mantenimiento', value: 1 },
-  ];
-  const efficiencyRanking = [
-    { center: 'Pirquen', value: 92 },
-    { center: 'Reloncaví', value: 88 },
-    { center: 'Chiloé', value: 85 },
-    { center: 'Aysén', value: 80 },
-    { center: 'Magallanes', value: 77 },
-  ];
-  const envTrend = [
-    { mes: 'Ene', temp: 13.2, ox: 8.1, ph: 7.8 },
-    { mes: 'Feb', temp: 13.5, ox: 8.0, ph: 7.7 },
-    { mes: 'Mar', temp: 13.8, ox: 7.9, ph: 7.8 },
-    { mes: 'Abr', temp: 13.1, ox: 8.2, ph: 7.9 },
-    { mes: 'May', temp: 12.7, ox: 8.3, ph: 7.8 },
-    { mes: 'Jun', temp: 12.3, ox: 8.4, ph: 7.7 },
-  ];
-  const iaActivity = [
-    { time: '08:00', action: 'Predicción de anomalía', result: 'Sin anomalía' },
-    { time: '10:30', action: 'Análisis de sensor', result: 'Sensor 3 fuera de rango' },
-    { time: '12:00', action: 'Predicción de consumo', result: 'Consumo esperado: 150kg' },
-    { time: '14:15', action: 'Alerta crítica', result: 'MOT alto en E5' },
-  ];
-
-  return (
-    <main className="flex-1 h-screen min-h-0 p-4 bg-azul-dark flex flex-col">
-      <div className="flex flex-col flex-1 min-h-0 gap-6">
-        {/* Header visual */}
-        <div className="flex items-center justify-between pb-2 border-b border-[#22334a]">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center border border-cyan-900 bg-[#0a1a2f]">
-              <Cpu className="w-8 h-8 text-cyan-400" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-white tracking-tight">WISENSOR</h1>
-              <p className="text-gray-400 text-sm">Panel Inteligente de Monitoreo y Gestión</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 text-sm text-gray-400">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-              <span>Sistema Activo</span>
-            </div>
-            <div className="text-gray-600">|</div>
-            <div>{new Date().toLocaleDateString('es-ES')}</div>
-            <div className="text-gray-600">|</div>
-            <div>{new Date().toLocaleTimeString()}</div>
-          </div>
-        </div>
-
-        {/* Widgets principales */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Anomalías */}
-          <div className="bg-[#08141e] rounded-lg p-4 border border-[#22334a] shadow-md flex flex-col items-center">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="text-yellow-400" />
-              <span className="text-white font-semibold">Predicción de Anomalías</span>
-            </div>
-            <ResponsiveContainer width="100%" height={60}>
-              <LineChart data={anomalyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="anomalyGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#FF6384" stopOpacity={0.8}/>
-                    <stop offset="100%" stopColor="#FF6384" stopOpacity={0.2}/>
-                  </linearGradient>
-                </defs>
-                <Line type="monotone" dataKey="value" stroke="url(#anomalyGradient)" strokeWidth={3} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-            <span className="text-2xl font-bold text-yellow-400 mt-2">{anomalyData.reduce((a, b) => a + b.value, 0)}</span>
-            <span className="text-xs text-gray-400">Anomalías esta semana</span>
-          </div>
-          {/* Consumo de Alimento */}
-          <div className="bg-[#08141e] rounded-lg p-4 border border-[#22334a] shadow-md flex flex-col items-center">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="text-green-400" />
-              <span className="text-white font-semibold">Consumo de Alimento</span>
-            </div>
-            <ResponsiveContainer width="100%" height={60}>
-              <BarChart data={feedData}>
-                <defs>
-                  <linearGradient id="feedBarGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#36A2EB" stopOpacity={0.9}/>
-                    <stop offset="100%" stopColor="#36A2EB" stopOpacity={0.3}/>
-                  </linearGradient>
-                </defs>
-                <Bar dataKey="value" fill="url(#feedBarGradient)" barSize={18} radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-            <span className="text-2xl font-bold text-green-400 mt-2">{feedData.reduce((a, b) => a + b.value, 0)} kg</span>
-            <span className="text-xs text-gray-400">Últimos 7 días</span>
-          </div>
-          {/* Estado de Sensores */}
-          <div className="bg-[#08141e] rounded-lg p-4 border border-[#22334a] shadow-md flex flex-col items-center w-full">
-            <div className="flex items-center gap-2 mb-2">
-              <Zap className="text-cyan-400" />
-              <span className="text-white font-semibold">Estado de Sensores</span>
-            </div>
-            <div className="w-full flex flex-col gap-2 mt-2">
-              {sensorStatus.map((item, idx) => (
-                <div key={item.name} className="flex items-center gap-2">
-                  <span className={`w-20 text-xs font-medium ${idx === 0 ? 'text-green-400' : idx === 1 ? 'text-red-400' : 'text-yellow-400'}`}>{item.name}</span>
-                  <div className="flex-1 h-2 bg-gray-800 rounded">
-                    <div className={`h-2 rounded ${idx === 0 ? 'bg-green-400' : idx === 1 ? 'bg-red-400' : 'bg-yellow-400'}`} style={{ width: `${(item.value / sensorStatus.reduce((a, b) => a + b.value, 0)) * 100}%` }}></div>
-                  </div>
-                  <span className={`text-xs font-bold ${idx === 0 ? 'text-green-400' : idx === 1 ? 'text-red-400' : 'text-yellow-400'}`}>{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          {/* Alertas Críticas */}
-          <div className="bg-[#08141e] rounded-lg p-4 border border-[#22334a] shadow-md flex flex-col items-center w-full">
-            <div className="flex items-center gap-2 mb-2">
-              <ActivityIcon className="text-red-400" />
-              <span className="text-white font-semibold">Alertas Críticas</span>
-            </div>
-            <div className="flex flex-col items-center w-full mt-2">
-              <span className="text-3xl font-bold text-red-400 mb-1">{alertData[0].value}</span>
-              <span className="text-xs text-gray-400 mb-2">Críticas activas</span>
-              <ul className="w-full text-xs text-gray-300">
-                {alertData.map((item, idx) => (
-                  <li key={item.name} className="flex items-center gap-2 mb-1">
-                    <span className={`w-16 font-medium ${idx === 0 ? 'text-red-400' : idx === 1 ? 'text-yellow-400' : 'text-green-400'}`}>{item.name}</span>
-                    <div className="flex-1 h-1.5 bg-gray-800 rounded">
-                      <div className={`h-1.5 rounded ${idx === 0 ? 'bg-red-400' : idx === 1 ? 'bg-yellow-400' : 'bg-green-400'}`} style={{ width: `${(item.value / alertData.reduce((a, b) => a + b.value, 0)) * 100}%` }}></div>
-                    </div>
-                    <span className={`text-xs font-bold ${idx === 0 ? 'text-red-400' : idx === 1 ? 'text-yellow-400' : 'text-green-400'}`}>{item.value}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Tabs para más widgets y gráficos */}
-        <div className="flex-1 flex flex-col min-h-0 gap-4">
-          <div className="flex gap-2 mb-2">
-            <button onClick={() => setActiveTab(0)} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 0 ? 'bg-red-dark text-white' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>Visión General</button>
-            <button onClick={() => setActiveTab(1)} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 1 ? 'bg-red-dark text-white' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>Tendencias Ambientales</button>
-            <button onClick={() => setActiveTab(2)} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === 2 ? 'bg-red-dark text-white' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>Ranking & IA</button>
-          </div>
-          <div className="flex-1 bg-[#08141e] rounded-lg border border-[#22334a] shadow-md p-4 flex flex-col min-h-0">
-            {activeTab === 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full min-h-0">
-                {/* Mapa de centros activos con Leaflet */}
-                <div className="flex flex-col items-center justify-center bg-gray-darkL rounded-lg border border-gray-700 h-full min-h-0 overflow-hidden max-h-full">
-                  <MapContainer center={[-43, -73]} zoom={5.5} scrollWheelZoom={false} style={{ width: '100%', height: '100%', minHeight: 220, borderRadius: '0.5rem', filter: 'grayscale(0.2) brightness(0.9)' }}>
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-                    />
-                    {mockCenters.map((center, idx) => (
-                      <Marker key={center.name} position={center.position} icon={centerIcon}>
-                        <Popup>
-                          <span className="font-semibold text-blue-700">{center.name}</span><br/>
-                          Centro activo
-                        </Popup>
-                      </Marker>
-                    ))}
-                  </MapContainer>
-                  <span className="text-white font-semibold mt-2">Mapa de Centros Activos</span>
-                  <span className="text-xs text-gray-400">({mockCenters.length} centros activos)</span>
-                </div>
-                {/* Actividad IA */}
-                <div className="bg-gray-darkL rounded-lg border border-gray-700 p-4 flex flex-col min-h-0 h-full overflow-auto max-h-full">
-                  <h5 className="font-medium text-white mb-2">Actividad Reciente de IA</h5>
-                  <ul className="text-xs text-gray-300 space-y-1">
-                    {iaActivity.map((item, idx) => (
-                      <li key={idx} className="flex items-center gap-2">
-                        <Cpu className="w-4 h-4 text-cyan-400" />
-                        <span className="font-semibold text-white">{item.time}</span>
-                        <span>{item.action}</span>
-                        <span className="text-green-400">{item.result}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-            {activeTab === 1 && (
-              <div className="flex flex-col h-full min-h-0">
-                <h4 className="text-lg font-semibold text-white mb-4">Tendencia de Parámetros Ambientales</h4>
-                <ResponsiveContainer width="100%" height={180}>
-                  <LineChart data={envTrend} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="tempLineGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#36A2EB" stopOpacity={0.8}/>
-                        <stop offset="100%" stopColor="#36A2EB" stopOpacity={0.2}/>
-                      </linearGradient>
-                      <linearGradient id="oxLineGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#FF6384" stopOpacity={0.8}/>
-                        <stop offset="100%" stopColor="#FF6384" stopOpacity={0.2}/>
-                      </linearGradient>
-                      <linearGradient id="phLineGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#FFCE56" stopOpacity={0.8}/>
-                        <stop offset="100%" stopColor="#FFCE56" stopOpacity={0.2}/>
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="mes" stroke="#8884d8" fontSize={12} />
-                    <YAxis fontSize={12} />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="temp" stroke="url(#tempLineGradient)" strokeWidth={3} name="Temp (°C)" dot={false} />
-                    <Line type="monotone" dataKey="ox" stroke="url(#oxLineGradient)" strokeWidth={3} name="O2 (mg/L)" dot={false} />
-                    <Line type="monotone" dataKey="ph" stroke="url(#phLineGradient)" strokeWidth={3} name="pH" dot={false} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            )}
-            {activeTab === 2 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full min-h-0">
-                {/* Ranking de eficiencia */}
-                <div className="bg-gray-darkL rounded-lg border border-gray-700 p-4 flex flex-col min-h-0 h-full overflow-auto max-h-full">
-                  <h5 className="font-medium text-white mb-2">Ranking de Centros por Eficiencia</h5>
-                  <ul className="text-xs text-gray-300 space-y-2">
-                    {efficiencyRanking.map((item, idx) => (
-                      <li key={idx} className="flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-green-400" />
-                        <span className="font-semibold text-white">{item.center}</span>
-                        <div className="flex-1 h-2 bg-gray-700 rounded mx-2">
-                          <div className="h-2 rounded bg-green-400" style={{ width: `${item.value}%` }}></div>
-                        </div>
-                        <span className="text-green-400 font-bold">{item.value}%</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                {/* Placeholder para expansión futura */}
-                <div className="flex flex-col items-center justify-center bg-gray-darkL rounded-lg border border-gray-700 h-full min-h-0 overflow-hidden max-h-full">
-                  <Thermometer className="w-10 h-10 text-yellow-400 mb-2" />
-                  <span className="text-white font-semibold">Más widgets próximamente</span>
-                  <span className="text-xs text-gray-400">Sugerencias bienvenidas</span>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </main>
-  );
-};
+export default DashboardOld;
