@@ -105,15 +105,15 @@ export const DashboardFiltersPanel = ({
   };
   // bg-gradient-to-l to-[#18182a] from-[#070714]
   return (
-    <div className="relative group  rounded-lg border border-[#283a53] p-3 grid grid-cols-6 place-items-start place-content-between gap-6 shadow-lg ">
+    <div className="relative group rounded-lg border border-[#283a53] p-3 grid grid-cols-1  gap-6 shadow-lg h-full ">
       {/* Selector de Centros */}
       <CardFilter className="flex flex-col w-full">
-        <div className="bg-gradient-to-bl from-[#1b1b2e] to-[#09497e] p-3">
-          <label className="text-sm font-medium text-gray-300 mb-2">
-            Centro
+        <div className="bg-gradient-to-bl from-[#1b1b2e] to-[#09497e] p-3 w-full h-full flex flex-col justify-center items-center">
+          <label className="text-sm font-medium text-white mb-2 text-center">
+            Centros
           </label>
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center">
+          <div className="flex flex-col gap-2 w-full">
+            <div className="flex items-center justify-center">
               <CustomCheckbox
                 checked={compareCenters}
                 onChange={handleCompareCentersChange}
@@ -125,18 +125,20 @@ export const DashboardFiltersPanel = ({
                 </span>
               )}
             </div>
-            <div className="flex flex-nowrap gap-1 w-full">
+            <div className="flex flex-col flex-nowrap gap-1 w-full">
               {availableCenters.map((center) => (
                 <AdvancedButton
                   key={center}
-                  variant={selectedCenters.includes(center) ? "solid" : "border"}
+                  variant={
+                    selectedCenters.includes(center) ? "solid" : "border"
+                  }
                   size="small"
                   onClick={() => handleCenterSelection(center)}
                   disabled={!compareCenters && selectedCenters.includes(center)}
                   className={`w-full text-sm font-semibold ${
                     selectedCenters.includes(center)
                       ? "!bg-gradient-to-tl !from-[#032e79] !to-[#0baeef] !border-[#0baeef]"
-                      : "!border-dashed !border-[#3f88d0] !text-gray-300 hover:!bg-[#032e79]"
+                      : "!border-dashed !border-[#3f88d0] !text-white hover:!bg-[#032e79]"
                   } ${
                     !compareCenters && selectedCenters.includes(center)
                       ? "!cursor-default"
@@ -150,11 +152,29 @@ export const DashboardFiltersPanel = ({
           </div>
         </div>
       </CardFilter>
+      {/* Selector de Métrica */}
+      <CardFilter className="p-3 flex flex-col justify-center items-center">
+        <label className="text-sm font-medium text-white mb-2 text-center">
+          Acciones
+        </label>
+        <div className="flex gap-2">
+          <AdvancedButton
+            variant="success"
+            size="small"
+            onClick={handleSelectAllCiclos}
+          >
+            Todos
+          </AdvancedButton>
+          <AdvancedButton variant="ghost" size="small" onClick={handleClearAll}>
+            Limpiar
+          </AdvancedButton>
+        </div>
+      </CardFilter>
 
       {/* Selector de Ciclos */}
       <CardFilter className="flex flex-col w-full">
-        <div className="p-3">
-          <label className="text-sm font-medium text-gray-300 mb-2">
+        <div className="p-3 flex flex-col justify-center items-center">
+          <label className="text-sm font-medium text-white mb-2 text-center">
             Ciclos a Comparar
           </label>
           <div className="flex flex-col gap-2">
@@ -177,15 +197,27 @@ export const DashboardFiltersPanel = ({
         </div>
       </CardFilter>
 
+      {/* Toggle Comparación */}
+      <CardFilter className=" p-3 flex flex-col justify-center items-center">
+        <label className="text-sm font-medium text-white mb-2 text-center">
+          Modo Comparación
+        </label>
+        <CustomCheckbox
+          checked={showComparison}
+          onChange={setShowComparison}
+          label="Comparar Ciclos"
+        />
+      </CardFilter>
+
       {/* Selector de Métrica */}
-      <CardFilter className="flex flex-col p-3">
-        <label className="text-sm font-medium text-gray-300 mb-2">
+      <CardFilter className="p-3 flex flex-col justify-center items-center">
+        <label className="text-sm font-medium text-white mb-2 text-center">
           Métrica Principal
         </label>
         <select
           value={selectedMetric}
           onChange={(e) => setSelectedMetric(e.target.value)}
-          className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg p-2 w-36"
+          className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg p-2 w-full"
         >
           <option value="all">Todas</option>
           <option value="temperatura">Temperatura</option>
@@ -197,54 +229,19 @@ export const DashboardFiltersPanel = ({
       </CardFilter>
 
       {/* Tipo de Gráfico */}
-      <CardFilter className="flex flex-col p-3">
-        <label className="text-sm font-medium text-gray-300 mb-2">
+      <CardFilter className="p-3 flex flex-col justify-center items-center">
+        <label className="text-sm font-medium text-white mb-2 text-center">
           Tipo de Gráfico
         </label>
         <select
           value={chartType}
           onChange={(e) => setChartType(e.target.value)}
-          className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg p-2 w-32"
+          className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg p-2 w-full"
         >
           <option value="line">Líneas</option>
           <option value="bar">Barras</option>
           <option value="area">Área</option>
         </select>
-      </CardFilter>
-
-      {/* Toggle Comparación */}
-      <CardFilter className="flex flex-col p-3">
-        <label className="text-sm font-medium text-gray-300 mb-2">
-          Modo Comparación
-        </label>
-        <CustomCheckbox
-          checked={showComparison}
-          onChange={setShowComparison}
-          label="Comparar Ciclos"
-        />
-      </CardFilter>
-
-      {/* Selector de Métrica */}
-      <CardFilter className="flex flex-col p-3">
-        <label className="text-sm font-medium text-gray-300 mb-2">
-          Acciones
-        </label>
-        <div className="flex gap-2">
-          <AdvancedButton
-            variant="success"
-            size="small"
-            onClick={handleSelectAllCiclos}
-          >
-            Todos
-          </AdvancedButton>
-          <AdvancedButton
-            variant="ghost"
-            size="small"
-            onClick={handleClearAll}
-          >
-            Limpiar
-          </AdvancedButton>
-        </div>
       </CardFilter>
     </div>
   );

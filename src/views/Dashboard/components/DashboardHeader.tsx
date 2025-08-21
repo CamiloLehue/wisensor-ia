@@ -16,11 +16,14 @@ export const DashboardHeader = ({ data, selectedCenters, compareCenters }: Dashb
   };
 
   return (
-    <div className="w-full">
-      <h1 className="text-2xl font-bold text-white mb-2">
-        Dashboard - {getHeaderTitle()}
-      </h1>
-      <div className="grid grid-cols-4 gap-4 mb-4">
+    <div className="flex justify-center items-center w-full gap-3  pb-1 h-17 ">
+      <div className="h-full px-5 text-white flex flex-col justify-center items-center text-center border border-dashed border-[#34b6c4] bg-[#1a3626] rounded-md ">
+        <small className='text-nowrap'>Centro Seleccionado</small>
+        <h1 className='inline-block text-xl font-bold '>
+          {getHeaderTitle()}
+        </h1>
+      </div>
+      <div className="grid grid-cols-4 gap-3 w-full h-full">
         {data?.[0]?.promedios && (
           <>
             <StatCard

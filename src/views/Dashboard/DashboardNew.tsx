@@ -29,32 +29,36 @@ function Dashboard() {
   );
 
   return (
-    <div className="relative w-full h-full p-4 gap-4 flex flex-col">
-      <DashboardFiltersPanel
-        filters={filters}
-        availableCiclos={availableCiclos}
-        availableCenters={availableCenters}
-        setters={setters}
-      />
-      <DashboardHeader
-        data={data}
-        selectedCenters={filters.selectedCenters}
-        compareCenters={filters.compareCenters}
-      />
+    <div className="relative w-full h-full p-4 gap-4 grid grid-cols-12">
+      <div className="col-span-2">
+        <DashboardFiltersPanel
+          filters={filters}
+          availableCiclos={availableCiclos}
+          availableCenters={availableCenters}
+          setters={setters}
+        />
+      </div>
 
-      <ChartsGrid
-        selectedMetric={filters.selectedMetric}
-        chartType={filters.chartType}
-        selectedYears={filters.selectedCiclos}
-        showComparison={filters.showComparison}
-        climaData={climaData}
-        consumoData={consumoData}
-        fcrData={fcrData}
-        semanalesData={semanalesData}
-        fallbackData={fallbackData}
-        getDataKeys={getDataKeys}
-        chartColors={chartColors}
-      />
+      <div className="col-span-10 space-y-2 w-full h-full">
+        <DashboardHeader
+          data={data}
+          selectedCenters={filters.selectedCenters}
+          compareCenters={filters.compareCenters}
+        />
+        <ChartsGrid
+          selectedMetric={filters.selectedMetric}
+          chartType={filters.chartType}
+          selectedYears={filters.selectedCiclos}
+          showComparison={filters.showComparison}
+          climaData={climaData}
+          consumoData={consumoData}
+          fcrData={fcrData}
+          semanalesData={semanalesData}
+          fallbackData={fallbackData}
+          getDataKeys={getDataKeys}
+          chartColors={chartColors}
+        />
+      </div>
     </div>
   );
 }

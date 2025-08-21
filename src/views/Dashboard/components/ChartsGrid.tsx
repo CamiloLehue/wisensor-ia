@@ -1,11 +1,12 @@
-import { ChartCard } from './ChartCard';
-import { WeeklyTrendsChart } from './WeeklyTrendsChart';
-import { ChartData } from './types';
+import { MapView } from "../../maps";
+import { ChartCard } from "./ChartCard";
+import { WeeklyTrendsChart } from "./WeeklyTrendsChart";
+import { ChartData } from "./types";
 
 interface ChartsGridProps {
   selectedMetric: string;
   chartType: string;
-  selectedYears: string[];  // Cambio de number[] a string[] para ciclos
+  selectedYears: string[]; // Cambio de number[] a string[] para ciclos
   showComparison: boolean;
   climaData: ChartData[];
   consumoData: ChartData[];
@@ -27,90 +28,95 @@ export const ChartsGrid = ({
   semanalesData,
   fallbackData,
   getDataKeys,
-  chartColors
+  chartColors,
 }: ChartsGridProps) => {
   const getChartTypeLabel = () => {
     switch (chartType) {
-      case 'line': return 'Líneas';
-      case 'bar': return 'Barras';
-      case 'area': return 'Área';
-      default: return 'Líneas';
+      case "line":
+        return "Líneas";
+      case "bar":
+        return "Barras";
+      case "area":
+        return "Área";
+      default:
+        return "Líneas";
     }
   };
 
   const getYearsLabel = () => {
-    return selectedYears.length > 0 ? selectedYears.join(', ') : 'Todos';
+    return selectedYears.length > 0 ? selectedYears.join(", ") : "Todos";
   };
 
   return (
-    <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
-      
+    <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-3">
+      <div className="rounded-lg overflow-hidden">
+        <MapView />
+      </div>
       {/* Gráfico Principal Dinámico */}
-      {(selectedMetric === 'all' || selectedMetric === 'temperatura') && (
+      {(selectedMetric === "all" || selectedMetric === "temperatura") && (
         <ChartCard
           title={`Temperatura Mensual (${getChartTypeLabel()})`}
           subtitle={`Ciclos: ${getYearsLabel()}`}
           data={climaData.length > 0 ? climaData : fallbackData}
-          dataKeys={getDataKeys('temperatura')}
+          dataKeys={getDataKeys("temperatura")}
           colors={chartColors}
           chartType={chartType}
         />
       )}
 
       {/* Gráfico de Consumo */}
-      {(selectedMetric === 'all' || selectedMetric === 'consumo') && (
+      {(selectedMetric === "all" || selectedMetric === "consumo") && (
         <ChartCard
           title={`Consumo de Alimentos (${getChartTypeLabel()})`}
           subtitle={`Ciclos: ${getYearsLabel()}`}
           data={consumoData.length > 0 ? consumoData : fallbackData}
-          dataKeys={getDataKeys('consumo')}
+          dataKeys={getDataKeys("consumo")}
           colors={chartColors.slice(2)}
           chartType={chartType}
         />
       )}
 
       {/* Gráfico de FCR */}
-      {(selectedMetric === 'all' || selectedMetric === 'fcr') && (
+      {(selectedMetric === "all" || selectedMetric === "fcr") && (
         <ChartCard
           title={`FCR Mensual (${getChartTypeLabel()})`}
           subtitle={`Ciclos: ${getYearsLabel()} | FCR: Factor de Conversión Alimenticia`}
           data={fcrData.length > 0 ? fcrData : fallbackData}
-          dataKeys={getDataKeys('fcr')}
+          dataKeys={getDataKeys("fcr")}
           colors={chartColors.slice(4)}
           chartType={chartType}
         />
       )}
 
       {/* Gráfico de Precipitación */}
-      {(selectedMetric === 'all' || selectedMetric === 'precipitacion') && (
+      {(selectedMetric === "all" || selectedMetric === "precipitacion") && (
         <ChartCard
           title={`Precipitación Mensual (${getChartTypeLabel()})`}
           subtitle={`Ciclos: ${getYearsLabel()}`}
           data={climaData.length > 0 ? climaData : fallbackData}
-          dataKeys={getDataKeys('precipitacion')}
+          dataKeys={getDataKeys("precipitacion")}
           colors={chartColors.slice(1)}
           chartType={chartType}
         />
       )}
 
       {/* Gráfico de Datos Semanales */}
-      {(selectedMetric === 'all' || selectedMetric === 'peso') && (
+      {(selectedMetric === "all" || selectedMetric === "peso") && (
         <WeeklyTrendsChart data={semanalesData} />
       )}
 
       {/* Gráfico Comparativo Unificado */}
-      {selectedMetric === 'all' && showComparison && (
+      {selectedMetric === "all" && showComparison && (
         <ChartCard
           title="Vista Comparativa Unificada"
           subtitle={`Todas las métricas por ciclos seleccionados: ${getYearsLabel()}`}
           data={climaData.length > 0 ? climaData : fallbackData}
-          dataKeys={getDataKeys('all')}
+          dataKeys={getDataKeys("all")}
           colors={chartColors}
           chartType={chartType}
           className="lg:col-span-2"
         />
       )}
-
     </div>
   );
 };
