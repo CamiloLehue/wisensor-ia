@@ -55,7 +55,7 @@ export const DashboardFiltersPanel = ({
       const newSelection = selectedCenters.includes(center)
         ? selectedCenters.filter((c) => c !== center)
         : [...selectedCenters, center];
-      
+
       // Asegurar que al menos un centro esté seleccionado
       if (newSelection.length > 0) {
         setSelectedCenters(newSelection);
@@ -68,7 +68,7 @@ export const DashboardFiltersPanel = ({
 
   const handleCompareCentersChange = (checked: boolean) => {
     setCompareCenters(checked);
-    
+
     if (!checked && selectedCenters.length > 1) {
       // Si se desactiva la comparación y hay múltiples centros seleccionados,
       // mantener solo el primero
@@ -103,83 +103,87 @@ export const DashboardFiltersPanel = ({
   };
   // bg-gradient-to-l to-[#18182a] from-[#070714]
   return (
-    <div className="relative group  rounded-lg border border-[#283a53] p-3 grid grid-cols-6 place-items-start place-content-between gap-6 shadow-lg h-full">
+    <div className="relative group  rounded-lg border border-[#283a53] p-3 grid grid-cols-6 place-items-start place-content-between gap-6 shadow-lg ">
       {/* Selector de Centros */}
       <CardFilter className="flex flex-col w-full">
-        <label className="text-sm font-medium text-gray-300 mb-2">
-          Centro
-        </label>
-        <div className="flex flex-col gap-2">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={compareCenters}
-              onChange={(e) => handleCompareCentersChange(e.target.checked)}
-              className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
-            />
-            <span className="text-white text-sm">Comparar Centros</span>
-            {compareCenters && (
-              <span className="ml-2 px-2 py-1 text-xs bg-blue-600 text-white rounded-full">
-                {selectedCenters.length} seleccionados
-              </span>
-            )}
+        <div className="bg-gradient-to-bl from-[#1b1b2e] to-[#09497e] p-3">
+          <label className="text-sm font-medium text-gray-300 mb-2">
+            Centro
           </label>
-          <div className="flex flex-wrap gap-1 max-w-48">
-            {availableCenters.map((center) => (
-              <button
-                key={center}
-                onClick={() => handleCenterSelection(center)}
-                disabled={!compareCenters && selectedCenters.includes(center)}
-                className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                  selectedCenters.includes(center)
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                } ${
-                  !compareCenters && selectedCenters.includes(center)
-                    ? "opacity-75 cursor-default"
-                    : ""
-                }`}
-              >
-                {center}
-              </button>
-            ))}
+          <div className="flex flex-col gap-2">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={compareCenters}
+                onChange={(e) => handleCompareCentersChange(e.target.checked)}
+                className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+              />
+              <span className="text-white text-sm">Comparar Centros</span>
+              {compareCenters && (
+                <span className="ml-2 px-2 py-1 text-xs bg-gradient-to-tl from-[#032e79]  to-[#0baeef] text-[#ffffff] rounded-full">
+                  {selectedCenters.length} seleccionados
+                </span>
+              )}
+            </label>
+            <div className="flex flex-nowrap gap-1 w-full">
+              {availableCenters.map((center) => (
+                <button
+                  key={center}
+                  onClick={() => handleCenterSelection(center)}
+                  disabled={!compareCenters && selectedCenters.includes(center)}
+                  className={`px-5 py-2  rounded-md font-semibold w-full transition-colors cursor-pointer ${
+                    selectedCenters.includes(center)
+                      ? "bg-gradient-to-tl from-[#032e79]  to-[#0baeef] text-[#ffffff] border border-[#0baeef] text-lg"
+                      : "border border-dashed border-[#3f88d0] text-gray-300 hover:bg-[#032e79] hover:text-white"
+                  } ${
+                    !compareCenters && selectedCenters.includes(center)
+                      ? "cursor-default"
+                      : ""
+                  }`}
+                >
+                  {center}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </CardFilter>
 
       {/* Selector de Ciclos */}
       <CardFilter className="flex flex-col w-full">
-        <label className="text-sm font-medium text-gray-300 mb-2">
-          Ciclos a Comparar
-        </label>
-        <div className="flex flex-col gap-2">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={compareCiclos}
-              onChange={(e) => setCompareCiclos(e.target.checked)}
-              className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
-            />
-            <span className="text-white text-sm">Comparar Ciclos</span>
+        <div className="p-3">
+          <label className="text-sm font-medium text-gray-300 mb-2">
+            Ciclos a Comparar
           </label>
-          <div className="flex gap-2 flex-wrap">
-            {availableCiclos.map((ciclo) => (
-              <label key={ciclo} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedCiclos.includes(ciclo)}
-                  onChange={(e) => handleCicloChange(ciclo, e.target.checked)}
-                  className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
-                />
-                <span className="text-white text-sm">{ciclo}</span>
-              </label>
-            ))}
+          <div className="flex flex-col gap-2">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={compareCiclos}
+                onChange={(e) => setCompareCiclos(e.target.checked)}
+                className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+              />
+              <span className="text-white text-sm">Comparar Ciclos</span>
+            </label>
+            <div className="flex gap-2 flex-wrap">
+              {availableCiclos.map((ciclo) => (
+                <label key={ciclo} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedCiclos.includes(ciclo)}
+                    onChange={(e) => handleCicloChange(ciclo, e.target.checked)}
+                    className="mr-2 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500"
+                  />
+                  <span className="text-white text-sm">{ciclo}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
       </CardFilter>
 
       {/* Selector de Métrica */}
-      <CardFilter className="flex flex-col">
+      <CardFilter className="flex flex-col p-3">
         <label className="text-sm font-medium text-gray-300 mb-2">
           Métrica Principal
         </label>
@@ -198,7 +202,7 @@ export const DashboardFiltersPanel = ({
       </CardFilter>
 
       {/* Tipo de Gráfico */}
-      <div className="flex flex-col">
+      <CardFilter className="flex flex-col p-3">
         <label className="text-sm font-medium text-gray-300 mb-2">
           Tipo de Gráfico
         </label>
@@ -211,10 +215,10 @@ export const DashboardFiltersPanel = ({
           <option value="bar">Barras</option>
           <option value="area">Área</option>
         </select>
-      </div>
+      </CardFilter>
 
       {/* Toggle Comparación */}
-      <div className="flex flex-col">
+      <CardFilter className="flex flex-col p-3">
         <label className="text-sm font-medium text-gray-300 mb-2">
           Modo Comparación
         </label>
@@ -227,10 +231,10 @@ export const DashboardFiltersPanel = ({
           />
           <span className="text-white text-sm">Comparar Ciclos</span>
         </label>
-      </div>
+      </CardFilter>
 
       {/* Selector de Métrica */}
-      <div className="flex flex-col">
+      <CardFilter className="flex flex-col p-3">
         <label className="text-sm font-medium text-gray-300 mb-2">
           Acciones
         </label>
@@ -248,15 +252,23 @@ export const DashboardFiltersPanel = ({
             Limpiar
           </button>
         </div>
-      </div>
+      </CardFilter>
     </div>
   );
 };
 
-const CardFilter = ({ children, className }: { children: React.ReactNode,className:string }) => {
+const CardFilter = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className: string;
+}) => {
   return (
     <div className="w-full h-[100%] relative bg-gradient-to-bl to-[#115dd7] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg">
-      <div className={`relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53] p-3 flex flex-col shadow-lg h-full ${className}`}>
+      <div
+        className={`relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53]  flex flex-col shadow-lg h-full ${className}`}
+      >
         {children}
       </div>
     </div>
