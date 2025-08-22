@@ -11,9 +11,9 @@ export const SuggestedQuestions: React.FC<SuggestedQuestionsProps> = ({
     "¿Cuál es el clima actual en Pirquen?",
     "¿Cómo está la alimentación de los peces en Polocuhe?",
     "Muéstrame los informes ambientales de Pirquen",
-    "¿Cuáles son las condiciones meteorológicas de la semana?",
-    "¿Muéstrame la mortalidad de cada centro de cultivo?",
-    "¿Que variables puede mostrarme para cada centro de cultivo?",
+    "Muéstrame los datos de temperatura mensual para los centros",
+    "Muéstrame la mortalidad de cada centro de cultivo",
+    "¿Qué variables puede mostrarme para cada centro de cultivo?",
   ];
 
   return (
