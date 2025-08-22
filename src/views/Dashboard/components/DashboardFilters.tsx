@@ -109,7 +109,7 @@ export const DashboardFiltersPanel = ({
       {/* Selector de Centros */}
       <div className="flex flex-col w-full">
         <div className="border border-dashed border-[#3f88d0] bg-gradient-to-bl from-[#1b1b2e] to-[#09497e] p-3 w-full h-full flex flex-col justify-center items-center">
-          <label className="text-sm font-medium text-white mb-2 text-center">
+          <label className="text-sm font-medium text-white/80 mb-5 text-center">
             Centros
           </label>
           <div className="flex flex-col gap-2 w-full">
@@ -154,10 +154,10 @@ export const DashboardFiltersPanel = ({
       </div>
       {/* Selector de Métrica */}
       <div className="p-3 flex flex-col justify-center items-center w-full">
-        <label className="text-sm font-medium text-white mb-2 text-center">
+        <label className="text-sm font-medium text-white/80 mb-5 text-center">
           Acciones
         </label>
-        <div className="flex flex-col w-full gap-2">
+        <div className="grid grid-cols-2 w-full gap-2">
           <AdvancedButton
             variant="success"
             size="small"
@@ -174,7 +174,7 @@ export const DashboardFiltersPanel = ({
 
       {/* Selector de Ciclos */}
       <div className="p-3 flex flex-col justify-center items-center w-full">
-        <label className="text-sm font-medium text-white mb-2 text-center">
+        <label className="text-sm font-medium text-white/80 mb-5 text-center">
           Ciclos a Comparar
         </label>
         <div className="flex flex-col justify-center items-start gap-2 w-full">
@@ -198,7 +198,7 @@ export const DashboardFiltersPanel = ({
 
       {/* Toggle Comparación */}
       <div className=" p-3 flex flex-col justify-center items-center w-full">
-        <label className="text-sm font-medium text-white mb-2 text-center">
+        <label className="text-sm font-medium text-white/80 mb-5 text-center">
           Modo Comparación
         </label>
         <div className="flex justify-start items-center w-full">
@@ -212,15 +212,15 @@ export const DashboardFiltersPanel = ({
 
       {/* Selector de Métrica */}
       <div className="p-3 flex flex-col justify-center items-center w-full">
-        <label className="text-sm font-medium text-white mb-2 text-center">
+        <label className="text-sm font-medium text-white/80 mb-5 text-center">
           Métrica Principal
         </label>
         <select
           value={selectedMetric}
           onChange={(e) => setSelectedMetric(e.target.value)}
-          className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg p-2 w-full"
+          className="bg-[#051a38] border border-[#1f5593] text-white text-sm rounded p-2 w-full outline-none focus:ring-0 focus:ring-transparent"
         >
-          <option value="all">Todas</option>
+          <option value="all">Ver todos</option>
           <option value="temperatura">Temperatura</option>
           <option value="precipitacion">Precipitación</option>
           <option value="consumo">Consumo</option>
@@ -231,13 +231,13 @@ export const DashboardFiltersPanel = ({
 
       {/* Tipo de Gráfico */}
       <div className="p-3 flex flex-col justify-center items-center w-full">
-        <label className="text-sm font-medium text-white mb-2 text-center">
+        <label className="text-sm font-medium text-white/80 mb-5 text-center">
           Tipo de Gráfico
         </label>
         <select
           value={chartType}
           onChange={(e) => setChartType(e.target.value)}
-          className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg p-2 w-full"
+          className="bg-[#051a38] border border-[#1f5593] text-white text-sm rounded p-2 w-full outline-none focus:ring-0 focus:ring-transparent"
         >
           <option value="line">Líneas</option>
           <option value="bar">Barras</option>
