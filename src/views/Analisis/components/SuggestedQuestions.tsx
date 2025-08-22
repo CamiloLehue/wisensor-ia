@@ -12,8 +12,8 @@ export const SuggestedQuestions: React.FC<SuggestedQuestionsProps> = ({
     "¿Cómo está la alimentación de los peces en Polocuhe?",
     "Muéstrame los informes ambientales de Pirquen",
     "¿Cuáles son las condiciones meteorológicas de la semana?",
-    "¿Hay alguna alerta ambiental activa?",
-    "¿Hay alguna alerta ambiental activa?",
+    "¿Muéstrame la mortalidad de cada centro de cultivo?",
+    "¿Que variables puede mostrarme para cada centro de cultivo?",
   ];
 
   return (
