@@ -29,7 +29,7 @@ function Dashboard() {
   );
 
   return (
-    <div className="relative w-full h-full p-4 gap-4 grid grid-cols-12">
+    <div className="relative w-full h-full p-4 gap-2 grid grid-cols-12 max-h-screen">
       <div className="col-span-2">
         <DashboardFiltersPanel
           filters={filters}
@@ -38,13 +38,12 @@ function Dashboard() {
           setters={setters}
         />
       </div>
-
-      <div className="col-span-10 space-y-2 w-full h-full">
-        <DashboardHeader
+      <div className="col-span-10 space-y-2 w-full ">
+        {/* <DashboardHeader
           data={data}
           selectedCenters={filters.selectedCenters}
           compareCenters={filters.compareCenters}
-        />
+        /> */}
         <ChartsGrid
           selectedMetric={filters.selectedMetric}
           chartType={filters.chartType}

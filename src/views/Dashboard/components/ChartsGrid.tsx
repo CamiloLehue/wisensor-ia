@@ -48,8 +48,8 @@ export const ChartsGrid = ({
   };
 
   return (
-    <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-3">
-      <div className="rounded-lg overflow-hidden">
+    <div className={`flex-1 w-full grid gap-1 h-full ${selectedMetric === "all" || selectedMetric === "" ? "grid-cols-4" : "grid-cols-1"}`}>
+      <div className="overflow-hidden">
         <MapView />
       </div>
       {/* Gráfico Principal Dinámico */}

@@ -38,8 +38,8 @@
   --ghost-light: #adb5bd;
   
   /* Disabled Colors */
-  --disabled: #e9ecef;
-  --disabled-text: #6c757d;
+  --disabled: #020c15;
+  --disabled-text: #ffffff;
   
   /* Common Colors */
   --white: #ffffff;
@@ -53,10 +53,10 @@
   font-size: 17px;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 1em 2.5em;
+  padding: .5em 2.5em;
   display: inline-block;
   cursor: pointer;
-  border-radius: 1em;
+  border-radius: .3em;
   transition: all 0.2s;
   border: none;
   font-family: inherit;
@@ -79,7 +79,7 @@
   display: inline-block;
   height: 100%;
   width: 100%;
-  border-radius: 1rem;
+  border-radius: .3rem;
   position: absolute;
   top: 0;
   left: 0;
