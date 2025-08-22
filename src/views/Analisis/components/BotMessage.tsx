@@ -14,6 +14,69 @@ import {
 import { isValidChart, ChartErrorBoundary } from './ChartUtils';
 import { Message } from '../types/MessageType';
 
+// Función para detectar y convertir tablas markdown a HTML
+const parseMarkdownTable = (text: string): 
+  | { hasTable: true; beforeTable: string; afterTable: string; headers: string[]; rows: string[][] }
+  | { hasTable: false; text: string } => {
+  const lines = text.split('\n');
+  const tableLines: string[] = [];
+  let inTable = false;
+  let tableStartIndex = -1;
+  let tableEndIndex = -1;
+
+  // Detectar líneas de tabla
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    // Verificar si es una línea de tabla (contiene |)
+    if (line.includes('|') && line.split('|').length > 2) {
+      if (!inTable) {
+        inTable = true;
+        tableStartIndex = i;
+      }
+      tableLines.push(line);
+      tableEndIndex = i;
+    } else if (inTable) {
+      // Si estábamos en una tabla pero esta línea no es parte de ella, terminar la tabla
+      break;
+    }
+  }
+
+  // Si encontramos una tabla
+  if (tableLines.length > 2) {
+    const beforeTable = lines.slice(0, tableStartIndex).join('\n');
+    const afterTable = lines.slice(tableEndIndex + 1).join('\n');
+    
+    // Procesar las líneas de la tabla
+    const [headerLine, , ...dataLines] = tableLines;
+    
+    // Extraer headers
+    const headers = headerLine.split('|')
+      .map(h => h.trim())
+      .filter(h => h !== '');
+    
+    // Extraer datos
+    const rows = dataLines.map(line => 
+      line.split('|')
+        .map(cell => cell.trim())
+        .filter(cell => cell !== '')
+    );
+
+    return {
+      hasTable: true,
+      beforeTable,
+      afterTable,
+      headers,
+      rows
+    };
+  }
+
+  return {
+    hasTable: false,
+    text: text
+  };
+};
+
 interface BotMessageProps {
   message: Message;
   currentlyPlayingAudio: string | null;
@@ -31,20 +94,83 @@ export const BotMessage: React.FC<BotMessageProps> = ({
   setCurrentlyPlayingAudio,
   handlePlayAudioFunction,
 }) => {
+  // Procesar el texto para detectar tablas
+  const parsedContent = parseMarkdownTable(message.text);
+
   return (
     <>
       <div className="flex-shrink-0 bg-gradient-to-bl from-[#ce4827] to-[#ca4242] p-2 rounded-full">
         <Bot className="h-5 w-5 text-white" />
       </div>
       <div className="ml-2 bg-[#03080c] border-s-2 border-s-[#ce4827] rounded-lg p-5 px-10 max-w-[calc(100%-60px)] h-full">
-        <p className="text-[1rem] text-gray-100">
-          {message.text.split("\n").map((line, i) => (
-            <span key={i}>
-              {line}
-              <br />
-            </span>
-          ))}
-        </p>
+        {parsedContent.hasTable ? (
+          <div className="text-[1rem] text-gray-100">
+            {/* Texto antes de la tabla */}
+            {parsedContent.beforeTable && (
+              <div className="mb-4">
+                {parsedContent.beforeTable.split("\n").map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
+              </div>
+            )}
+            
+            {/* Tabla */}
+            <div className="my-4 overflow-x-hidden rounded-lg">
+              <table className="w-full border-collapse  bg-[#010a13] rounded-lg">
+                <thead>
+                  <tr className="bg-[#192130]">
+                    {parsedContent.headers.map((header, i) => (
+                      <th 
+                        key={i} 
+                        className="border border-[#272d42] px-4 py-2 text-left font-semibold text-blue-100"
+                      >
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {parsedContent.rows.map((row, i) => (
+                    <tr key={i} className="hover:bg-[#141d2c]">
+                      {row.map((cell, j) => (
+                        <td 
+                          key={j} 
+                          className="border border-[#1b2033] px-4 py-2 text-gray-100"
+                        >
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            {/* Texto después de la tabla */}
+            {parsedContent.afterTable && (
+              <div className="mt-4">
+                {parsedContent.afterTable.split("\n").map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className="text-[1rem] text-gray-100">
+            {parsedContent.text.split("\n").map((line, i) => (
+              <span key={i}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
+        )}
 
         {/* Verifica que el gráfico exista en el mensaje y sea válido */}
         {message.chart && isValidChart(message.chart) ? (
