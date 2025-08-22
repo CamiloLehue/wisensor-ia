@@ -1,3 +1,5 @@
+import { AIParticleEffects } from './AIParticleEffects';
+
 function ChatBotSvg() {
   return (
     <svg
@@ -12,32 +14,199 @@ function ChatBotSvg() {
             .robot-body {
               stroke-dasharray: 1200;
               stroke-dashoffset: 1000;
-              animation: drawRobot 5s ease-in-out  infinite alternate;
+              animation: drawRobot 4s ease-in-out infinite alternate,
+                         robotGlow 3s ease-in-out infinite alternate,
+                         robotFloat 6s ease-in-out infinite;
+              filter: drop-shadow(0 0 10px #00ccff40);
             }
             
             .robot-eye {
-              animation: blink 3s infinite;
+              animation: smartBlink 4s infinite,
+                         eyeGlow 2s ease-in-out infinite alternate,
+                         eyeScan 8s linear infinite;
               transform-origin: center;
+              filter: drop-shadow(0 0 8px #00ccff80);
+            }
+
+            .robot-eye:nth-child(2) {
+              animation-delay: 0.5s;
+            }
+
+            .robot-eye:nth-child(3) {
+              animation-delay: 1s;
             }
 
             @keyframes drawRobot {
-              to {
+              0% {
+                stroke-dashoffset: 1000;
+                stroke-width: 4;
+              }
+              50% {
+                stroke-width: 6;
+              }
+              100% {
                 stroke-dashoffset: 0;
+                stroke-width: 4;
               }
             }
 
-            @keyframes blink {
-              0%, 96%, 98% {
-                transform: scaleY(1);
+            @keyframes robotGlow {
+              0% {
+                stroke: #00ccff;
+                filter: drop-shadow(0 0 10px #00ccff40);
               }
-              97% {
+              50% {
+                stroke: #00ffcc;
+                filter: drop-shadow(0 0 20px #00ffcc60);
+              }
+              100% {
+                stroke: #0099ff;
+                filter: drop-shadow(0 0 15px #0099ff50);
+              }
+            }
+
+            @keyframes robotFloat {
+              0%, 100% {
+                transform: translateY(0px) scale(1);
+              }
+              50% {
+                transform: translateY(-8px) scale(1.02);
+              }
+            }
+
+            @keyframes smartBlink {
+              0%, 85%, 87%, 89%, 100% {
+                transform: scaleY(1);
+                opacity: 1;
+              }
+              86%, 88% {
                 transform: scaleY(0.1);
+                opacity: 0.7;
+              }
+              15%, 25% {
+                transform: scaleY(0.8) scaleX(1.1);
+              }
+            }
+
+            @keyframes eyeGlow {
+              0% {
+                fill: #00ccff;
+                filter: drop-shadow(0 0 8px #00ccff80);
+              }
+              50% {
+                fill: #00ffee;
+                filter: drop-shadow(0 0 15px #00ffee90);
+              }
+              100% {
+                fill: #0088ff;
+                filter: drop-shadow(0 0 12px #0088ff70);
+              }
+            }
+
+            @keyframes eyeScan {
+              0%, 20% {
+                transform: scaleX(1);
+              }
+              10% {
+                transform: scaleX(1.3);
+              }
+              25%, 75% {
+                transform: scaleX(1);
+              }
+              50% {
+                transform: scaleX(0.8) scaleY(1.2);
+              }
+              80%, 90% {
+                transform: scaleX(1.4) scaleY(0.9);
+              }
+              100% {
+                transform: scaleX(1);
+              }
+            }
+
+            /* Efectos de partículas */
+            .particle {
+              animation: float 3s ease-in-out infinite;
+              opacity: 0.6;
+            }
+
+            .particle:nth-child(1) { animation-delay: 0s; }
+            .particle:nth-child(2) { animation-delay: 0.5s; }
+            .particle:nth-child(3) { animation-delay: 1s; }
+            .particle:nth-child(4) { animation-delay: 1.5s; }
+
+            @keyframes float {
+              0%, 100% {
+                transform: translateY(0) scale(0.8);
+                opacity: 0.3;
+              }
+              50% {
+                transform: translateY(-20px) scale(1.2);
+                opacity: 0.8;
+              }
+            }
+
+            /* Animación de ondas de energía */
+            .energy-wave {
+              animation: energyPulse 4s ease-in-out infinite;
+              transform-origin: center;
+            }
+
+            @keyframes energyPulse {
+              0%, 100% {
+                transform: scale(0.8);
+                opacity: 0.4;
+              }
+              50% {
+                transform: scale(1.3);
+                opacity: 0.1;
               }
             }
           `}
         </style>
       </defs>
       <g id="Layer_1-2" data-name="Layer 1">
+        <AIParticleEffects intensity="medium" color="#00ccff" />
+        
+        {/* Ondas de energía de fondo */}
+        <circle
+          cx="127"
+          cy="88"
+          r="100"
+          fill="none"
+          stroke="#00ccff20"
+          strokeWidth="2"
+          className="energy-wave"
+        />
+        <circle
+          cx="127"
+          cy="88"
+          r="120"
+          fill="none"
+          stroke="#00ffcc15"
+          strokeWidth="1"
+          className="energy-wave"
+          style={{ animationDelay: "1s" }}
+        />
+        <circle
+          cx="127"
+          cy="88"
+          r="140"
+          fill="none"
+          stroke="#0099ff10"
+          strokeWidth="1"
+          className="energy-wave"
+          style={{ animationDelay: "2s" }}
+        />
+
+        {/* Partículas flotantes */}
+        <circle cx="50" cy="40" r="2" fill="#00ccff" className="particle" />
+        <circle cx="200" cy="60" r="1.5" fill="#00ffcc" className="particle" />
+        <circle cx="220" cy="120" r="2.5" fill="#0099ff" className="particle" />
+        <circle cx="30" cy="100" r="1" fill="#00ccff" className="particle" />
+        <circle cx="180" cy="30" r="1.8" fill="#00ffcc" className="particle" />
+        <circle cx="40" cy="140" r="2.2" fill="#0099ff" className="particle" />
+
         <g>
           <path
             fill="#ffffff00"
