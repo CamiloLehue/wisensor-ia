@@ -1,16 +1,11 @@
-import {
-  Settings,
-  BarChart2,
-  Gauge,
-  BotMessageSquare,
-} from "lucide-react";
+import { Settings, BarChart2, Gauge, BotMessageSquare } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 function Sidebar() {
   const location = useLocation();
 
   const menuItems = [
-    { path: "/analisis", icon: BarChart2, label: "ANÁLISIS" },
+    { path: "/analisis", icon: BarChart2, label: "Chat Análisis" },
     // { path: "/inicio", icon: House, label: "Inicio" },
     { path: "/dashboard", icon: Gauge, label: "Dashboard" },
     // { path: "/inventario", icon: ShoppingBag, label: "GraficosEj" },
@@ -42,8 +37,8 @@ function Sidebar() {
                 className={`sidebar-menu-link relative flex items-center p-2 rounded-lg transition-all duration-200 group-hover:pl-3 text-xs font-semibold gap-2 w-full
               ${
                 location.pathname === item.path
-                  ? "bg-cyan-600/20 text-white"
-                  : "text-gray-400 hover:bg-gray-700/60 hover:text-white"
+                  ? "bg-cyan-600/20 border border-dashed border-[#0af] text-white"
+                  : "text-gray-400 hover:bg-gray-700/60 hover:text-white border border-transparent"
               }
             `}
               >
@@ -71,10 +66,17 @@ function Sidebar() {
                   />
                 )}
 
+                {item.path === "/analisis" ? (
+                  <span className="text-clip bg-clip-text text-transparent bg-gradient-to-bl from-red-300 font-bold to-sky-300 whitespace-nowrap transition-all duration-200 opacity-0 group-hover:opacity-100 group-hover:ml-2 overflow-hidden">
+                    {item.label}
+                  </span>
+                ) : (
+                  <span className="sidebar-text whitespace-nowrap transition-all duration-200 opacity-0 group-hover:opacity-100 group-hover:ml-2 overflow-hidden">
+                    {item.label}
+                  </span>
+                )}
+
                 {/* Texto del menú */}
-                <span className="sidebar-text whitespace-nowrap transition-all duration-200 opacity-0 group-hover:opacity-100 group-hover:ml-2 overflow-hidden">
-                  {item.label}
-                </span>
               </Link>
 
               {/* Tooltip para estado colapsado */}
