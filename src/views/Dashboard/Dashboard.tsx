@@ -580,8 +580,8 @@ function DashboardOld() {
 
         {/* Gráfico de Datos Semanales - Solo se muestra si selectedMetric es 'all' o 'peso' */}
         {(selectedMetric === 'all' || selectedMetric === 'peso') && (
-          <div className="relative bg-gradient-to-bl to-[#115dd7] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg h-full">
-            <div className="relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53] p-4 flex flex-col shadow-lg h-full">
+          <div className="relative bg-gradient-to-bl to-[#115dd76d] via-[#18182a] from-[#02c6fc7e] p-[1px]  h-full">
+            <div className="relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e]  border border-[#283a53] p-4 flex flex-col shadow-lg h-full">
               <div className="mb-4">
                 <h2 className="text-lg font-semibold text-white mb-2">Tendencias Semanales</h2>
                 <p className="text-sm text-gray-400">Datos semanales combinados - Últimas 8 semanas</p>

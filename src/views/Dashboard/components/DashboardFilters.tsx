@@ -105,10 +105,10 @@ export const DashboardFiltersPanel = ({
   };
   // bg-gradient-to-l to-[#18182a] from-[#070714]
   return (
-    <div className="relative group rounded-lg border border-[#283a53] p-3 grid grid-cols-1  gap-6 shadow-lg h-full ">
+    <CardFilter className="relative group rounded-lg p-3 flex flex-col justify-start items-center gap-3 shadow-lg h-full ">
       {/* Selector de Centros */}
-      <CardFilter className="flex flex-col w-full">
-        <div className="bg-gradient-to-bl from-[#1b1b2e] to-[#09497e] p-3 w-full h-full flex flex-col justify-center items-center">
+      <div className="flex flex-col w-full">
+        <div className="border border-dashed border-[#3f88d0] bg-gradient-to-bl from-[#1b1b2e] to-[#09497e] p-3 w-full h-full flex flex-col justify-center items-center">
           <label className="text-sm font-medium text-white mb-2 text-center">
             Centros
           </label>
@@ -137,7 +137,7 @@ export const DashboardFiltersPanel = ({
                   disabled={!compareCenters && selectedCenters.includes(center)}
                   className={`w-full text-sm font-semibold ${
                     selectedCenters.includes(center)
-                      ? "!bg-gradient-to-tl !from-[#032e79] !to-[#0baeef] !border-[#0baeef]"
+                      ? ""
                       : "!border-dashed !border-[#3f88d0] !text-white hover:!bg-[#032e79]"
                   } ${
                     !compareCenters && selectedCenters.includes(center)
@@ -151,17 +151,18 @@ export const DashboardFiltersPanel = ({
             </div>
           </div>
         </div>
-      </CardFilter>
+      </div>
       {/* Selector de Métrica */}
-      <CardFilter className="p-3 flex flex-col justify-center items-center">
+      <div className="p-3 flex flex-col justify-center items-center w-full">
         <label className="text-sm font-medium text-white mb-2 text-center">
           Acciones
         </label>
-        <div className="flex gap-2">
+        <div className="flex flex-col w-full gap-2">
           <AdvancedButton
             variant="success"
             size="small"
             onClick={handleSelectAllCiclos}
+            className="w-full"
           >
             Todos
           </AdvancedButton>
@@ -169,48 +170,48 @@ export const DashboardFiltersPanel = ({
             Limpiar
           </AdvancedButton>
         </div>
-      </CardFilter>
+      </div>
 
       {/* Selector de Ciclos */}
-      <CardFilter className="flex flex-col w-full">
-        <div className="p-3 flex flex-col justify-center items-center">
-          <label className="text-sm font-medium text-white mb-2 text-center">
-            Ciclos a Comparar
-          </label>
-          <div className="flex flex-col gap-2">
-            <CustomCheckbox
-              checked={compareCiclos}
-              onChange={setCompareCiclos}
-              label="Comparar Ciclos"
-            />
-            <div className="flex gap-2 flex-wrap">
-              {availableCiclos.map((ciclo) => (
-                <CustomCheckbox
-                  key={ciclo}
-                  checked={selectedCiclos.includes(ciclo)}
-                  onChange={(checked) => handleCicloChange(ciclo, checked)}
-                  label={ciclo}
-                />
-              ))}
-            </div>
+      <div className="p-3 flex flex-col justify-center items-center w-full">
+        <label className="text-sm font-medium text-white mb-2 text-center">
+          Ciclos a Comparar
+        </label>
+        <div className="flex flex-col justify-center items-start gap-2 w-full">
+          <CustomCheckbox
+            checked={compareCiclos}
+            onChange={setCompareCiclos}
+            label="Comparar Ciclos"
+          />
+          <div className="flex gap-2 flex-wrap">
+            {availableCiclos.map((ciclo) => (
+              <CustomCheckbox
+                key={ciclo}
+                checked={selectedCiclos.includes(ciclo)}
+                onChange={(checked) => handleCicloChange(ciclo, checked)}
+                label={ciclo}
+              />
+            ))}
           </div>
         </div>
-      </CardFilter>
+      </div>
 
       {/* Toggle Comparación */}
-      <CardFilter className=" p-3 flex flex-col justify-center items-center">
+      <div className=" p-3 flex flex-col justify-center items-center w-full">
         <label className="text-sm font-medium text-white mb-2 text-center">
           Modo Comparación
         </label>
-        <CustomCheckbox
+        <div className="flex justify-start items-center w-full">
+          <CustomCheckbox
           checked={showComparison}
           onChange={setShowComparison}
           label="Comparar Ciclos"
         />
-      </CardFilter>
+        </div>
+      </div>
 
       {/* Selector de Métrica */}
-      <CardFilter className="p-3 flex flex-col justify-center items-center">
+      <div className="p-3 flex flex-col justify-center items-center w-full">
         <label className="text-sm font-medium text-white mb-2 text-center">
           Métrica Principal
         </label>
@@ -226,10 +227,10 @@ export const DashboardFiltersPanel = ({
           <option value="fcr">FCR</option>
           <option value="peso">Peso</option>
         </select>
-      </CardFilter>
+      </div>
 
       {/* Tipo de Gráfico */}
-      <CardFilter className="p-3 flex flex-col justify-center items-center">
+      <div className="p-3 flex flex-col justify-center items-center w-full">
         <label className="text-sm font-medium text-white mb-2 text-center">
           Tipo de Gráfico
         </label>
@@ -242,8 +243,8 @@ export const DashboardFiltersPanel = ({
           <option value="bar">Barras</option>
           <option value="area">Área</option>
         </select>
-      </CardFilter>
-    </div>
+      </div>
+    </CardFilter>
   );
 };
 
@@ -255,7 +256,7 @@ const CardFilter = ({
   className: string;
 }) => {
   return (
-    <div className="w-full h-[100%] relative bg-gradient-to-bl to-[#115dd7] via-[#18182a] from-[#02c6fc] p-[1px] rounded-lg">
+    <div className="w-full h-[100%] relative bg-gradient-to-b to-[#02c2fc]  from-[#022e6d] p-[1px] rounded-lg">
       <div
         className={`relative group overflow-hidden bg-gradient-to-t to-[#08141e] from-[#1b1b2e] rounded-lg border border-[#283a53]  flex flex-col shadow-lg h-full ${className}`}
       >

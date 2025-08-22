@@ -48,7 +48,7 @@ export const ChartsGrid = ({
   };
 
   return (
-    <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-3">
+    <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-1 h-full">
       <div className="rounded-lg overflow-hidden">
         <MapView />
       </div>

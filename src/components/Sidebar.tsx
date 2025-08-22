@@ -1,5 +1,4 @@
 import {
-  House,
   Settings,
   BarChart2,
   Gauge,
@@ -12,7 +11,7 @@ function Sidebar() {
 
   const menuItems = [
     { path: "/analisis", icon: BarChart2, label: "ANÁLISIS" },
-    { path: "/inicio", icon: House, label: "Inicio" },
+    // { path: "/inicio", icon: House, label: "Inicio" },
     { path: "/dashboard", icon: Gauge, label: "Dashboard" },
     // { path: "/inventario", icon: ShoppingBag, label: "GraficosEj" },
     // Nueva entrada para la vista de Análisis
