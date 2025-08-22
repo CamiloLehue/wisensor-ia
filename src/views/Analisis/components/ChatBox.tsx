@@ -24,6 +24,7 @@ interface ChatBoxProps {
   audioRef: RefObject<HTMLAudioElement | null>;
   setCurrentlyPlayingAudio: (text: string | null) => void;
   handlePlayAudioFunction: (text: string, autoPlay: boolean) => void;
+  onQuestionSelect?: (question: string) => void;
 }
 
 export const ChatBox: React.FC<ChatBoxProps> = ({
@@ -44,6 +45,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({
   audioRef,
   setCurrentlyPlayingAudio,
   handlePlayAudioFunction,
+  onQuestionSelect,
 }) => {
 
   const { height } = useWindowSize();
@@ -71,6 +73,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({
               audioRef={audioRef}
               setCurrentlyPlayingAudio={setCurrentlyPlayingAudio}
               handlePlayAudioFunction={handlePlayAudioFunction}
+              onQuestionSelect={onQuestionSelect}
             />
           </div>
         </div>

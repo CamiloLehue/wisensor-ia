@@ -72,6 +72,15 @@ export const Analisis = () => {
   // Separate ref for audio playback
   const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Function to handle suggested question selection
+  const handleQuestionSelect = useCallback((selectedQuestion: string) => {
+    setQuestion(selectedQuestion);
+    // Automatically trigger the question after a short delay to allow state to update
+    setTimeout(() => {
+      handleAskQuestion();
+    }, 100);
+  }, [setQuestion, handleAskQuestion]);
+
   useSetCoordenadasFromMessages(
     messages as MessagesType[],
     setCoordenadas,
@@ -200,6 +209,7 @@ export const Analisis = () => {
               audioRef={playbackAudioRef}
               setCurrentlyPlayingAudio={setCurrentlyPlayingAudio}
               handlePlayAudioFunction={handlePlayAudioFunction}
+              onQuestionSelect={handleQuestionSelect}
             />
           </div>
         </div>

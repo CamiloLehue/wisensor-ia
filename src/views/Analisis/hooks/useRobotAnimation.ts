@@ -1,55 +1,51 @@
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { RefObject } from 'react';
-
-interface RobotAnimationConfig {
-  initialScale?: number;
-  initialY?: number;
-  floatHeight?: number;
-  entryDuration?: number;
-  floatDuration?: number;
-}
+import { RefObject, useEffect } from 'react';
+import { useEyeTracking } from './useEyeTracking';
 
 export const useRobotAnimation = (
-  containerRef: RefObject<HTMLDivElement | null>,
-  config: RobotAnimationConfig = {}
+  containerRef: RefObject<HTMLDivElement | null>
 ) => {
-  const {
-    initialScale = 0.3,
-    initialY = -50,
-    floatHeight = 15,
-    entryDuration = 1.5,
-    floatDuration = 2
-  } = config;
+  // Hook para el seguimiento de ojos
+  const { leftEyePosition, rightEyePosition } = useEyeTracking(containerRef);
 
   useGSAP(
     () => {
-      // Entrada inicial del robot
+      // Entrada simple del robot sin efectos dramáticos
       gsap.fromTo(
         "#Layer_2",
         { 
-          scale: initialScale, 
-          opacity: 0,
-          y: initialY 
+          opacity: 0
         },
         { 
-          scale: 1, 
-          opacity: 1, 
-          y: 0,
-          duration: entryDuration,
-          ease: "elastic.out(1, 0.5)"
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out"
         }
       );
-
-      // Animación de flotación continua
-      gsap.to("#Layer_2", {
-        y: floatHeight,
-        duration: floatDuration,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-      });
     },
     { scope: containerRef }
   );
+
+  // Efecto para mover los ojos completos siguiendo el cursor
+  useEffect(() => {
+    const leftEye = containerRef.current?.querySelector('#left-eye') as SVGElement;
+    const rightEye = containerRef.current?.querySelector('#right-eye') as SVGElement;
+
+    if (leftEye && rightEye) {
+      gsap.to(leftEye, {
+        x: leftEyePosition.x - 85.45, // Restar la posición base
+        y: leftEyePosition.y - 66.25,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+
+      gsap.to(rightEye, {
+        x: rightEyePosition.x - 164.32, // Restar la posición base
+        y: rightEyePosition.y - 66.25,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+    }
+  }, [leftEyePosition, rightEyePosition, containerRef]);
 };

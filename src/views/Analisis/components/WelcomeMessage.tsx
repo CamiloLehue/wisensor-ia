@@ -1,15 +1,18 @@
 import React, { useRef } from "react";
-import {ChatBotSvg} from "./svg/ChatBotSvg";
+import { ChatBotSvg } from "./svg/ChatBotSvg";
 import { useRobotAnimation } from "../hooks/useRobotAnimation";
+import { SuggestedQuestions } from "./SuggestedQuestions";
 
-export const WelcomeMessage: React.FC = () => {
+interface WelcomeMessageProps {
+  onQuestionSelect?: (question: string) => void;
+}
+
+export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({
+  onQuestionSelect,
+}) => {
   const container = useRef<HTMLDivElement>(null);
-  
-  useRobotAnimation(container, {
-    floatHeight: 5,
-    floatDuration: 10,
-    entryDuration: 1.5
-  });
+
+  useRobotAnimation(container);
 
   return (
     <div className="relative w-full max-w-5xl mx-auto flex flex-col justify-center items-center mb-5">
@@ -17,36 +20,24 @@ export const WelcomeMessage: React.FC = () => {
       <div ref={container} className="py-5 h-30 w-30 container">
         <ChatBotSvg />
       </div>
-      <p className="text-balance text-center text-gray-200">
-        ¡Te damos la bienvenida a la sección de Análisis!
+      <h2 className="text-balance text-center text-gray-100 text-2xl font-semibold mb-2">
+        ¡Bienvenido al Asistente de Análisis IA!
+      </h2>
+      <small className="text-balance text-center text-amber-400 mb-6  font-medium">
+        Versión Beta 1.0.3 - Tecnología en desarrollo
+      </small>
+      <p className="text-balance text-center text-gray-300 text-base mb-2">
+        Tu asistente inteligente para consultar información histórica y en
+        tiempo real de los centros{" "}
       </p>
-      <p className="text-balance text-center text-amber-500 mb-4">
-        (Versión beta) Beta 1.0.3
+      <p className="text-balance text-center text-gray-400 mb-6">
+        Accede instantáneamente a tres bases de datos especializadas para tomar
+        decisiones informadas
       </p>
-      <p className="text-balance text-center text-gray-300">
-        Actualmente, puedes acceder a información de los centros{"  "}
-        <span className="font-bold text-white">PIRQUEN y POLOCUHE</span>.
-      </p>
-      <p className="text-balance text-center text-gray-300 mb-4">
-        {" "}
-        la plataforma te permite consultar tres bases de datos principales
-      </p>
-      <div className="flex justify-center items-start gap-5">
-        <p className=" cursor-default py-1 text-sky-300 border border-dashed border-sky-300/50 px-4 rounded">
-          Clima
-        </p>
-        <p className=" cursor-default py-1 text-amber-300 border border-dashed border-amber-300/50 px-4 rounded">
-          Alimentación
-        </p>
-        <div className=" cursor-default flex flex-col justify-center items-center">
-          <p className="text-lime-300 py-1 border border-dashed border-lime-300/50 px-4 rounded">
-            Informes Ambientales{" "}
-          </p>
-          <span className="text-gray-500 text-xs">
-            (Exclusivo para Pirquen)
-          </span>
-        </div>
-      </div>
+
+      {onQuestionSelect && (
+        <SuggestedQuestions onQuestionSelect={onQuestionSelect} />
+      )}
     </div>
   );
 };
