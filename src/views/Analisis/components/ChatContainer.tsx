@@ -12,6 +12,7 @@ interface ChatContainerProps {
   audioRef: React.RefObject<HTMLAudioElement | null>;
   setCurrentlyPlayingAudio: (text: string | null) => void;
   handlePlayAudioFunction: (text: string, autoPlay: boolean) => void;
+  onQuestionSelect?: (question: string) => void;
 }
 
 export const ChatContainer: React.FC<ChatContainerProps> = ({
@@ -22,6 +23,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   audioRef,
   setCurrentlyPlayingAudio,
   handlePlayAudioFunction,
+  onQuestionSelect,
 }) => {
   return (
     <div
@@ -35,7 +37,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           <React.Fragment key={index}>
             {message.sender === "bot-bienvenida" &&
             message.text === "sin-pregunta" ? (
-              <WelcomeMessage />
+              <WelcomeMessage onQuestionSelect={onQuestionSelect} />
             ) : (
               <div
                 className={`flex items-start ${

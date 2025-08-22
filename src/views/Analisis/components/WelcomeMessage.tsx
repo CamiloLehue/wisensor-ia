@@ -1,8 +1,13 @@
 import React, { useRef } from "react";
 import {ChatBotSvg} from "./svg/ChatBotSvg";
 import { useRobotAnimation } from "../hooks/useRobotAnimation";
+import { SuggestedQuestions } from "./SuggestedQuestions";
 
-export const WelcomeMessage: React.FC = () => {
+interface WelcomeMessageProps {
+  onQuestionSelect?: (question: string) => void;
+}
+
+export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ onQuestionSelect }) => {
   const container = useRef<HTMLDivElement>(null);
   
   useRobotAnimation(container, {
@@ -31,7 +36,7 @@ export const WelcomeMessage: React.FC = () => {
         {" "}
         la plataforma te permite consultar tres bases de datos principales
       </p>
-      <div className="flex justify-center items-start gap-5">
+      <div className="flex justify-center items-start gap-5 mb-8">
         <p className=" cursor-default py-1 text-sky-300 border border-dashed border-sky-300/50 px-4 rounded">
           Clima
         </p>
@@ -47,6 +52,8 @@ export const WelcomeMessage: React.FC = () => {
           </span>
         </div>
       </div>
+      
+      {onQuestionSelect && <SuggestedQuestions onQuestionSelect={onQuestionSelect} />}
     </div>
   );
 };
