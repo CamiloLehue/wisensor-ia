@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import {ChatBotSvg} from "./svg/ChatBotSvg";
+import { ChatBotSvg } from "./svg/ChatBotSvg";
 import { useRobotAnimation } from "../hooks/useRobotAnimation";
 import { SuggestedQuestions } from "./SuggestedQuestions";
 
@@ -7,13 +7,15 @@ interface WelcomeMessageProps {
   onQuestionSelect?: (question: string) => void;
 }
 
-export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ onQuestionSelect }) => {
+export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({
+  onQuestionSelect,
+}) => {
   const container = useRef<HTMLDivElement>(null);
-  
+
   useRobotAnimation(container, {
     floatHeight: 5,
     floatDuration: 10,
-    entryDuration: 1.5
+    entryDuration: 1.5,
   });
 
   return (
@@ -25,19 +27,21 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ onQuestionSelect
       <h2 className="text-balance text-center text-gray-100 text-2xl font-semibold mb-2">
         ¡Bienvenido al Asistente de Análisis IA!
       </h2>
-      <p className="text-balance text-center text-amber-400 mb-6 text-sm font-medium">
+      <small className="text-balance text-center text-amber-400 mb-6  font-medium">
         Versión Beta 1.0.3 - Tecnología en desarrollo
-      </p>
-      <p className="text-balance text-center text-gray-300 text-lg mb-2">
-        Tu asistente inteligente para consultar información histórica y en tiempo real de los centros{" "}
-       
+      </small>
+      <p className="text-balance text-center text-gray-300 text-base mb-2">
+        Tu asistente inteligente para consultar información histórica y en
+        tiempo real de los centros{" "}
       </p>
       <p className="text-balance text-center text-gray-400 mb-6">
-        Accede instantáneamente a tres bases de datos especializadas para tomar decisiones informadas
+        Accede instantáneamente a tres bases de datos especializadas para tomar
+        decisiones informadas
       </p>
-    
-      
-      {onQuestionSelect && <SuggestedQuestions onQuestionSelect={onQuestionSelect} />}
+
+      {onQuestionSelect && (
+        <SuggestedQuestions onQuestionSelect={onQuestionSelect} />
+      )}
     </div>
   );
 };
