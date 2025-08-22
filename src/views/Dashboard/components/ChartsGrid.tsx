@@ -1,4 +1,4 @@
-import { MapView } from "../../maps";
+import MapDashboard from "../../maps/components/MapDashboard";
 import { ChartCard } from "./ChartCard";
 import { WeeklyTrendsChart } from "./WeeklyTrendsChart";
 import { ChartData } from "./types";
@@ -50,7 +50,7 @@ export const ChartsGrid = ({
   return (
     <div className={`flex-1 w-full grid gap-1 h-full ${selectedMetric === "all" || selectedMetric === "" ? "grid-cols-4" : "grid-cols-1"}`}>
       <div className="overflow-hidden">
-        <MapView />
+        <MapDashboard />
       </div>
       {/* Gráfico Principal Dinámico */}
       {(selectedMetric === "all" || selectedMetric === "temperatura") && (
