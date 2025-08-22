@@ -12,13 +12,7 @@ export const WelcomeMessage: React.FC<WelcomeMessageProps> = ({
 }) => {
   const container = useRef<HTMLDivElement>(null);
 
-  useRobotAnimation(container, {
-    floatHeight: 8,
-    floatDuration: 6,
-    entryDuration: 2.5,
-    initialScale: 0.2,
-    initialY: -80
-  });
+  useRobotAnimation(container);
 
   return (
     <div className="relative w-full max-w-5xl mx-auto flex flex-col justify-center items-center mb-5">

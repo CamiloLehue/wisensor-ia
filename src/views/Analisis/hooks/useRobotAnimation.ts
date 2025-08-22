@@ -1,111 +1,51 @@
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { RefObject } from 'react';
-
-interface RobotAnimationConfig {
-  initialScale?: number;
-  initialY?: number;
-  floatHeight?: number;
-  entryDuration?: number;
-  floatDuration?: number;
-}
+import { RefObject, useEffect } from 'react';
+import { useEyeTracking } from './useEyeTracking';
 
 export const useRobotAnimation = (
-  containerRef: RefObject<HTMLDivElement | null>,
-  config: RobotAnimationConfig = {}
+  containerRef: RefObject<HTMLDivElement | null>
 ) => {
-  const {
-    initialScale = 0.1,
-    initialY = -100,
-    floatHeight = 12,
-    entryDuration = 2,
-    floatDuration = 4
-  } = config;
+  // Hook para el seguimiento de ojos
+  const { leftEyePosition, rightEyePosition } = useEyeTracking(containerRef);
 
   useGSAP(
     () => {
-      // Timeline para animaciones secuenciales
-      const tl = gsap.timeline();
-
-      // Entrada dramática del robot con efectos múltiples
-      tl.fromTo(
+      // Entrada simple del robot sin efectos dramáticos
+      gsap.fromTo(
         "#Layer_2",
         { 
-          scale: initialScale, 
-          opacity: 0,
-          y: initialY,
-          rotation: -180,
-          filter: "blur(10px)"
+          opacity: 0
         },
         { 
-          scale: 1, 
-          opacity: 1, 
-          y: 0,
-          rotation: 0,
-          filter: "blur(0px)",
-          duration: entryDuration,
-          ease: "elastic.out(1.2, 0.6)"
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out"
         }
-      )
-      // Efecto de "activación" con escala pulsante
-      .to("#Layer_2", {
-        scale: 1.1,
-        duration: 0.3,
-        ease: "power2.out"
-      })
-      .to("#Layer_2", {
-        scale: 1,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-
-      // Animación de flotación continua con variaciones
-      gsap.to("#Layer_2", {
-        y: floatHeight,
-        duration: floatDuration,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      });
-
-      // Rotación sutil continua para efecto "escaneando"
-      gsap.to("#Layer_2", {
-        rotation: 3,
-        duration: floatDuration * 1.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-      });
-
-      // Efecto de pulsación de escala periódica
-      gsap.to("#Layer_2", {
-        scale: 1.05,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: "power2.inOut"
-      });
-
-      // Animaciones específicas para los ojos del robot
-      gsap.to(".robot-eye", {
-        scaleX: 0.8,
-        duration: 0.1,
-        repeat: -1,
-        repeatDelay: 4,
-        yoyo: true,
-        ease: "power2.inOut",
-        stagger: 0.1
-      });
-
-      // Efecto de "pensamiento" - variación en la opacidad
-      gsap.to("#Layer_2", {
-        opacity: 0.95,
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-      });
+      );
     },
     { scope: containerRef }
   );
+
+  // Efecto para mover los ojos completos siguiendo el cursor
+  useEffect(() => {
+    const leftEye = containerRef.current?.querySelector('#left-eye') as SVGElement;
+    const rightEye = containerRef.current?.querySelector('#right-eye') as SVGElement;
+
+    if (leftEye && rightEye) {
+      gsap.to(leftEye, {
+        x: leftEyePosition.x - 85.45, // Restar la posición base
+        y: leftEyePosition.y - 66.25,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+
+      gsap.to(rightEye, {
+        x: rightEyePosition.x - 164.32, // Restar la posición base
+        y: rightEyePosition.y - 66.25,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+    }
+  }, [leftEyePosition, rightEyePosition, containerRef]);
 };

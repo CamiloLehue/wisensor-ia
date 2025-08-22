@@ -15,15 +15,13 @@ function ChatBotSvg() {
               stroke-dasharray: 1200;
               stroke-dashoffset: 1000;
               animation: drawRobot 4s ease-in-out infinite alternate,
-                         robotGlow 3s ease-in-out infinite alternate,
-                         robotFloat 6s ease-in-out infinite;
+                         robotGlow 3s ease-in-out infinite alternate;
               filter: drop-shadow(0 0 10px #00ccff40);
             }
             
             .robot-eye {
               animation: smartBlink 4s infinite,
-                         eyeGlow 2s ease-in-out infinite alternate,
-                         eyeScan 8s linear infinite;
+                         eyeGlow 2s ease-in-out infinite alternate;
               transform-origin: center;
               filter: drop-shadow(0 0 8px #00ccff80);
             }
@@ -65,15 +63,6 @@ function ChatBotSvg() {
               }
             }
 
-            @keyframes robotFloat {
-              0%, 100% {
-                transform: translateY(0px) scale(1);
-              }
-              50% {
-                transform: translateY(-8px) scale(1.02);
-              }
-            }
-
             @keyframes smartBlink {
               0%, 85%, 87%, 89%, 100% {
                 transform: scaleY(1);
@@ -100,27 +89,6 @@ function ChatBotSvg() {
               100% {
                 fill: #0088ff;
                 filter: drop-shadow(0 0 12px #0088ff70);
-              }
-            }
-
-            @keyframes eyeScan {
-              0%, 20% {
-                transform: scaleX(1);
-              }
-              10% {
-                transform: scaleX(1.3);
-              }
-              25%, 75% {
-                transform: scaleX(1);
-              }
-              50% {
-                transform: scaleX(0.8) scaleY(1.2);
-              }
-              80%, 90% {
-                transform: scaleX(1.4) scaleY(0.9);
-              }
-              100% {
-                transform: scaleX(1);
               }
             }
 
@@ -216,11 +184,13 @@ function ChatBotSvg() {
             d="M244.94,53.91h-3.07v-19.01c7.4-2.16,12.82-8.99,12.82-17.09,0-9.84-7.98-17.82-17.82-17.82s-17.82,7.98-17.82,17.82c0,8.1,5.41,14.93,12.82,17.09v19.01h-3.07c-2.5,0-4.52,1.93-4.71,4.38-7.35-21.03-25.01-35.86-45.65-35.86h-10.08c1.44-.82,2.42-2.34,2.42-4.11V4.75c0-2.62-2.13-4.75-4.75-4.75h-82.29c-2.62,0-4.75,2.13-4.75,4.75v13.58c0,1.77.98,3.3,2.42,4.11h-10.08c-20.7,0-38.4,14.91-45.71,36.03-.1-2.53-2.17-4.56-4.73-4.56H4.75c-2.62,0-4.75,2.13-4.75,4.75v47.24c0,2.62,2.13,4.75,4.75,4.75h3.13c1.25,32.61,28.15,58.76,61.06,58.76h55.95c2.76,0,5-2.24,5-5s-2.24-5-5-5h-55.95c-27.4,0-49.82-21.66-51.06-48.76h3.01c2.62,0,4.75-2.13,4.75-4.75v-4.21c7.32,21.09,25.01,35.98,45.69,35.98h64.77l46.29,39.68c.29.25.62.36.95.36.76,0,1.48-.6,1.48-1.47v-39.06c17.82-2.69,32.64-16.49,39.24-35.26v4c0,2.62,2.13,4.75,4.75,4.75h16.14c2.62,0,4.75-2.13,4.75-4.75v-47.24c0-2.62-2.13-4.75-4.75-4.75ZM199.42,106.14c-4.75,6.26-10.99,10.26-17.59,11.25l-17.01,2.57v15.98l-15.7-13.46-5.62-4.82h-72.17c-7.23,0-14.21-3.51-19.66-9.88-6.21-7.26-9.64-17.11-9.64-27.74s3.42-20.47,9.64-27.74c5.45-6.37,12.43-9.88,19.66-9.88h107.11c7.23,0,14.21,3.51,19.66,9.88,6.21,7.26,9.64,17.11,9.64,27.74,0,9.75-2.95,19.01-8.32,26.09Z"
           />
           <path
+            id="left-eye"
             className="cls-1 robot-eye"
             fill="#00ccff"
             d="M85.45,52.5c-6.08,0-11,4.92-11,11v27.55c0,6.08,4.92,11,11,11s11-4.92,11-11v-27.55c0-6.08-4.92-11-11-11Z"
           />
           <path
+            id="right-eye"
             className="cls-1 robot-eye"
             fill="#00ccff"
             d="M164.32,52.5c-6.08,0-11,4.92-11,11v27.55c0,6.08,4.92,11,11,11s11-4.92,11-11v-27.55c0-6.08-4.92-11-11-11Z"
